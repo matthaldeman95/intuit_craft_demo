@@ -1,0 +1,103 @@
+<meta http-equiv="refresh" content="60" />
+
+<div style="width: 100%;overflow:auto;">
+    <div style="float:left; width: 50%">
+        <h1>
+            Turbotax Home
+        </h1>
+
+        <a href="/dashboard/turbotax/">Test</a>
+
+        <ul>
+            Site Status:
+        ***REMOVED***% if t_http_code == 200 %***REMOVED***
+                Online!
+        ***REMOVED***% endif %***REMOVED***
+        </ul>
+
+        <ul>
+        ***REMOVED***% if t_http_code == 200 %***REMOVED***
+            Page Load Time: {{t_load_time ***REMOVED******REMOVED***
+        ***REMOVED***% else %***REMOVED***
+                Offline - Error Code {{ t_http_code ***REMOVED******REMOVED***
+            <ul>
+            ***REMOVED***% if t_email_sent == "True" %***REMOVED***
+                    Error successfully sent to system administrator
+            ***REMOVED***% else %***REMOVED***
+                    Error message not sent successfully
+            ***REMOVED***% endif %***REMOVED***
+            </ul>
+        ***REMOVED***% endif %***REMOVED***
+
+        </ul>
+
+    ***REMOVED***{ t_plot|safe ***REMOVED******REMOVED***
+
+        <ul>
+            Most Recent Data:
+        ***REMOVED***% if t_latest_data %***REMOVED***
+                ***REMOVED***% for point in t_latest_data %***REMOVED***
+                        <ul>
+                        ***REMOVED***{ point.timestamp***REMOVED******REMOVED******REMOVED***{ point.status_code ***REMOVED******REMOVED*** ***REMOVED***{ point.load_time***REMOVED******REMOVED***
+                        </ul>
+                ***REMOVED***% endfor %***REMOVED***
+        ***REMOVED***% else %***REMOVED***
+                <p> No past data is currently available.</p>
+        ***REMOVED***% endif %***REMOVED***
+        </ul>
+
+    </div>
+    <div style="float:left;">
+        <h1>
+            Intuit Wikipedia
+        </h1>
+
+        <ul>
+            Site Status:
+        ***REMOVED***% if w_http_code == 200 %***REMOVED***
+                Online!
+        ***REMOVED***% endif %***REMOVED***
+        </ul>
+
+        <ul>
+        ***REMOVED***% if w_http_code == 200 %***REMOVED***
+            Page Load Time: {{w_load_time ***REMOVED******REMOVED***
+        ***REMOVED***% else %***REMOVED***
+                Offline - Error Code {{ w_http_code ***REMOVED******REMOVED***
+            <ul>
+            ***REMOVED***% if w_email_sent == "True" %***REMOVED***
+                    Error successfully sent to system administrator
+            ***REMOVED***% else %***REMOVED***
+                    Error message not sent successfully
+            ***REMOVED***% endif %***REMOVED***
+            </ul>
+        ***REMOVED***% endif %***REMOVED***
+
+        </ul>
+
+    ***REMOVED***{ w_plot|safe ***REMOVED******REMOVED***
+
+        <ul>
+            Most Recent Data:
+        ***REMOVED***% if w_latest_data %***REMOVED***
+                ***REMOVED***% for point in w_latest_data %***REMOVED***
+                        <ul>
+                        ***REMOVED***{ point.timestamp***REMOVED******REMOVED******REMOVED***{ point.status_code ***REMOVED******REMOVED*** ***REMOVED***{ point.load_time***REMOVED******REMOVED***
+                        </ul>
+                ***REMOVED***% endfor %***REMOVED***
+        ***REMOVED***% else %***REMOVED***
+                <p> No past data is currently available.</p>
+        ***REMOVED***% endif %***REMOVED***
+        </ul>
+
+
+    </div>
+</div>
+
+<form>
+    <input type="submit" value="Refresh" />
+</form>
+
+<h3 style="float:center">
+    Last refreshed:  {{ current_time ***REMOVED******REMOVED***
+</h3>

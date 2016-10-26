@@ -1,0 +1,43 @@
+<meta http-equiv="refresh" content="60" />
+
+<header>
+    <center><h1>
+    ***REMOVED***{ site_name ***REMOVED******REMOVED***
+    </h1></center>
+</header>
+
+<div style="float:left; width: 40%">
+    <h3>
+        Site Status:
+    ***REMOVED***% if http_code == 200 %***REMOVED***
+            Online!
+    ***REMOVED***% else %***REMOVED***
+            Offline - Error Code {{ t_http_code ***REMOVED******REMOVED***
+        <ul>
+            ***REMOVED***% if t_email_sent == "True" %***REMOVED***
+                    Error successfully sent to system administrator
+            ***REMOVED***% else %***REMOVED***
+                    Error message not sent successfully
+            ***REMOVED***% endif %***REMOVED***
+            </ul>
+    ***REMOVED***% endif %***REMOVED***
+
+    </h3></center>
+    <h3>
+        Page Load Time:  {{ load_time ***REMOVED******REMOVED***
+    </h3></center>
+
+    <form action="/dashboard/{{ site_id ***REMOVED******REMOVED***/" method="post">
+    ***REMOVED***% csrf_token %***REMOVED***
+    ***REMOVED***% for option in radio_options %***REMOVED***
+            <input type="radio" name="choice" id="choice {{ forloop.counter ***REMOVED******REMOVED***"
+                   value="{{ forloop.counter ***REMOVED******REMOVED***"/>
+            <label for="choice{{ forloop.counter ***REMOVED******REMOVED***">{{option***REMOVED******REMOVED***</label><br />
+    ***REMOVED***% endfor %***REMOVED***
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+
+<div style="float:left;">
+***REMOVED***{ plot|safe ***REMOVED******REMOVED***
+</div>
