@@ -6,7 +6,7 @@ Jinja2==2.8
 MarkupSafe==0.23
 matplotlib==1.1.0
 mpld3==0.2
-numpy==1.11.2
+numpy==1.1
 pyparsing==2.1.10
 python-dateutil==2.5.3
 python-decouple==3.0

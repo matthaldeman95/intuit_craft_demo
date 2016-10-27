@@ -16,6 +16,7 @@ def generate_plot(data, size, data_range***REMOVED***:
     y = [***REMOVED***
     for data in data:
         x.append(data.timestamp***REMOVED***
+        print type(data.timestamp***REMOVED***
         y.append(data.load_time***REMOVED***
 
     avg = mean(y***REMOVED***
@@ -44,6 +45,9 @@ def generate_plot(data, size, data_range***REMOVED***:
 
     elif data_range == 4:
         title += "Last day"
+
+    elif data_range == 5:
+        title += "All time"
 
     plt.plot(x, y***REMOVED***
     plt.title(title, size=18***REMOVED***
