@@ -1,19 +1,8 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import loader
 import datetime
 import site_check
 from .models import WebSite, DataPoint
-import site_check
-from django.urls import reverse
-from django.conf import settings
-from .models import WebSite, DataPoint
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.dates import DateFormatter
-from matplotlib import dates
-import matplotlib.pyplot as plt
-import numpy as np
-import mpld3
 import generate_plot
 from django.utils import timezone
 
@@ -25,7 +14,7 @@ def dashboard(request***REMOVED***:
     ***REMOVED***
     template = loader.get_template('intuit_site_check/dashboard.html'***REMOVED***
 
-    current_time = datetime.datetime.now(***REMOVED***
+    current_time = timezone.now(***REMOVED***
 
     # Load each website data and save data points
     s = WebSite.objects.filter(site_id="turbotax"***REMOVED***[0***REMOVED***
@@ -87,7 +76,7 @@ def detail_page(request, site_id, data_range=0***REMOVED***:
     site_name = s.site_name
     site_id = s.site_id
     url = s.site_url
-    current_time = datetime.datetime.now(***REMOVED***
+    current_time = timezone.now(***REMOVED***
     http_code, load_time, email_sent = site_check.site_check(url***REMOVED***
     dp = DataPoint(website=s, timestamp=current_time, status_code=http_code,
                    load_time=load_time***REMOVED***
@@ -97,7 +86,6 @@ def detail_page(request, site_id, data_range=0***REMOVED***:
 
     if data_range:
         data_range = int(data_range***REMOVED***
-
     else:
         time_delta = datetime.timedelta(hours=1***REMOVED***
 
@@ -113,10 +101,8 @@ def detail_page(request, site_id, data_range=0***REMOVED***:
     elif data_range == 4:
         time_delta = datetime.timedelta(hours=24***REMOVED***
 
-    print time_delta
-
     latest_data = DataPoint.objects.filter(website=s***REMOVED***.order_by('-timestamp'***REMOVED***
-    latest_data = filter_datetime_range(latest_data, time_delta***REMOVED***
+    latest_data = filter_timezone_range(latest_data, time_delta***REMOVED***
 
     plot = generate_plot.generate_plot(latest_data, 1***REMOVED***
 
@@ -139,7 +125,8 @@ def detail_page(request, site_id, data_range=0***REMOVED***:
     return HttpResponse(template.render(context, request***REMOVED******REMOVED***
 
 
-def filter_datetime_range(data_set, td***REMOVED***:
+def filter_timezone_range(data_set, td***REMOVED***:
+
     filtered_data = [***REMOVED***
     for data in data_set:
         if data.timestamp >= timezone.now(***REMOVED*** - td:

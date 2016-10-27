@@ -1,0 +1,11 @@
+#!/home/matthew/Documents/intuit_craft_demo/venv/bin/python2.7
+
+# -*- coding: utf-8 -*-
+import re
+import sys
+
+from django.core.management import execute_from_command_line
+
+if __name__ == '__main__':
+    sys.argv[0***REMOVED*** = re.sub(r'(-script\.pyw|\.exe***REMOVED***?$', '', sys.argv[0***REMOVED******REMOVED***
+    sys.exit(execute_from_command_line(***REMOVED******REMOVED***
