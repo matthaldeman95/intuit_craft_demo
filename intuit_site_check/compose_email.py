@@ -15,7 +15,7 @@ def compose_email(site_name, error_code, time***REMOVED***:
     sender = 'matthaldeman95@gmail.com'
     receiver = 'matthaldeman95@gmail.com'
 
-    message = ***REMOVED***
+    message =
     From:  Intuit <matthaldeman95@gmail.com>
     To:  System Administrator <matthaldeman95@gmail.com>
     MIME-Version: 1.0
@@ -26,7 +26,7 @@ def compose_email(site_name, error_code, time***REMOVED***:
 
     %s
 
-    ***REMOVED*** % (time, site_name, error_code***REMOVED***
+    % (time, site_name, error_code***REMOVED***
 
     s = smtplib.SMTP('smtp.gmail.com:587'***REMOVED***
     s.ehlo(***REMOVED***
