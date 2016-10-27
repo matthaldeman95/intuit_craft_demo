@@ -1,1 +1,1 @@
-web:  gunicorn intuit_site_check.wsgi --log-file -
+web:  gunicorn intuit_app.wsgi:application --pythonpath ./intuit_craft_demo --log-file - --access-logfile -

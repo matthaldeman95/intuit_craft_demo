@@ -1,10 +1,12 @@
+import datetime
+
 from django.http import HttpResponse
 from django.template import loader
-import datetime
+from django.utils import timezone
+
+import generate_plot
 import site_check
 from .models import WebSite, DataPoint
-import generate_plot
-from django.utils import timezone
 
 
 def dashboard(request***REMOVED***:
