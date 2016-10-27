@@ -1,6 +1,10 @@
 <meta http-equiv="refresh" content="60" />
+{% load render_table from django_tables2 %***REMOVED***
+{% load static %***REMOVED***
+<link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %***REMOVED***" />
 
-<div style="width: 100%;overflow:auto;">
+<!doctype html>
+<html>
     <div style="float:left; width: 50%">
         <h1>
             <a href="/dashboard/turbotax/">Turbotax Home</a>
@@ -32,18 +36,12 @@
 
     ***REMOVED***{ t_plot|safe ***REMOVED******REMOVED***
 
-        <ul>
-            Most Recent Data:
-        ***REMOVED***% if t_latest_data %***REMOVED***
-                ***REMOVED***% for point in t_latest_data %***REMOVED***
-                        <ul>
-                        ***REMOVED***{ point.timestamp***REMOVED******REMOVED******REMOVED***{ point.status_code ***REMOVED******REMOVED*** ***REMOVED***{ point.load_time***REMOVED******REMOVED***
-                        </ul>
-                ***REMOVED***% endfor %***REMOVED***
-        ***REMOVED***% else %***REMOVED***
-                <p> No past data is currently available.</p>
-        ***REMOVED***% endif %***REMOVED***
-        </ul>
+        <div class="table-container" style="height: 200px; overflow: auto">
+            <table class="paleblue">
+             ***REMOVED***% render_table t_table %***REMOVED***
+            </table>
+        </div>
+
 
     </div>
     <div style="float:left;">
@@ -76,27 +74,15 @@
 
     ***REMOVED***{ w_plot|safe ***REMOVED******REMOVED***
 
-        <ul>
-            Most Recent Data:
-        ***REMOVED***% if w_latest_data %***REMOVED***
-                ***REMOVED***% for point in w_latest_data %***REMOVED***
-                        <ul>
-                        ***REMOVED***{ point.timestamp***REMOVED******REMOVED******REMOVED***{ point.status_code ***REMOVED******REMOVED*** ***REMOVED***{ point.load_time***REMOVED******REMOVED***
-                        </ul>
-                ***REMOVED***% endfor %***REMOVED***
-        ***REMOVED***% else %***REMOVED***
-                <p> No past data is currently available.</p>
-        ***REMOVED***% endif %***REMOVED***
-        </ul>
+        <div class="table-container" style="height: 200px; overflow: auto">
+            <table class="paleblue">
+             ***REMOVED***% render_table w_table %***REMOVED***
+            </table>
+        </div>
 
 
     </div>
-</div>
 
-<form>
-    <input type="submit" value="Refresh" />
-</form>
 
-<h3 style="float:center">
-    Last refreshed:  {{ current_time ***REMOVED******REMOVED***
-</h3>
+
+</html>

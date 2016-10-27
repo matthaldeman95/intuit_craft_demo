@@ -1,5 +1,11 @@
 <meta http-equiv="refresh" content="60" />
 
+{% load render_table from django_tables2 %***REMOVED***
+{% load static %***REMOVED***
+
+<!doctype html>
+<html>
+
 <header>
     <center><h1>
     ***REMOVED***{ site_name ***REMOVED******REMOVED***
@@ -29,16 +35,45 @@
 
     <form action="/dashboard/{{ site_id ***REMOVED******REMOVED***/" method="post">
     ***REMOVED***% csrf_token %***REMOVED***
+        <div style="float: left; width: 40%">
     ***REMOVED***% for option in radio_options %***REMOVED***
             <input type="radio" name="choice" id="choice {{ forloop.counter ***REMOVED******REMOVED***"
                    value="{{ forloop.counter ***REMOVED******REMOVED***"/>
             <label for="choice{{ forloop.counter ***REMOVED******REMOVED***">{{option***REMOVED******REMOVED***</label><br />
     ***REMOVED***% endfor %***REMOVED***
-        <input type="submit" value="Submit" />
+        </div>
+        <div style="float:left">
+            <dt>
+                Start Date and Time
+            </dt>
+            <dt>
+                <input id="start_date_time" type="text" name="start_date_time"/>
+            </dt>
+            <dt>
+                End Date and Time
+            </dt>
+            <dt>
+                <input id="end_date_time" type="text" name="end_date_time"/>
+            </dt>
+        </div>
+        <dd>
+            <input type="submit" value="Submit" />
+        </dd>
+
     </form>
     <a href="/dashboard/">Back to Main Dashboard</a>
+
+    <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %***REMOVED***" />
+    <div class="table-container" style="height: 400px; overflow: auto">
+         <table class="paleblue">
+             ***REMOVED***% render_table table %***REMOVED***
+         </table>
+    </div>
+
 </div>
 
 <div style="float:left;">
 ***REMOVED***{ plot|safe ***REMOVED******REMOVED***
 </div>
+
+</html>

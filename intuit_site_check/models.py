@@ -14,6 +14,7 @@ class WebSite(models.Model***REMOVED***:
     site_id = models.CharField(max_length=25, default="site_id"***REMOVED***
     site_name = models.CharField(max_length=25***REMOVED***
     site_url = models.URLField(max_length=200***REMOVED***
+    on_error_message = models.BooleanField(default=False***REMOVED***
 
     def __str__(self***REMOVED***:
         return self.site_name
