@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab07e535-f745-4f37-8bc7-57c555bcbf28" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/site_check.py" afterPath="$PROJECT_DIR$/intuit_site_check/site_check.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/compose_email.py" afterPath="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
     </list>
     <ignored path="intuit_craft_demo.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -89,8 +89,8 @@
       <file leaf-file-name="compose_email.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/compose_email.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+            <state relative-caret-position="144">
+              <caret line="8" column="47" selection-start-line="8" selection-start-column="47" selection-end-line="8" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -145,6 +145,7 @@
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/intuit_app/settings.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/site_check.py" />
+        <option value="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
       </list>
     </option>
   </component>
@@ -461,8 +462,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/intuit_site_check/compose_email.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+        <state relative-caret-position="144">
+          <caret line="8" column="47" selection-start-line="8" selection-start-column="47" selection-end-line="8" selection-end-column="47" />
           <folding />
         </state>
       </provider>
