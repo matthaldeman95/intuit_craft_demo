@@ -14,13 +14,15 @@ def site_check(url***REMOVED***:
     r = requests.get(url***REMOVED***
     http_code = r.status_code
     email_sent = False
+    # TODO Fix email, need password maintained privately?
+    ***REMOVED***
     if http_code != requests.codes.ok:
         ***REMOVED***
             compose_email('Intuit Wikipedia Page', http_code, datetime.datetime.now(***REMOVED******REMOVED***
             email_sent = True
         ***REMOVED***
             pass
-
+    ***REMOVED***
     load_time = r.elapsed.total_seconds(***REMOVED***
 
     return http_code, load_time, email_sent
