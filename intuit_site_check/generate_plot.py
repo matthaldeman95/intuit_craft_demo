@@ -1,7 +1,4 @@
-from matplotlib import dates
 import matplotlib.pyplot as plt
-from matplotlib.offsetbox import AnchoredText
-import numpy as np
 import mpld3
 from numpy import mean
 
@@ -10,25 +7,31 @@ def generate_plot(data, size, data_range***REMOVED***:
     ***REMOVED***
     Generates interactive plots of site data
     :param data:    Site data
+    :param size:    Desired size of plot; 0 for small, 1 for large
+    :param data_range   Selected timestamp range of data in integer form
     :return:        Interactive mpld3 plot
     ***REMOVED***
+    # Load data
     x = [***REMOVED***
     y = [***REMOVED***
     for data in data:
         x.append(data.timestamp***REMOVED***
         y.append(float(data.load_time***REMOVED******REMOVED***
 
+    # Average of data
     avg = mean(y***REMOVED***
     avg = float(round(avg, 3***REMOVED******REMOVED***
     avg_text = "Average: " + str(avg***REMOVED***
 
+    # Control size of output plot
     if size == 0:
-        mpl_figure = plt.figure(1, figsize=(5,4***REMOVED******REMOVED***
-    elif size == 1:
-        mpl_figure = plt.figure(1, figsize=(8,6***REMOVED******REMOVED***
+        mpl_figure = plt.figure(1, figsize=(5, 4***REMOVED******REMOVED***
+    else:
+        mpl_figure = plt.figure(1, figsize=(8, 6***REMOVED******REMOVED***
 
     title = "Site Load Times: "
 
+    # Give title based on the selected data range
     if data_range == -1:
         title += "User Defined"
 
@@ -58,4 +61,3 @@ def generate_plot(data, size, data_range***REMOVED***:
     plt.clf(***REMOVED***
 
     return mpld3_plot
-

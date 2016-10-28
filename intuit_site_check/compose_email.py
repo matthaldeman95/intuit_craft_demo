@@ -1,9 +1,9 @@
-
 import smtplib
 
 username = 'matthaldeman95@gmail.com'
-with open('/Users/Matt/Documents/priv/pd.txt'***REMOVED*** as file:
-    password = file.read(***REMOVED***
+with open('/home/matthew/Documents/priv/pd.txt'***REMOVED*** as pdfile:
+    password = pdfile.read(***REMOVED***
+
 
 def compose_email(site_name, error_code, time***REMOVED***:
     ***REMOVED***
@@ -14,11 +14,10 @@ def compose_email(site_name, error_code, time***REMOVED***:
     :return:
     ***REMOVED***
 
-    print "Made it here"
     sender = 'matthaldeman95@gmail.com'
     receiver = 'matthaldeman95@gmail.com'
 
-    message =***REMOVED***
+    message = ***REMOVED***
     From:  Intuit <matthaldeman95@gmail.com>
     To:  System Administrator <matthaldeman95@gmail.com>
     MIME-Version: 1.0
@@ -28,7 +27,7 @@ def compose_email(site_name, error_code, time***REMOVED***:
     At %s, the following HTTP error occurred for the site %s:
 
     %s
-    ***REMOVED***% (time, site_name, error_code***REMOVED***
+    ***REMOVED*** % (time, site_name, error_code***REMOVED***
 
     s = smtplib.SMTP('smtp.gmail.com:587'***REMOVED***
     s.ehlo(***REMOVED***
@@ -39,4 +38,5 @@ def compose_email(site_name, error_code, time***REMOVED***:
 
 
 if __name__ == "__main__":
-    compose_email("test.com", 404, 10***REMOVED***
+    import datetime
+    compose_email("test.com", 404, datetime.datetime.now(***REMOVED******REMOVED***

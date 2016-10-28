@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
-
 from django.db import models
-from django.utils import timezone
-import datetime
+
 
 class WebSite(models.Model***REMOVED***:
     ***REMOVED***
@@ -14,10 +12,10 @@ class WebSite(models.Model***REMOVED***:
     site_id = models.CharField(max_length=25, default="site_id"***REMOVED***
     site_name = models.CharField(max_length=25***REMOVED***
     site_url = models.URLField(max_length=200***REMOVED***
-    on_error_message = models.BooleanField(default=False***REMOVED***
 
     def __str__(self***REMOVED***:
         return self.site_name
+
 
 class DataPoint(models.Model***REMOVED***:
     ***REMOVED***
@@ -34,6 +32,3 @@ class DataPoint(models.Model***REMOVED***:
 
     def __str__(self***REMOVED***:
         return self.website.site_id + ': ' + str(self.load_time***REMOVED***
-
-    def timestamp_5_min(self***REMOVED***:
-        return self.timestamp >= timezone.now(***REMOVED*** - datetime.timedelta(minutes=5***REMOVED***
