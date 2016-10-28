@@ -22,9 +22,9 @@
     ***REMOVED***% if http_code == 200 %***REMOVED***
             Online!
     ***REMOVED***% else %***REMOVED***
-            Offline - Error Code {{ t_http_code ***REMOVED******REMOVED***
+            Offline - Error Code {{ http_code ***REMOVED******REMOVED***
         <ul>
-            ***REMOVED***% if t_email_sent == "True" %***REMOVED***
+            ***REMOVED***% if email_sent == 1 %***REMOVED***
                     Error successfully sent to system administrator
             ***REMOVED***% else %***REMOVED***
                     Error message not sent successfully

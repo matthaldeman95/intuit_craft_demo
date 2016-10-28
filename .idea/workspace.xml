@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ab07e535-f745-4f37-8bc7-57c555bcbf28" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/views.py" afterPath="$PROJECT_DIR$/intuit_site_check/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html" afterPath="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html" />
     </list>
     <ignored path="intuit_craft_demo.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,7 +23,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="194">
@@ -73,8 +72,8 @@
       <file leaf-file-name="dashboard.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/dashboard.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-648">
-              <caret line="42" column="74" selection-start-line="42" selection-start-column="38" selection-end-line="42" selection-end-column="74" />
+            <state relative-caret-position="285">
+              <caret line="40" column="13" selection-start-line="26" selection-start-column="8" selection-end-line="40" selection-end-column="13" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -89,11 +88,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="detail_page.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="detail_page.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="81" column="23" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
+            <state relative-caret-position="237">
+              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#form#0;n#div#0;n#html#0;n#!!top" expanded="true" />
@@ -179,14 +178,14 @@
         <option value="$PROJECT_DIR$/intuit_site_check/static/intuit_site_check/style.css" />
         <option value="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/generate_plot.py" />
-        <option value="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html" />
         <option value="$PROJECT_DIR$/intuit_site_check/views.py" />
+        <option value="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="48" />
-    <option name="y" value="76" />
+    <option name="x" value="52" />
+    <option name="y" value="97" />
     <option name="width" value="1157" />
     <option name="height" value="666" />
   </component>
@@ -473,7 +472,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="48" y="76" width="1157" height="666" extended-state="0" />
+    <frame x="52" y="97" width="1157" height="666" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24823944" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -901,10 +900,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/intuit_site_check/tables.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="7" column="37" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/intuit_site_check/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="49" column="5" selection-start-line="49" selection-start-column="5" selection-end-line="49" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/dashboard.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-648">
-          <caret line="42" column="74" selection-start-line="42" selection-start-column="38" selection-end-line="42" selection-end-column="74" />
+        <state relative-caret-position="285">
+          <caret line="40" column="13" selection-start-line="26" selection-start-column="8" selection-end-line="40" selection-end-column="13" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -920,8 +935,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="81" column="23" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
+        <state relative-caret-position="237">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding>
             <element signature="n#style#0;n#div#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#form#0;n#div#0;n#html#0;n#!!top" expanded="true" />
@@ -929,22 +944,6 @@
             <element signature="n#style#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#1;n#html#0;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/intuit_site_check/tables.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="7" column="37" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/intuit_site_check/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="49" column="5" selection-start-line="49" selection-start-column="5" selection-end-line="49" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
