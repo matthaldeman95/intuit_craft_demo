@@ -4,9 +4,6 @@
     <list default="true" id="ab07e535-f745-4f37-8bc7-57c555bcbf28" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/compose_email.py" afterPath="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/generate_plot.py" afterPath="$PROJECT_DIR$/intuit_site_check/generate_plot.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html" afterPath="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/views.py" afterPath="$PROJECT_DIR$/intuit_site_check/views.py" />
     </list>
     <ignored path="intuit_craft_demo.iws" />
@@ -27,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="164">
-              <caret line="47" column="39" selection-start-line="47" selection-start-column="39" selection-end-line="47" selection-end-column="39" />
+            <state relative-caret-position="194">
+              <caret line="49" column="5" selection-start-line="49" selection-start-column="5" selection-end-line="49" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -140,7 +137,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tables.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tables.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/tables.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
@@ -935,18 +932,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/intuit_site_check/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="47" column="39" selection-start-line="47" selection-start-column="39" selection-end-line="47" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/intuit_site_check/tables.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="7" column="37" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/intuit_site_check/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="49" column="5" selection-start-line="49" selection-start-column="5" selection-end-line="49" selection-end-column="5" />
           <folding />
         </state>
       </provider>
