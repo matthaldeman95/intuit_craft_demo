@@ -120,6 +120,8 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
     # Get data in selected data range
     all_data = DataPoint.objects.filter(website=s***REMOVED***.order_by('-timestamp'***REMOVED***
 
+    data_range_text = ""
+
     if data_range == 5:
         requested_data = all_data
     elif data_range != -1:
@@ -128,6 +130,7 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
         if start_date_time:
             requested_data = filter_start_end_datetime(all_data,
                                                        start_date_time, end_date_time***REMOVED***
+            data_range_text = str(start_date_time***REMOVED*** + " - " + str(end_date_time***REMOVED***
         else:
             requested_data = filter_timezone_range(all_data, datetime.timedelta(hours=24***REMOVED******REMOVED***
 
@@ -135,7 +138,7 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
     table = DataPointTable(requested_data***REMOVED***
     table.paginate(***REMOVED***
 
-    plot = generate_plot.generate_plot(requested_data, 1, data_range***REMOVED***
+    plot = generate_plot.generate_plot(requested_data, 1, data_range, data_range_text***REMOVED***
 
     # Preset radio box options
     radio_options = [

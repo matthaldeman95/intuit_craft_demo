@@ -3,7 +3,7 @@ import mpld3
 from numpy import mean
 
 
-def generate_plot(data, size, data_range***REMOVED***:
+def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     ***REMOVED***
     Generates interactive plots of site data
     :param data:    Site data
@@ -33,7 +33,7 @@ def generate_plot(data, size, data_range***REMOVED***:
 
     # Give title based on the selected data range
     if data_range == -1:
-        title += "User Defined"
+        title += user_selected
 
     elif data_range == 1:
         title += "Last 5 minutes"

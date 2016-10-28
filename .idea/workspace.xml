@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab07e535-f745-4f37-8bc7-57c555bcbf28" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/intuit_site_check/filters.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/compose_email.py" afterPath="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/generate_plot.py" afterPath="$PROJECT_DIR$/intuit_site_check/generate_plot.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/models.py" afterPath="$PROJECT_DIR$/intuit_site_check/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/site_check.py" afterPath="$PROJECT_DIR$/intuit_site_check/site_check.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/tables.py" afterPath="$PROJECT_DIR$/intuit_site_check/tables.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/urls.py" afterPath="$PROJECT_DIR$/intuit_site_check/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/views.py" afterPath="$PROJECT_DIR$/intuit_site_check/views.py" />
     </list>
     <ignored path="intuit_craft_demo.iws" />
@@ -34,8 +27,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="167">
-              <caret line="133" column="9" selection-start-line="133" selection-start-column="7" selection-end-line="133" selection-end-column="9" />
+            <state relative-caret-position="239">
+              <caret line="129" column="13" selection-start-line="129" selection-start-column="13" selection-end-line="129" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -53,11 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="generate_plot.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="generate_plot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/generate_plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
+            <state relative-caret-position="288">
+              <caret line="52" column="18" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="18" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -85,13 +78,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
+            <state relative-caret-position="216">
+              <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
+                <marker date="1477668345916" expanded="true" signature="101:360" ph="..." />
               </folding>
             </state>
           </provider>
@@ -165,13 +159,13 @@
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/intuit_app/settings.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
-        <option value="$PROJECT_DIR$/intuit_site_check/generate_plot.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/models.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/site_check.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/tables.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/filters.py" />
-        <option value="$PROJECT_DIR$/intuit_site_check/views.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/urls.py" />
+        <option value="$PROJECT_DIR$/intuit_site_check/views.py" />
+        <option value="$PROJECT_DIR$/intuit_site_check/generate_plot.py" />
       </list>
     </option>
   </component>
@@ -848,16 +842,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/intuit_site_check/generate_plot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/intuit_site_check/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-133">
@@ -902,20 +886,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/intuit_site_check/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+            <marker date="1477668345916" expanded="true" signature="101:360" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/intuit_site_check/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="133" column="9" selection-start-line="133" selection-start-column="7" selection-end-line="133" selection-end-column="9" />
+        <state relative-caret-position="239">
+          <caret line="129" column="13" selection-start-line="129" selection-start-column="13" selection-end-line="129" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/intuit_site_check/urls.py">
+    <entry file="file://$PROJECT_DIR$/intuit_site_check/generate_plot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
+        <state relative-caret-position="288">
+          <caret line="52" column="18" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="18" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
