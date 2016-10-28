@@ -1,7 +1,9 @@
 <meta http-equiv="refresh" content="60" />
-
 {% load render_table from django_tables2 %***REMOVED***
 {% load static %***REMOVED***
+<link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %***REMOVED***" />
+<link rel="stylesheet" type="text/css" href="{% static 'intuit_site_check/style.css' %***REMOVED***" />
+
 
 <!doctype html>
 <html>
@@ -12,8 +14,10 @@
     </h1></center>
 </header>
 
+<center><a href="/dashboard/">Back to Main Dashboard</a></center>
+
 <div style="float:left; width: 40%">
-    <h3>
+    <h2>
         Site Status:
     ***REMOVED***% if http_code == 200 %***REMOVED***
             Online!
@@ -25,13 +29,14 @@
             ***REMOVED***% else %***REMOVED***
                     Error message not sent successfully
             ***REMOVED***% endif %***REMOVED***
-            </ul>
+        </ul>
     ***REMOVED***% endif %***REMOVED***
 
-    </h3></center>
-    <h3>
+    </h2>
+
+    <h2>
         Page Load Time:  {{ load_time ***REMOVED******REMOVED***
-    </h3></center>
+    </h2>
 
     <form action="/dashboard/{{ site_id ***REMOVED******REMOVED***/" method="post">
     ***REMOVED***% csrf_token %***REMOVED***
@@ -41,6 +46,9 @@
                    value="{{ forloop.counter ***REMOVED******REMOVED***"/>
             <label for="choice{{ forloop.counter ***REMOVED******REMOVED***">{{option***REMOVED******REMOVED***</label><br />
     ***REMOVED***% endfor %***REMOVED***
+            <div align="center">
+                <input type="submit" value="Submit" />
+            </div>
         </div>
         <div style="float:left">
             <dt>
@@ -56,14 +64,11 @@
                 <input id="end_date_time" type="text" name="end_date_time"/>
             </dt>
         </div>
-        <dd>
-            <input type="submit" value="Submit" />
-        </dd>
+
 
     </form>
-    <a href="/dashboard/">Back to Main Dashboard</a>
 
-    <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %***REMOVED***" />
+
     <div class="table-container" style="height: 400px; overflow: auto">
          <table class="paleblue">
              ***REMOVED***% render_table table %***REMOVED***
@@ -73,7 +78,14 @@
 </div>
 
 <div style="float:left;">
-***REMOVED***{ plot|safe ***REMOVED******REMOVED***
+    <div class="plot-container" style="height: 500px" align="center">
+    ***REMOVED***{ plot|safe ***REMOVED******REMOVED***
+
+    </div>
+
+
 </div>
+
+
 
 </html>

@@ -45,9 +45,9 @@ def dashboard(request***REMOVED***:
 
     # Create django_tables of data, add pagination
     t_table = DataPointTable(t_latest_data***REMOVED***
-    t_table.paginate(***REMOVED***
+    t_table.paginate(per_page=10***REMOVED***
     w_table = DataPointTable(w_latest_data***REMOVED***
-    w_table.paginate(***REMOVED***
+    w_table.paginate(per_page=10***REMOVED***
 
     # Create mpld3 plots of data
     t_plot = generate_plot.generate_plot(t_latest_data, 0, 3***REMOVED***
@@ -136,7 +136,7 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
 
     # Create django_table and plot
     table = DataPointTable(requested_data***REMOVED***
-    table.paginate(***REMOVED***
+    table.paginate(per_page=25***REMOVED***
 
     plot = generate_plot.generate_plot(requested_data, 1, data_range, data_range_text***REMOVED***
 

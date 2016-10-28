@@ -1,3 +1,19 @@
 h1 {
     font-family:  "Helvetica";
 ***REMOVED***
+
+h2 {
+    font-family:  "Helvetica";
+***REMOVED***
+
+footer {
+    padding-bottom:  800px;
+***REMOVED***
+
+form {
+    padding-bottom:  50px;
+***REMOVED***
+
+.plot-container {
+    position: fixed;
+***REMOVED***

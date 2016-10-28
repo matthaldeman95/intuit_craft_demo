@@ -25,11 +25,11 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
 
     # Control size of output plot
     if size == 0:
-        mpl_figure = plt.figure(1, figsize=(5, 4***REMOVED******REMOVED***
-    else:
         mpl_figure = plt.figure(1, figsize=(8, 6***REMOVED******REMOVED***
+    else:
+        mpl_figure = plt.figure(1, figsize=(8, 5***REMOVED******REMOVED***
 
-    title = "Site Load Times: "
+    title = "Page Load Times: "
 
     # Give title based on the selected data range
     if data_range == -1:
@@ -50,11 +50,13 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     elif data_range == 5:
         title += "All time"
 
+    font = {'fontname':'Helvetica'***REMOVED***
+
     plt.plot(x, y***REMOVED***
-    plt.title(title, size=18***REMOVED***
-    plt.xlabel('Time', size=15***REMOVED***
-    plt.ylabel('Load Time (s***REMOVED***', size=15***REMOVED***
-    plt.annotate(avg_text, xy=(0.65, 0.92***REMOVED***, xycoords='axes fraction', size=16***REMOVED***
+    plt.title(title, size=18, **font***REMOVED***
+    plt.xlabel('Time', size=15, **font***REMOVED***
+    plt.ylabel('Load Time (s***REMOVED***', size=15, **font***REMOVED***
+    plt.annotate(avg_text, xy=(0.65, 0.92***REMOVED***, xycoords='axes fraction', size=16, **font***REMOVED***
 
     mpld3_plot = mpld3.fig_to_html(mpl_figure***REMOVED***
 
