@@ -15,6 +15,7 @@ def dashboard(request***REMOVED***:
     Main dashboard home page.  Two columns for two websites.  Displays site status, load time,
         any error messages, interactive pyplot and radio boxes for data visualization
     ***REMOVED***
+
     template = loader.get_template('intuit_site_check/dashboard.html'***REMOVED***
 
     current_time = timezone.now(***REMOVED***
@@ -58,14 +59,14 @@ def dashboard(request***REMOVED***:
         'current_time': current_time,
         't_http_code': t_http_code,
         't_load_time': t_load_time,
-        't_email_sent': t_email_sent,
+        't_email_sent': int(t_email_sent***REMOVED***,
         't_latest_data': t_latest_data,
         't_plot': t_plot,
         't_table': t_table,
         't_id': t_id,
         'w_http_code': w_http_code,
         'w_load_time': w_load_time,
-        'w_email_sent': w_email_sent,
+        'w_email_sent': int(w_email_sent***REMOVED***,
         'w_latest_data': w_latest_data,
         'w_plot': w_plot,
         'w_id': w_id,
@@ -171,8 +172,13 @@ def filter_timezone_range(data_set, td***REMOVED***:
 
 def filter_start_end_datetime(data_set, start, end***REMOVED***:
 
+
     start = datetime.datetime.strptime(str(start***REMOVED***, '%m/%d/%Y %I:%M %p'***REMOVED***
     end = datetime.datetime.strptime(str(end***REMOVED***, '%m/%d/%Y %I:%M %p'***REMOVED***
+
+    start = timezone.make_aware(start***REMOVED***
+    end = timezone.make_aware(end***REMOVED***
+
     filtered_data = [***REMOVED***
     for data in data_set:
         if data.timestamp >= start and data.timestamp <= end:
@@ -180,6 +186,8 @@ def filter_start_end_datetime(data_set, start, end***REMOVED***:
 
     return filtered_data
 
+<<<<<<< HEAD
+=======
 def error_code_testpage(request***REMOVED***:
     template = loader.get_template('intuit_site_check/dashboard.html'***REMOVED***
 
@@ -239,3 +247,4 @@ def error_code_testpage(request***REMOVED***:
 ***REMOVED***
 
     return HttpResponse(template.render(context, request***REMOVED******REMOVED***
+>>>>>>> ad4b288e12c2b7c12b5f3e12c46914c820cabeab

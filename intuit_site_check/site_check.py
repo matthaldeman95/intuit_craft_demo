@@ -1,6 +1,7 @@
 import requests
 import compose_email
-from .models import WebSite
+from .models import WebSite, DataPoint
+import datetime
 
 def site_check(WebSite***REMOVED***:
     ***REMOVED***
@@ -13,21 +14,28 @@ def site_check(WebSite***REMOVED***:
                              default, since no email is sent if website is working
     ***REMOVED***
     url = WebSite.site_url
-    r = requests.get(url***REMOVED***
-    http_code = r.status_code
     email_sent = False
-    load_time = r.elapsed.total_seconds(***REMOVED***
-    # TODO Fix email, need password maintained privately?
-    if http_code != requests.codes.ok:
-        if not WebSite.on_error_message:
-            ***REMOVED***
-                compose_email('Intuit Wikipedia Page', http_code, datetime.datetime.now(***REMOVED******REMOVED***
-                email_sent = True
-                WebSite.on_error_message = True
-            ***REMOVED***
-                pass
 
-    elif WebSite.on_error_message:
-        WebSite.on_error_message = False
+    ***REMOVED***
+        r = requests.get(url***REMOVED***
+        http_code = r.status_code
+        load_time = r.elapsed.total_seconds(***REMOVED***
+
+    except requests.ConnectionError:
+        http_code = 429
+        load_time = 0
+
+    codes = DataPoint.objects.all(***REMOVED***.filter(website=WebSite***REMOVED***.order_by('-timestamp'***REMOVED***
+    most_recent_code = codes[0***REMOVED***.status_code
+
+    if http_code != requests.codes.ok:
+        if http_code != most_recent_code:
+            ***REMOVED***
+                compose_email.compose_email('Intuit Wikipedia Page', http_code, datetime.datetime.now(***REMOVED******REMOVED***
+                email_sent = True
+            ***REMOVED***
+                email_sent = False
+        else:
+            email_sent = True
 
     return http_code, load_time, email_sent

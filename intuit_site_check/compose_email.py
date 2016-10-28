@@ -2,7 +2,7 @@
 import smtplib
 
 username = 'matthaldeman95@gmail.com'
-with open('/home/matthew/Documents/priv/pd.txt'***REMOVED*** as file:
+with open('/Users/Matt/Documents/priv/pd.txt'***REMOVED*** as file:
     password = file.read(***REMOVED***
 
 def compose_email(site_name, error_code, time***REMOVED***:
@@ -13,6 +13,8 @@ def compose_email(site_name, error_code, time***REMOVED***:
     :param time:        Time of bad request
     :return:
     ***REMOVED***
+
+    print "Made it here"
     sender = 'matthaldeman95@gmail.com'
     receiver = 'matthaldeman95@gmail.com'
 
@@ -34,3 +36,7 @@ def compose_email(site_name, error_code, time***REMOVED***:
     s.ehlo(***REMOVED***
     s.login(username, password***REMOVED***
     s.sendmail(sender, receiver, message***REMOVED***
+
+
+if __name__ == "__main__":
+    compose_email("test.com", 404, 10***REMOVED***

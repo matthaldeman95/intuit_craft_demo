@@ -16,13 +16,16 @@ def generate_plot(data, size, data_range***REMOVED***:
     y = [***REMOVED***
     for data in data:
         x.append(data.timestamp***REMOVED***
+<<<<<<< HEAD
+        y.append(float(data.load_time***REMOVED******REMOVED***
+=======
         print type(data.timestamp***REMOVED***
         y.append(data.load_time***REMOVED***
+>>>>>>> ad4b288e12c2b7c12b5f3e12c46914c820cabeab
 
     avg = mean(y***REMOVED***
     avg = float(round(avg, 3***REMOVED******REMOVED***
     avg_text = "Average: " + str(avg***REMOVED***
-    print avg_text
 
     if size == 0:
         mpl_figure = plt.figure(1, figsize=(5,4***REMOVED******REMOVED***
@@ -53,7 +56,7 @@ def generate_plot(data, size, data_range***REMOVED***:
     plt.title(title, size=18***REMOVED***
     plt.xlabel('Time', size=15***REMOVED***
     plt.ylabel('Load Time (s***REMOVED***', size=15***REMOVED***
-    plt.annotate(avg_text, xy=(0.65, 0.85***REMOVED***, xycoords='axes fraction', size=16***REMOVED***
+    plt.annotate(avg_text, xy=(0.65, 0.92***REMOVED***, xycoords='axes fraction', size=16***REMOVED***
 
     mpld3_plot = mpld3.fig_to_html(mpl_figure***REMOVED***
 

@@ -37,4 +37,3 @@ class DataPoint(models.Model***REMOVED***:
 
     def timestamp_5_min(self***REMOVED***:
         return self.timestamp >= timezone.now(***REMOVED*** - datetime.timedelta(minutes=5***REMOVED***
-

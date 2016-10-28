@@ -2,6 +2,8 @@
 {% load render_table from django_tables2 %***REMOVED***
 {% load static %***REMOVED***
 <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %***REMOVED***" />
+{% load static %***REMOVED***
+<link rel="stylesheet" type="text/css" href="{% static 'intuit_site_check/style.css' %***REMOVED***" />
 
 <!doctype html>
 <html>
@@ -14,7 +16,9 @@
         <ul>
             Site Status:
         ***REMOVED***% if t_http_code == 200 %***REMOVED***
-                Online!
+                Online
+        ***REMOVED***% else %***REMOVED***
+                Offline:  Error Code {{ t_http_code ***REMOVED******REMOVED***
         ***REMOVED***% endif %***REMOVED***
         </ul>
 
@@ -24,7 +28,7 @@
         ***REMOVED***% else %***REMOVED***
                 Offline - Error Code {{ t_http_code ***REMOVED******REMOVED***
             <ul>
-            ***REMOVED***% if t_email_sent == "True" %***REMOVED***
+            ***REMOVED***% if t_email_sent == 1 %***REMOVED***
                     Error successfully sent to system administrator
             ***REMOVED***% else %***REMOVED***
                     Error message not sent successfully
@@ -51,8 +55,10 @@
 
         <ul>
             Site Status:
-        ***REMOVED***% if w_http_code == 200 %***REMOVED***
+        ***REMOVED***% if t_http_code == 200 %***REMOVED***
                 Online!
+        ***REMOVED***% else %***REMOVED***
+                Offline:  Error Code {{ w_http_code ***REMOVED******REMOVED***
         ***REMOVED***% endif %***REMOVED***
         </ul>
 
@@ -62,7 +68,7 @@
         ***REMOVED***% else %***REMOVED***
                 Offline - Error Code {{ w_http_code ***REMOVED******REMOVED***
             <ul>
-            ***REMOVED***% if w_email_sent == "True" %***REMOVED***
+            ***REMOVED***% if w_email_sent == 1 %***REMOVED***
                     Error successfully sent to system administrator
             ***REMOVED***% else %***REMOVED***
                     Error message not sent successfully
