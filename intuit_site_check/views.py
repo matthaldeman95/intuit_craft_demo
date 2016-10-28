@@ -186,8 +186,6 @@ def filter_start_end_datetime(data_set, start, end***REMOVED***:
 
     return filtered_data
 
-<<<<<<< HEAD
-=======
 def error_code_testpage(request***REMOVED***:
     template = loader.get_template('intuit_site_check/dashboard.html'***REMOVED***
 
@@ -247,4 +245,3 @@ def error_code_testpage(request***REMOVED***:
 ***REMOVED***
 
     return HttpResponse(template.render(context, request***REMOVED******REMOVED***
->>>>>>> ad4b288e12c2b7c12b5f3e12c46914c820cabeab

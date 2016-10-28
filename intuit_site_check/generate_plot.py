@@ -16,12 +16,7 @@ def generate_plot(data, size, data_range***REMOVED***:
     y = [***REMOVED***
     for data in data:
         x.append(data.timestamp***REMOVED***
-<<<<<<< HEAD
         y.append(float(data.load_time***REMOVED******REMOVED***
-=======
-        print type(data.timestamp***REMOVED***
-        y.append(data.load_time***REMOVED***
->>>>>>> ad4b288e12c2b7c12b5f3e12c46914c820cabeab
 
     avg = mean(y***REMOVED***
     avg = float(round(avg, 3***REMOVED******REMOVED***
