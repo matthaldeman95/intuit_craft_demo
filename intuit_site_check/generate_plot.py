@@ -11,6 +11,8 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     :param data_range   Selected timestamp range of data in integer form
     :return:        Interactive mpld3 plot
     ***REMOVED***
+
+
     # Load data
     x = [***REMOVED***
     y = [***REMOVED***
@@ -23,11 +25,12 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     avg = float(round(avg, 3***REMOVED******REMOVED***
     avg_text = "Average: " + str(avg***REMOVED***
 
+    figsize = [(6, 4.5***REMOVED***,(8, 6***REMOVED******REMOVED***
+
+    print size, figsize[size***REMOVED***
+
     # Control size of output plot
-    if size == 0:
-        mpl_figure = plt.figure(1, figsize=(8, 6***REMOVED******REMOVED***
-    else:
-        mpl_figure = plt.figure(1, figsize=(8, 5***REMOVED******REMOVED***
+    mpl_figure = plt.figure(figsize=figsize[size***REMOVED******REMOVED***
 
     title = "Page Load Times: "
 

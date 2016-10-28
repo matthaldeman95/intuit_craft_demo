@@ -1,7 +1,12 @@
 import smtplib
+from sys import platform
 
 username = 'matthaldeman95@gmail.com'
-with open('/home/matthew/Documents/priv/pd.txt'***REMOVED*** as pdfile:
+if platform == "darwin":
+    path = '/Users/Matt/Documents/priv/pd.txt'
+elif platform == "linux2":
+    path = '/home/matthew/Documents/priv/pd.txt'
+with open(path***REMOVED*** as pdfile:
     password = pdfile.read(***REMOVED***
 
 
