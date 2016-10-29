@@ -27,10 +27,6 @@ def filter_start_end_datetime(data_set, start, end***REMOVED***:
     :return:            Filtered data
     ***REMOVED***
 
-    # Mask to create datetime object from string
-    start = datetime.datetime.strptime(str(start***REMOVED***, '%m/%d/%Y %I:%M %p'***REMOVED***
-    end = datetime.datetime.strptime(str(end***REMOVED***, '%m/%d/%Y %I:%M %p'***REMOVED***
-
     # Add timezones to timezone-naive data
     start = timezone.make_aware(start***REMOVED***
     end = timezone.make_aware(end***REMOVED***
@@ -41,3 +37,4 @@ def filter_start_end_datetime(data_set, start, end***REMOVED***:
             filtered_data.append(data***REMOVED***
 
     return filtered_data
+

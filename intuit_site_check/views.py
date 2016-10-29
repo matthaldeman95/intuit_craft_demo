@@ -97,6 +97,42 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
     start_date_time = request.POST.get('start_date_time'***REMOVED***
     end_date_time = request.POST.get('end_date_time'***REMOVED***
 
+    # Perform checks to make sure time range is valid
+    # TODO Make this a function in the filters file
+
+    valid_time_range = True
+    invalid_range_message = ""
+
+    if start_date_time:
+
+        # If start time filled in but end is left blank:
+        if not end_date_time:
+            data_range = 3
+            valid_time_range = False
+            invalid_range_message = "Missing end date/time"
+
+        # Create valid datetime objects using mask, if invalid, incorrect entry format
+        else:
+            ***REMOVED***
+                start_date_time = datetime.datetime.strptime(str(start_date_time***REMOVED***, '%m/%d/%Y %I:%M %p'***REMOVED***
+                end_date_time = datetime.datetime.strptime(str(end_date_time***REMOVED***, '%m/%d/%Y %I:%M %p'***REMOVED***
+
+                # Check to make sure that start comes before end
+                if start_date_time >= end_date_time:
+                    data_range = 3
+                    valid_time_range = False
+                    invalid_range_message = "End date cannot be before start"
+            except ValueError:
+                data_range = 3
+                valid_time_range = False
+                invalid_range_message ="Incorrect entry format:  Use format 10/29/2016 7:18 PM"
+    # End date is filled in but start is left empty
+    elif end_date_time and not start_date_time:
+        data_range = 3
+        valid_time_range = False
+        invalid_range_message = "Missing start date/time"
+
+
     # If a radio box was selected, use that
     if data_range:
         data_range = int(data_range***REMOVED***
@@ -122,7 +158,6 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
     all_data = DataPoint.objects.filter(website=s***REMOVED***.order_by('-timestamp'***REMOVED***
 
     data_range_text = ""
-
     if data_range == 5:
         requested_data = all_data
     elif data_range != -1:
@@ -159,6 +194,8 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
         'plot': plot,
         'radio_options': radio_options,
         'all_data': all_data,
-        'table': table
+        'table': table,
+        'valid_time_range': int(valid_time_range***REMOVED***,
+        'invalid_range_message': invalid_range_message
 ***REMOVED***
     return HttpResponse(template.render(context, request***REMOVED******REMOVED***
