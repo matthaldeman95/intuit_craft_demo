@@ -16,6 +16,8 @@ Features:
 Dependencies:
 
 python 2.7
+
+
 pip
 
 matplotlib
@@ -36,14 +38,14 @@ virtualenv
 
             $ sudo pip install virtualenv
 
-All other dependencies should be handled by pip later in the process.
+All other dependencies should be handled by the requirements.txt file.
 
-Clone or download this repository, and cd into that directory.  Create a virtual environment and enter it:
+Clone or download this project, and cd into that directory.  Create a virtual environment and enter it:
 
             $ virtualenv venv
             $ source venv/bin/activate
 
-Download all of the requirements:
+Download and install all of the requirements:
 
             $ sudo pip install -r requirements.txt
 
