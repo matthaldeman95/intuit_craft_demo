@@ -76,3 +76,5 @@ pydoc (***REMOVED*** {
 if [ -n "${BASH-***REMOVED***" ***REMOVED*** || [ -n "${ZSH_VERSION-***REMOVED***" ***REMOVED*** ; then
     hash -r 2>/dev/null
 fi
+
+SECRET_KEY='***REMOVED***=1_7g(si(v_fu8a#r%*^b_a$4slo@***REMOVED***9#y1&x!9ruw*e_53yem'

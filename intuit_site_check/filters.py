@@ -1,5 +1,4 @@
 from django.utils import timezone
-import datetime
 
 
 def filter_timezone_range(data_set, td***REMOVED***:
@@ -37,4 +36,3 @@ def filter_start_end_datetime(data_set, start, end***REMOVED***:
             filtered_data.append(data***REMOVED***
 
     return filtered_data
-

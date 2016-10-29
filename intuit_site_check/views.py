@@ -12,7 +12,7 @@ from filters import filter_start_end_datetime, filter_timezone_range
 def dashboard(request***REMOVED***:
     ***REMOVED***
     Main dashboard home page.  Two columns for two websites.  Displays site status, load time,
-        any error messages, interactive pyplot and radio boxes for data visualization
+        any error messages, interactive pyplot, django_tables.  Last hour of data
     ***REMOVED***
 
     template = loader.get_template('intuit_site_check/dashboard.html'***REMOVED***
@@ -23,8 +23,8 @@ def dashboard(request***REMOVED***:
     s = WebSite.objects.filter(site_id="turbotax"***REMOVED***[0***REMOVED***
     t_id = s.site_id
     t_http_code, t_load_time, t_email_sent = site_check.site_check(s***REMOVED***
-    dp = DataPoint(website=s,timestamp=current_time,status_code=t_http_code,
-              load_time=t_load_time***REMOVED***
+    dp = DataPoint(website=s, timestamp=current_time, status_code=t_http_code,
+                   load_time=t_load_time***REMOVED***
     dp.save(***REMOVED***
 
     s = WebSite.objects.filter(site_id="wikipedia"***REMOVED***[0***REMOVED***
@@ -44,11 +44,11 @@ def dashboard(request***REMOVED***:
     w_latest_data = filter_timezone_range(w_all_data, time_delta***REMOVED***
 
     # Create django_tables of data, add pagination
+    # TODO Fix pagination for two tables on same page (changing page on 1 changes both***REMOVED***
     t_table = DataPointTable(t_latest_data***REMOVED***
-    #t_table.paginate(page=request.GET.get('page', 1***REMOVED***, per_page=10***REMOVED***
+    # t_table.paginate(page=request.GET.get('page', 1***REMOVED***, per_page=10***REMOVED***
     w_table = DataPointTable(w_latest_data***REMOVED***
-    #w_table.paginate(page=request.GET.get('page', 1***REMOVED***, per_page=10***REMOVED***
-
+    # w_table.paginate(page=request.GET.get('page', 1***REMOVED***, per_page=10***REMOVED***
 
     # Create mpld3 plots of data
     t_plot = generate_plot.generate_plot(t_latest_data, 0, 3***REMOVED***
@@ -99,7 +99,6 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
 
     # Perform checks to make sure time range is valid
     # TODO Make this a function in the filters file
-
     valid_time_range = True
     invalid_range_message = ""
 
@@ -125,13 +124,12 @@ def detail_page(request, site_id, data_range=3***REMOVED***:
             except ValueError:
                 data_range = 3
                 valid_time_range = False
-                invalid_range_message ="Incorrect entry format:  Use format 10/29/2016 7:18 PM"
+                invalid_range_message = "Incorrect entry format:  Use format 10/29/2016 7:18 PM"
     # End date is filled in but start is left empty
     elif end_date_time and not start_date_time:
         data_range = 3
         valid_time_range = False
         invalid_range_message = "Missing start date/time"
-
 
     # If a radio box was selected, use that
     if data_range:

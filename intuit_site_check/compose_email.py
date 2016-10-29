@@ -7,8 +7,8 @@ username = 'matthaldeman95@gmail.com'
         path = '/Users/Matt/Documents/priv/pd.txt'
     elif platform == "linux2":
         path = '/home/matthew/Documents/priv/pd.txt'
-    with open(path***REMOVED*** as pdfile:
-        password = pdfile.read(***REMOVED***
+    with open(path***REMOVED*** as pd_file:
+        password = pd_file.read(***REMOVED***
 ***REMOVED***
     password = "filler password"
 

@@ -10,9 +10,9 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     :param data:    Site data
     :param size:    Desired size of plot; 0 for small, 1 for large
     :param data_range   Selected timestamp range of data in integer form
+    :param user_selected:   Text indicating user selected time range (for title of plot***REMOVED***
     :return:        Interactive mpld3 plot
     ***REMOVED***
-
 
     # Load data
     x = [***REMOVED***
@@ -27,7 +27,7 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     avg = float(round(avg, 3***REMOVED******REMOVED***
     avg_text = "Average: " + str(avg***REMOVED***
 
-    figsize = [(6, 4.5***REMOVED***,(8, 6***REMOVED******REMOVED***
+    figsize = [(6, 4.5***REMOVED***, (8, 6***REMOVED******REMOVED***
 
     # Control size of output plot
     mpl_figure = plt.figure(figsize=figsize[size***REMOVED******REMOVED***
