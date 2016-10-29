@@ -15,10 +15,26 @@ Features:
 
 Dependencies:
 
+python 2.7
 pip
+
 matplotlib
-django_tables2
+
+    On Linux:
+
+            $ sudo apt-get install python-matplotlib
+
+    On Mac:
+
+            $ sudo pip install matplotlib
+
+django_tables2 - Doesn't seem to play nicely with the later requirements installation
+
+            $ sudo pip install django_tables2
+
 virtualenv
+
+            $ sudo pip install virtualenv
 
 All other dependencies should be handled by pip later in the process.
 
