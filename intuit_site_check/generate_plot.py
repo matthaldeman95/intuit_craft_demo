@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import mpld3
 from numpy import mean
+import datetime
 
 
 def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
@@ -17,7 +18,8 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     x = [***REMOVED***
     y = [***REMOVED***
     for data in data:
-        x.append(data.timestamp***REMOVED***
+        time_stamp = data.timestamp - datetime.timedelta(hours=7***REMOVED***
+        x.append(time_stamp***REMOVED***
         y.append(float(data.load_time***REMOVED******REMOVED***
 
     # Average of data
@@ -26,8 +28,6 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     avg_text = "Average: " + str(avg***REMOVED***
 
     figsize = [(6, 4.5***REMOVED***,(8, 6***REMOVED******REMOVED***
-
-    print size, figsize[size***REMOVED***
 
     # Control size of output plot
     mpl_figure = plt.figure(figsize=figsize[size***REMOVED******REMOVED***
