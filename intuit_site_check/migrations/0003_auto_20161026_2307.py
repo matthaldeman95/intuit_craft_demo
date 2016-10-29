@@ -5,16 +5,16 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 
 
-class Migration(migrations.Migration***REMOVED***:
+class Migration(migrations.Migration):
 
     dependencies = [
-        ('intuit_site_check', '0002_website_site_id'***REMOVED***,
-    ***REMOVED***
+        ('intuit_site_check', '0002_website_site_id'),
+    ]
 
     operations = [
         migrations.AlterField(
             model_name='datapoint',
             name='timestamp',
-            field=models.DateTimeField(***REMOVED***,
-        ***REMOVED***,
-    ***REMOVED***
+            field=models.DateTimeField(),
+        ),
+    ]

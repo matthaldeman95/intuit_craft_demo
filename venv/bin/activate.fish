@@ -1,4 +1,4 @@
-# This file must be used using `. bin/activate.fish` *within a running fish ( http://fishshell.com ***REMOVED*** session*.
+# This file must be used using `. bin/activate.fish` *within a running fish ( http://fishshell.com ) session*.
 # Do not run it directly.
 
 function deactivate -d 'Exit virtualenv mode and return to the normal environment.'
@@ -26,7 +26,7 @@ function deactivate -d 'Exit virtualenv mode and return to the normal environmen
 
     set -e VIRTUAL_ENV
 
-    if test "$argv[1***REMOVED***" != 'nondestructive'
+    if test "$argv[1]" != 'nondestructive'
         # Self-destruct!
         functions -e pydoc
         functions -e deactivate
@@ -62,9 +62,9 @@ if test -z "$VIRTUAL_ENV_DISABLE_PROMPT"
         # Prompt override provided?
         # If not, just prepend the environment name.
         if test -n ""
-            printf '%s%s' "" (set_color normal***REMOVED***
+            printf '%s%s' "" (set_color normal)
         else
-            printf '%s(%s%s%s***REMOVED*** ' (set_color normal***REMOVED*** (set_color -o white***REMOVED*** (basename "$VIRTUAL_ENV"***REMOVED*** (set_color normal***REMOVED***
+            printf '%s(%s%s%s) ' (set_color normal) (set_color -o white) (basename "$VIRTUAL_ENV") (set_color normal)
         end
 
         # Restore the original $status

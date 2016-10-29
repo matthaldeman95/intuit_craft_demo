@@ -1,8 +1,8 @@
 <meta http-equiv="refresh" content="60" />
-{% load render_table from django_tables2 %***REMOVED***
-{% load static %***REMOVED***
-<link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %***REMOVED***" />
-<link rel="stylesheet" type="text/css" href="{% static 'intuit_site_check/style.css' %***REMOVED***" />
+{% load render_table from django_tables2 %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'intuit_site_check/style.css' %}" />
 
 
 <!doctype html>
@@ -10,7 +10,7 @@
 
 <header>
     <center><h1>
-    ***REMOVED***{ site_name ***REMOVED******REMOVED***
+        {{ site_name }}
     </h1></center>
 </header>
 
@@ -19,33 +19,33 @@
 <div style="float:left; width: 40%">
     <h2>
         Site Status:
-    ***REMOVED***% if http_code == 200 %***REMOVED***
+        {% if http_code == 200 %}
             Online!
-    ***REMOVED***% else %***REMOVED***
-            Offline - Error Code {{ http_code ***REMOVED******REMOVED***
+        {% else %}
+            Offline - Error Code {{ http_code }}
         <ul>
-            ***REMOVED***% if email_sent == 1 %***REMOVED***
+                {% if email_sent == 1 %}
                     Error successfully sent to system administrator
-            ***REMOVED***% else %***REMOVED***
+                {% else %}
                     Error message not sent successfully
-            ***REMOVED***% endif %***REMOVED***
+                {% endif %}
         </ul>
-    ***REMOVED***% endif %***REMOVED***
+        {% endif %}
 
     </h2>
 
     <h2>
-        Page Load Time:  {{ load_time ***REMOVED******REMOVED*** s
+        Page Load Time:  {{ load_time }} s
     </h2>
 
-    <form action="/dashboard/{{ site_id ***REMOVED******REMOVED***/" method="post">
-    ***REMOVED***% csrf_token %***REMOVED***
+    <form action="/dashboard/{{ site_id }}/" method="post">
+        {% csrf_token %}
         <div style="float: left; width: 40%">
-    ***REMOVED***% for option in radio_options %***REMOVED***
-            <input type="radio" name="choice" id="choice {{ forloop.counter ***REMOVED******REMOVED***"
-                   value="{{ forloop.counter ***REMOVED******REMOVED***"/>
-            <label for="choice{{ forloop.counter ***REMOVED******REMOVED***">{{option***REMOVED******REMOVED***</label><br />
-    ***REMOVED***% endfor %***REMOVED***
+        {% for option in radio_options %}
+            <input type="radio" name="choice" id="choice {{ forloop.counter }}"
+                   value="{{ forloop.counter }}"/>
+            <label for="choice{{ forloop.counter }}">{{option}}</label><br />
+        {% endfor %}
             <div align="center">
                 <input type="submit" value="Submit" />
             </div>
@@ -68,17 +68,17 @@
 
     </form>
 
-***REMOVED***% if valid_time_range == 0 %***REMOVED***
+    {% if valid_time_range == 0 %}
         <div>
             Invalid time range
-        ***REMOVED***{ invalid_range_message ***REMOVED******REMOVED***
+            {{ invalid_range_message }}
         </div>
-***REMOVED***% endif %***REMOVED***
+    {% endif %}
 
 
     <div class="table-container" style="height: 600px; overflow: auto">
          <table class="paleblue">
-             ***REMOVED***% render_table table %***REMOVED***
+                 {% render_table table %}
          </table>
     </div>
 
@@ -86,7 +86,7 @@
 
 <div style="float:left;">
     <div class="plot-container" style="height: 500px" align="center">
-    ***REMOVED***{ plot|safe ***REMOVED******REMOVED***
+        {{ plot|safe }}
 
     </div>
 

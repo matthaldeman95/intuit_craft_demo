@@ -1,106 +1,106 @@
-(function(***REMOVED*** {
+(function() {
     'use strict';
     var timeParsePatterns = [
         // 9
-    ***REMOVED***
-            re: /^\d{1,2***REMOVED***$/i,
-            handler: function(bits***REMOVED*** {
-                if (bits[0***REMOVED***.length === 1***REMOVED*** {
-                    return '0' + bits[0***REMOVED*** + ':00';
-            ***REMOVED*** else {
-                    return bits[0***REMOVED*** + ':00';
-            ***REMOVED***
-        ***REMOVED***
-***REMOVED***
+        {
+            re: /^\d{1,2}$/i,
+            handler: function(bits) {
+                if (bits[0].length === 1) {
+                    return '0' + bits[0] + ':00';
+                } else {
+                    return bits[0] + ':00';
+                }
+            }
+        },
         // 13:00
-    ***REMOVED***
-            re: /^\d{2***REMOVED***[:.***REMOVED***\d{2***REMOVED***$/i,
-            handler: function(bits***REMOVED*** {
-                return bits[0***REMOVED***.replace('.', ':'***REMOVED***;
-        ***REMOVED***
-***REMOVED***
+        {
+            re: /^\d{2}[:.]\d{2}$/i,
+            handler: function(bits) {
+                return bits[0].replace('.', ':');
+            }
+        },
         // 9:00
-    ***REMOVED***
-            re: /^\d[:.***REMOVED***\d{2***REMOVED***$/i,
-            handler: function(bits***REMOVED*** {
-                return '0' + bits[0***REMOVED***.replace('.', ':'***REMOVED***;
-        ***REMOVED***
-***REMOVED***
+        {
+            re: /^\d[:.]\d{2}$/i,
+            handler: function(bits) {
+                return '0' + bits[0].replace('.', ':');
+            }
+        },
         // 3 am / 3 a.m. / 3am
-    ***REMOVED***
-            re: /^(\d+***REMOVED***\s*([ap***REMOVED******REMOVED***(?:.?m.?***REMOVED***?$/i,
-            handler: function(bits***REMOVED*** {
-                var hour = parseInt(bits[1***REMOVED******REMOVED***;
-                if (hour === 12***REMOVED*** {
+        {
+            re: /^(\d+)\s*([ap])(?:.?m.?)?$/i,
+            handler: function(bits) {
+                var hour = parseInt(bits[1]);
+                if (hour === 12) {
                     hour = 0;
-            ***REMOVED***
-                if (bits[2***REMOVED***.toLowerCase(***REMOVED*** === 'p'***REMOVED*** {
-                    if (hour === 12***REMOVED*** {
+                }
+                if (bits[2].toLowerCase() === 'p') {
+                    if (hour === 12) {
                         hour = 0;
-                ***REMOVED***
-                    return (hour + 12***REMOVED*** + ':00';
-            ***REMOVED*** else {
-                    if (hour < 10***REMOVED*** {
+                    }
+                    return (hour + 12) + ':00';
+                } else {
+                    if (hour < 10) {
                         return '0' + hour + ':00';
-                ***REMOVED*** else {
+                    } else {
                         return hour + ':00';
-                ***REMOVED***
-            ***REMOVED***
-        ***REMOVED***
-***REMOVED***
+                    }
+                }
+            }
+        },
         // 3.30 am / 3:15 a.m. / 3.00am
-    ***REMOVED***
-            re: /^(\d+***REMOVED***[.:***REMOVED***(\d{2***REMOVED******REMOVED***\s*([ap***REMOVED******REMOVED***.?m.?$/i,
-            handler: function(bits***REMOVED*** {
-                var hour = parseInt(bits[1***REMOVED******REMOVED***;
-                var mins = parseInt(bits[2***REMOVED******REMOVED***;
-                if (mins < 10***REMOVED*** {
+        {
+            re: /^(\d+)[.:](\d{2})\s*([ap]).?m.?$/i,
+            handler: function(bits) {
+                var hour = parseInt(bits[1]);
+                var mins = parseInt(bits[2]);
+                if (mins < 10) {
                     mins = '0' + mins;
-            ***REMOVED***
-                if (hour === 12***REMOVED*** {
+                }
+                if (hour === 12) {
                     hour = 0;
-            ***REMOVED***
-                if (bits[3***REMOVED***.toLowerCase(***REMOVED*** === 'p'***REMOVED*** {
-                    if (hour === 12***REMOVED*** {
+                }
+                if (bits[3].toLowerCase() === 'p') {
+                    if (hour === 12) {
                         hour = 0;
-                ***REMOVED***
-                    return (hour + 12***REMOVED*** + ':' + mins;
-            ***REMOVED*** else {
-                    if (hour < 10***REMOVED*** {
+                    }
+                    return (hour + 12) + ':' + mins;
+                } else {
+                    if (hour < 10) {
                         return '0' + hour + ':' + mins;
-                ***REMOVED*** else {
+                    } else {
                         return hour + ':' + mins;
-                ***REMOVED***
-            ***REMOVED***
-        ***REMOVED***
-***REMOVED***
+                    }
+                }
+            }
+        },
         // noon
-    ***REMOVED***
+        {
             re: /^no/i,
-            handler: function(bits***REMOVED*** {
+            handler: function(bits) {
                 return '12:00';
-        ***REMOVED***
-***REMOVED***
+            }
+        },
         // midnight
-    ***REMOVED***
+        {
             re: /^mid/i,
-            handler: function(bits***REMOVED*** {
+            handler: function(bits) {
                 return '00:00';
-        ***REMOVED***
-    ***REMOVED***
-    ***REMOVED***;
+            }
+        }
+    ];
 
-    function parseTimeString(s***REMOVED*** {
-        for (var i = 0; i < timeParsePatterns.length; i++***REMOVED*** {
-            var re = timeParsePatterns[i***REMOVED***.re;
-            var handler = timeParsePatterns[i***REMOVED***.handler;
-            var bits = re.exec(s***REMOVED***;
-            if (bits***REMOVED*** {
-                return handler(bits***REMOVED***;
-        ***REMOVED***
-    ***REMOVED***
+    function parseTimeString(s) {
+        for (var i = 0; i < timeParsePatterns.length; i++) {
+            var re = timeParsePatterns[i].re;
+            var handler = timeParsePatterns[i].handler;
+            var bits = re.exec(s);
+            if (bits) {
+                return handler(bits);
+            }
+        }
         return s;
-***REMOVED***
+    }
 
     window.parseTimeString = parseTimeString;
-***REMOVED******REMOVED***(***REMOVED***;
+})();

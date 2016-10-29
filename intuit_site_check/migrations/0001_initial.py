@@ -6,34 +6,34 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-class Migration(migrations.Migration***REMOVED***:
+class Migration(migrations.Migration):
 
     initial = True
 
     dependencies = [
-    ***REMOVED***
+    ]
 
     operations = [
         migrations.CreateModel(
             name='DataPoint',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'***REMOVED******REMOVED***,
-                ('timestamp', models.DateTimeField(verbose_name='data timestamp'***REMOVED******REMOVED***,
-                ('status_code', models.IntegerField(***REMOVED******REMOVED***,
-                ('load_time', models.DecimalField(decimal_places=5, max_digits=10***REMOVED******REMOVED***,
-            ***REMOVED***,
-        ***REMOVED***,
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('timestamp', models.DateTimeField(verbose_name='data timestamp')),
+                ('status_code', models.IntegerField()),
+                ('load_time', models.DecimalField(decimal_places=5, max_digits=10)),
+            ],
+        ),
         migrations.CreateModel(
             name='WebSite',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'***REMOVED******REMOVED***,
-                ('site_name', models.CharField(max_length=25***REMOVED******REMOVED***,
-                ('site_url', models.URLField(***REMOVED******REMOVED***,
-            ***REMOVED***,
-        ***REMOVED***,
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('site_name', models.CharField(max_length=25)),
+                ('site_url', models.URLField()),
+            ],
+        ),
         migrations.AddField(
             model_name='datapoint',
             name='website',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='intuit_site_check.WebSite'***REMOVED***,
-        ***REMOVED***,
-    ***REMOVED***
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='intuit_site_check.WebSite'),
+        ),
+    ]

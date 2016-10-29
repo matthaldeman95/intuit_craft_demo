@@ -3,7 +3,7 @@
 
 /*!
  * XRegExp v2.0.0
- * (c***REMOVED*** 2007-2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2007-2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  */
 
@@ -12,14 +12,14 @@
  * flags, and methods beyond what browsers support natively. XRegExp is also a regex utility belt
  * with tools to make your client-side grepping simpler and more powerful, while freeing you from
  * worrying about pesky cross-browser inconsistencies and the dubious `lastIndex` property. See
- * XRegExp's documentation (http://xregexp.com/***REMOVED*** for more details.
+ * XRegExp's documentation (http://xregexp.com/) for more details.
  * @module xregexp
  * @requires N/A
  */
 var XRegExp;
 
 // Avoid running twice; that would reset tokens and could break references to native globals
-XRegExp = XRegExp || (function (undef***REMOVED*** {
+XRegExp = XRegExp || (function (undef) {
     "use strict";
 
 /*--------------------------------------
@@ -34,25 +34,25 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
         features = {
             natives: false,
             extensibility: false
-***REMOVED***
+        },
 
-// Store native methods to use and restore ("native" is an ES3 reserved keyword***REMOVED***
+// Store native methods to use and restore ("native" is an ES3 reserved keyword)
         nativ = {
             exec: RegExp.prototype.exec,
             test: RegExp.prototype.test,
             match: String.prototype.match,
             replace: String.prototype.replace,
             split: String.prototype.split
-***REMOVED***
+        },
 
 // Storage for fixed/extended native methods
-        fixed = {***REMOVED***,
+        fixed = {},
 
 // Storage for cached regexes
-        cache = {***REMOVED***,
+        cache = {},
 
 // Storage for addon tokens
-        tokens = [***REMOVED***,
+        tokens = [],
 
 // Token scopes
         defaultScope = "default",
@@ -60,32 +60,32 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
 
 // Regexes that match native regex syntax
         nativeTokens = {
-            // Any native multicharacter token in default scope (includes octals, excludes character classes***REMOVED***
-            "default": /^(?:\\(?:0(?:[0-3***REMOVED***[0-7***REMOVED***{0,2***REMOVED***|[4-7***REMOVED***[0-7***REMOVED***?***REMOVED***?|[1-9***REMOVED***\d*|x[\dA-Fa-f***REMOVED***{2***REMOVED***|u[\dA-Fa-f***REMOVED***{4***REMOVED***|c[A-Za-z***REMOVED***|[\s\S***REMOVED******REMOVED***|\(\?[:=!***REMOVED***|[?*+***REMOVED***\?|{\d+(?:,\d****REMOVED***?***REMOVED***\??***REMOVED***/,
-            // Any native multicharacter token in character class scope (includes octals***REMOVED***
-            "class": /^(?:\\(?:[0-3***REMOVED***[0-7***REMOVED***{0,2***REMOVED***|[4-7***REMOVED***[0-7***REMOVED***?|x[\dA-Fa-f***REMOVED***{2***REMOVED***|u[\dA-Fa-f***REMOVED***{4***REMOVED***|c[A-Za-z***REMOVED***|[\s\S***REMOVED******REMOVED******REMOVED***/
-***REMOVED***
+            // Any native multicharacter token in default scope (includes octals, excludes character classes)
+            "default": /^(?:\\(?:0(?:[0-3][0-7]{0,2}|[4-7][0-7]?)?|[1-9]\d*|x[\dA-Fa-f]{2}|u[\dA-Fa-f]{4}|c[A-Za-z]|[\s\S])|\(\?[:=!]|[?*+]\?|{\d+(?:,\d*)?}\??)/,
+            // Any native multicharacter token in character class scope (includes octals)
+            "class": /^(?:\\(?:[0-3][0-7]{0,2}|[4-7][0-7]?|x[\dA-Fa-f]{2}|u[\dA-Fa-f]{4}|c[A-Za-z]|[\s\S]))/
+        },
 
 // Any backreference in replacement strings
-        replacementToken = /\$(?:{([\w$***REMOVED***+***REMOVED******REMOVED***|(\d\d?|[\s\S***REMOVED******REMOVED******REMOVED***/g,
+        replacementToken = /\$(?:{([\w$]+)}|(\d\d?|[\s\S]))/g,
 
 // Any character with a later instance in the string
-        duplicateFlags = /([\s\S***REMOVED******REMOVED***(?=[\s\S***REMOVED****\1***REMOVED***/g,
+        duplicateFlags = /([\s\S])(?=[\s\S]*\1)/g,
 
 // Any greedy/lazy quantifier
-        quantifier = /^(?:[?*+***REMOVED***|{\d+(?:,\d****REMOVED***?***REMOVED******REMOVED***\??/,
+        quantifier = /^(?:[?*+]|{\d+(?:,\d*)?})\??/,
 
 // Check for correct `exec` handling of nonparticipating capturing groups
-        compliantExecNpcg = nativ.exec.call(/(***REMOVED***??/, ""***REMOVED***[1***REMOVED*** === undef,
+        compliantExecNpcg = nativ.exec.call(/()??/, "")[1] === undef,
 
-// Check for flag y support (Firefox 3+***REMOVED***
+// Check for flag y support (Firefox 3+)
         hasNativeY = RegExp.prototype.sticky !== undef,
 
 // Used to kill infinite recursion during XRegExp construction
         isInsideConstructor = false,
 
 // Storage for known flags, including addon flags
-        registeredFlags = "gim" + (hasNativeY ? "y" : ""***REMOVED***;
+        registeredFlags = "gim" + (hasNativeY ? "y" : "");
 
 /*--------------------------------------
  *  Private helper functions
@@ -94,129 +94,129 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
 /**
  * Attaches XRegExp.prototype properties and named capture supporting data to a regex object.
  * @private
- * @param {RegExp***REMOVED*** regex Regex to augment.
- * @param {Array***REMOVED*** captureNames Array with capture names, or null.
- * @param {Boolean***REMOVED*** [isNative***REMOVED*** Whether the regex was created by `RegExp` rather than `XRegExp`.
- * @returns {RegExp***REMOVED*** Augmented regex.
+ * @param {RegExp} regex Regex to augment.
+ * @param {Array} captureNames Array with capture names, or null.
+ * @param {Boolean} [isNative] Whether the regex was created by `RegExp` rather than `XRegExp`.
+ * @returns {RegExp} Augmented regex.
  */
-    function augment(regex, captureNames, isNative***REMOVED*** {
+    function augment(regex, captureNames, isNative) {
         var p;
         // Can't auto-inherit these since the XRegExp constructor returns a nonprimitive value
-        for (p in self.prototype***REMOVED*** {
-            if (self.prototype.hasOwnProperty(p***REMOVED******REMOVED*** {
-                regex[p***REMOVED*** = self.prototype[p***REMOVED***;
-        ***REMOVED***
-    ***REMOVED***
-        regex.xregexp = {captureNames: captureNames, isNative: !!isNative***REMOVED***;
+        for (p in self.prototype) {
+            if (self.prototype.hasOwnProperty(p)) {
+                regex[p] = self.prototype[p];
+            }
+        }
+        regex.xregexp = {captureNames: captureNames, isNative: !!isNative};
         return regex;
-***REMOVED***
+    }
 
 /**
  * Returns native `RegExp` flags used by a regex object.
  * @private
- * @param {RegExp***REMOVED*** regex Regex to check.
- * @returns {String***REMOVED*** Native flags in use.
+ * @param {RegExp} regex Regex to check.
+ * @returns {String} Native flags in use.
  */
-    function getNativeFlags(regex***REMOVED*** {
-        //return nativ.exec.call(/\/([a-z***REMOVED*******REMOVED***$/i, String(regex***REMOVED******REMOVED***[1***REMOVED***;
-        return (regex.global     ? "g" : ""***REMOVED*** +
-               (regex.ignoreCase ? "i" : ""***REMOVED*** +
-               (regex.multiline  ? "m" : ""***REMOVED*** +
-               (regex.extended   ? "x" : ""***REMOVED*** + // Proposed for ES6, included in AS3
-               (regex.sticky     ? "y" : ""***REMOVED***; // Proposed for ES6, included in Firefox 3+
-***REMOVED***
+    function getNativeFlags(regex) {
+        //return nativ.exec.call(/\/([a-z]*)$/i, String(regex))[1];
+        return (regex.global     ? "g" : "") +
+               (regex.ignoreCase ? "i" : "") +
+               (regex.multiline  ? "m" : "") +
+               (regex.extended   ? "x" : "") + // Proposed for ES6, included in AS3
+               (regex.sticky     ? "y" : ""); // Proposed for ES6, included in Firefox 3+
+    }
 
 /**
  * Copies a regex object while preserving special properties for named capture and augmenting with
- * `XRegExp.prototype` methods. The copy has a fresh `lastIndex` property (set to zero***REMOVED***. Allows
+ * `XRegExp.prototype` methods. The copy has a fresh `lastIndex` property (set to zero). Allows
  * adding and removing flags while copying the regex.
  * @private
- * @param {RegExp***REMOVED*** regex Regex to copy.
- * @param {String***REMOVED*** [addFlags***REMOVED*** Flags to be added while copying the regex.
- * @param {String***REMOVED*** [removeFlags***REMOVED*** Flags to be removed while copying the regex.
- * @returns {RegExp***REMOVED*** Copy of the provided regex, possibly with modified flags.
+ * @param {RegExp} regex Regex to copy.
+ * @param {String} [addFlags] Flags to be added while copying the regex.
+ * @param {String} [removeFlags] Flags to be removed while copying the regex.
+ * @returns {RegExp} Copy of the provided regex, possibly with modified flags.
  */
-    function copy(regex, addFlags, removeFlags***REMOVED*** {
-        if (!self.isRegExp(regex***REMOVED******REMOVED*** {
-            throw new TypeError("type RegExp expected"***REMOVED***;
-    ***REMOVED***
-        var flags = nativ.replace.call(getNativeFlags(regex***REMOVED*** + (addFlags || ""***REMOVED***, duplicateFlags, ""***REMOVED***;
-        if (removeFlags***REMOVED*** {
+    function copy(regex, addFlags, removeFlags) {
+        if (!self.isRegExp(regex)) {
+            throw new TypeError("type RegExp expected");
+        }
+        var flags = nativ.replace.call(getNativeFlags(regex) + (addFlags || ""), duplicateFlags, "");
+        if (removeFlags) {
             // Would need to escape `removeFlags` if this was public
-            flags = nativ.replace.call(flags, new RegExp("[" + removeFlags + "***REMOVED***+", "g"***REMOVED***, ""***REMOVED***;
-    ***REMOVED***
-        if (regex.xregexp && !regex.xregexp.isNative***REMOVED*** {
-            // Compiling the current (rather than precompilation***REMOVED*** source preserves the effects of nonnative source flags
-            regex = augment(self(regex.source, flags***REMOVED***,
-                            regex.xregexp.captureNames ? regex.xregexp.captureNames.slice(0***REMOVED*** : null***REMOVED***;
-    ***REMOVED*** else {
-            // Augment with `XRegExp.prototype` methods, but use native `RegExp` (avoid searching for special tokens***REMOVED***
-            regex = augment(new RegExp(regex.source, flags***REMOVED***, null, true***REMOVED***;
-    ***REMOVED***
+            flags = nativ.replace.call(flags, new RegExp("[" + removeFlags + "]+", "g"), "");
+        }
+        if (regex.xregexp && !regex.xregexp.isNative) {
+            // Compiling the current (rather than precompilation) source preserves the effects of nonnative source flags
+            regex = augment(self(regex.source, flags),
+                            regex.xregexp.captureNames ? regex.xregexp.captureNames.slice(0) : null);
+        } else {
+            // Augment with `XRegExp.prototype` methods, but use native `RegExp` (avoid searching for special tokens)
+            regex = augment(new RegExp(regex.source, flags), null, true);
+        }
         return regex;
-***REMOVED***
+    }
 
 /*
  * Returns the last index at which a given value can be found in an array, or `-1` if it's not
  * present. The array is searched backwards.
  * @private
- * @param {Array***REMOVED*** array Array to search.
- * @param {****REMOVED*** value Value to locate in the array.
- * @returns {Number***REMOVED*** Last zero-based index at which the item is found, or -1.
+ * @param {Array} array Array to search.
+ * @param {*} value Value to locate in the array.
+ * @returns {Number} Last zero-based index at which the item is found, or -1.
  */
-    function lastIndexOf(array, value***REMOVED*** {
+    function lastIndexOf(array, value) {
         var i = array.length;
-        if (Array.prototype.lastIndexOf***REMOVED*** {
-            return array.lastIndexOf(value***REMOVED***; // Use the native method if available
-    ***REMOVED***
-        while (i--***REMOVED*** {
-            if (array[i***REMOVED*** === value***REMOVED*** {
+        if (Array.prototype.lastIndexOf) {
+            return array.lastIndexOf(value); // Use the native method if available
+        }
+        while (i--) {
+            if (array[i] === value) {
                 return i;
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
         return -1;
-***REMOVED***
+    }
 
 /**
  * Determines whether an object is of the specified type.
  * @private
- * @param {****REMOVED*** value Object to check.
- * @param {String***REMOVED*** type Type to check for, in lowercase.
- * @returns {Boolean***REMOVED*** Whether the object matches the type.
+ * @param {*} value Object to check.
+ * @param {String} type Type to check for, in lowercase.
+ * @returns {Boolean} Whether the object matches the type.
  */
-    function isType(value, type***REMOVED*** {
-        return Object.prototype.toString.call(value***REMOVED***.toLowerCase(***REMOVED*** === "[object " + type + "***REMOVED***";
-***REMOVED***
+    function isType(value, type) {
+        return Object.prototype.toString.call(value).toLowerCase() === "[object " + type + "]";
+    }
 
 /**
  * Prepares an options object from the given value.
  * @private
- * @param {String|Object***REMOVED*** value Value to convert to an options object.
- * @returns {Object***REMOVED*** Options object.
+ * @param {String|Object} value Value to convert to an options object.
+ * @returns {Object} Options object.
  */
-    function prepareOptions(value***REMOVED*** {
-        value = value || {***REMOVED***;
-        if (value === "all" || value.all***REMOVED*** {
-            value = {natives: true, extensibility: true***REMOVED***;
-    ***REMOVED*** else if (isType(value, "string"***REMOVED******REMOVED*** {
-            value = self.forEach(value, /[^\s,***REMOVED***+/, function (m***REMOVED*** {
-                this[m***REMOVED*** = true;
-    ***REMOVED*** {***REMOVED******REMOVED***;
-    ***REMOVED***
+    function prepareOptions(value) {
+        value = value || {};
+        if (value === "all" || value.all) {
+            value = {natives: true, extensibility: true};
+        } else if (isType(value, "string")) {
+            value = self.forEach(value, /[^\s,]+/, function (m) {
+                this[m] = true;
+            }, {});
+        }
         return value;
-***REMOVED***
+    }
 
 /**
  * Runs built-in/custom tokens in reverse insertion order, until a match is found.
  * @private
- * @param {String***REMOVED*** pattern Original pattern from which an XRegExp object is being built.
- * @param {Number***REMOVED*** pos Position to search for tokens within `pattern`.
- * @param {Number***REMOVED*** scope Current regex scope.
- * @param {Object***REMOVED*** context Context object assigned to token handler functions.
- * @returns {Object***REMOVED*** Object with properties `output` (the substitution string returned by the
- *   successful token handler***REMOVED*** and `match` (the token's match array***REMOVED***, or null.
+ * @param {String} pattern Original pattern from which an XRegExp object is being built.
+ * @param {Number} pos Position to search for tokens within `pattern`.
+ * @param {Number} scope Current regex scope.
+ * @param {Object} context Context object assigned to token handler functions.
+ * @returns {Object} Object with properties `output` (the substitution string returned by the
+ *   successful token handler) and `match` (the token's match array), or null.
  */
-    function runTokens(pattern, pos, scope, context***REMOVED*** {
+    function runTokens(pattern, pos, scope, context) {
         var i = tokens.length,
             result = null,
             match,
@@ -225,51 +225,51 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
         isInsideConstructor = true;
         // Must reset `isInsideConstructor`, even if a `trigger` or `handler` throws
         try {
-            while (i--***REMOVED*** { // Run in reverse order
-                t = tokens[i***REMOVED***;
-                if ((t.scope === "all" || t.scope === scope***REMOVED*** && (!t.trigger || t.trigger.call(context***REMOVED******REMOVED******REMOVED*** {
+            while (i--) { // Run in reverse order
+                t = tokens[i];
+                if ((t.scope === "all" || t.scope === scope) && (!t.trigger || t.trigger.call(context))) {
                     t.pattern.lastIndex = pos;
-                    match = fixed.exec.call(t.pattern, pattern***REMOVED***; // Fixed `exec` here allows use of named backreferences, etc.
-                    if (match && match.index === pos***REMOVED*** {
+                    match = fixed.exec.call(t.pattern, pattern); // Fixed `exec` here allows use of named backreferences, etc.
+                    if (match && match.index === pos) {
                         result = {
-                            output: t.handler.call(context, match, scope***REMOVED***,
+                            output: t.handler.call(context, match, scope),
                             match: match
-                    ***REMOVED***;
+                        };
                         break;
-                ***REMOVED***
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED*** catch (err***REMOVED*** {
+                    }
+                }
+            }
+        } catch (err) {
             throw err;
-    ***REMOVED*** finally {
+        } finally {
             isInsideConstructor = false;
-    ***REMOVED***
+        }
         return result;
-***REMOVED***
+    }
 
 /**
  * Enables or disables XRegExp syntax and flag extensibility.
  * @private
- * @param {Boolean***REMOVED*** on `true` to enable; `false` to disable.
+ * @param {Boolean} on `true` to enable; `false` to disable.
  */
-    function setExtensibility(on***REMOVED*** {
-        self.addToken = addToken[on ? "on" : "off"***REMOVED***;
+    function setExtensibility(on) {
+        self.addToken = addToken[on ? "on" : "off"];
         features.extensibility = on;
-***REMOVED***
+    }
 
 /**
  * Enables or disables native method overrides.
  * @private
- * @param {Boolean***REMOVED*** on `true` to enable; `false` to disable.
+ * @param {Boolean} on `true` to enable; `false` to disable.
  */
-    function setNatives(on***REMOVED*** {
-        RegExp.prototype.exec = (on ? fixed : nativ***REMOVED***.exec;
-        RegExp.prototype.test = (on ? fixed : nativ***REMOVED***.test;
-        String.prototype.match = (on ? fixed : nativ***REMOVED***.match;
-        String.prototype.replace = (on ? fixed : nativ***REMOVED***.replace;
-        String.prototype.split = (on ? fixed : nativ***REMOVED***.split;
+    function setNatives(on) {
+        RegExp.prototype.exec = (on ? fixed : nativ).exec;
+        RegExp.prototype.test = (on ? fixed : nativ).test;
+        String.prototype.match = (on ? fixed : nativ).match;
+        String.prototype.replace = (on ? fixed : nativ).replace;
+        String.prototype.split = (on ? fixed : nativ).split;
         features.natives = on;
-***REMOVED***
+    }
 
 /*--------------------------------------
  *  Constructor
@@ -281,104 +281,104 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  * is in fact a native `RegExp` and works with all native methods.
  * @class XRegExp
  * @constructor
- * @param {String|RegExp***REMOVED*** pattern Regex pattern string, or an existing `RegExp` object to copy.
- * @param {String***REMOVED*** [flags***REMOVED*** Any combination of flags:
+ * @param {String|RegExp} pattern Regex pattern string, or an existing `RegExp` object to copy.
+ * @param {String} [flags] Any combination of flags:
  *   <li>`g` - global
  *   <li>`i` - ignore case
  *   <li>`m` - multiline anchors
  *   <li>`n` - explicit capture
- *   <li>`s` - dot matches all (aka singleline***REMOVED***
- *   <li>`x` - free-spacing and line comments (aka extended***REMOVED***
- *   <li>`y` - sticky (Firefox 3+ only***REMOVED***
+ *   <li>`s` - dot matches all (aka singleline)
+ *   <li>`x` - free-spacing and line comments (aka extended)
+ *   <li>`y` - sticky (Firefox 3+ only)
  *   Flags cannot be provided when constructing one `RegExp` from another.
- * @returns {RegExp***REMOVED*** Extended regular expression object.
+ * @returns {RegExp} Extended regular expression object.
  * @example
  *
  * // With named capture and flag x
- * date = XRegExp('(?<year>  [0-9***REMOVED***{4***REMOVED******REMOVED*** -?  # year  \n\
- *                 (?<month> [0-9***REMOVED***{2***REMOVED******REMOVED*** -?  # month \n\
- *                 (?<day>   [0-9***REMOVED***{2***REMOVED******REMOVED***     # day   ', 'x'***REMOVED***;
+ * date = XRegExp('(?<year>  [0-9]{4}) -?  # year  \n\
+ *                 (?<month> [0-9]{2}) -?  # month \n\
+ *                 (?<day>   [0-9]{2})     # day   ', 'x');
  *
  * // Passing a regex object to copy it. The copy maintains special properties for named capture,
  * // is augmented with `XRegExp.prototype` methods, and has a fresh `lastIndex` property (set to
- * // zero***REMOVED***. Native regexes are not recompiled using XRegExp syntax.
- * XRegExp(/regex/***REMOVED***;
+ * // zero). Native regexes are not recompiled using XRegExp syntax.
+ * XRegExp(/regex/);
  */
-    self = function (pattern, flags***REMOVED*** {
-        if (self.isRegExp(pattern***REMOVED******REMOVED*** {
-            if (flags !== undef***REMOVED*** {
-                throw new TypeError("can't supply flags when constructing one RegExp from another"***REMOVED***;
-        ***REMOVED***
-            return copy(pattern***REMOVED***;
-    ***REMOVED***
+    self = function (pattern, flags) {
+        if (self.isRegExp(pattern)) {
+            if (flags !== undef) {
+                throw new TypeError("can't supply flags when constructing one RegExp from another");
+            }
+            return copy(pattern);
+        }
         // Tokens become part of the regex construction process, so protect against infinite recursion
         // when an XRegExp is constructed within a token handler function
-        if (isInsideConstructor***REMOVED*** {
-            throw new Error("can't call the XRegExp constructor within token definition functions"***REMOVED***;
-    ***REMOVED***
+        if (isInsideConstructor) {
+            throw new Error("can't call the XRegExp constructor within token definition functions");
+        }
 
-        var output = [***REMOVED***,
+        var output = [],
             scope = defaultScope,
             tokenContext = {
                 hasNamedCapture: false,
-                captureNames: [***REMOVED***,
-                hasFlag: function (flag***REMOVED*** {
-                    return flags.indexOf(flag***REMOVED*** > -1;
-            ***REMOVED***
-    ***REMOVED***
+                captureNames: [],
+                hasFlag: function (flag) {
+                    return flags.indexOf(flag) > -1;
+                }
+            },
             pos = 0,
             tokenResult,
             match,
             chr;
-        pattern = pattern === undef ? "" : String(pattern***REMOVED***;
-        flags = flags === undef ? "" : String(flags***REMOVED***;
+        pattern = pattern === undef ? "" : String(pattern);
+        flags = flags === undef ? "" : String(flags);
 
-        if (nativ.match.call(flags, duplicateFlags***REMOVED******REMOVED*** { // Don't use test/exec because they would update lastIndex
-            throw new SyntaxError("invalid duplicate regular expression flag"***REMOVED***;
-    ***REMOVED***
-        // Strip/apply leading mode modifier with any combination of flags except g or y: (?imnsx***REMOVED***
-        pattern = nativ.replace.call(pattern, /^\(\?([\w$***REMOVED***+***REMOVED***\***REMOVED***/, function ($0, $1***REMOVED*** {
-            if (nativ.test.call(/[gy***REMOVED***/, $1***REMOVED******REMOVED*** {
-                throw new SyntaxError("can't use flag g or y in mode modifier"***REMOVED***;
-        ***REMOVED***
-            flags = nativ.replace.call(flags + $1, duplicateFlags, ""***REMOVED***;
+        if (nativ.match.call(flags, duplicateFlags)) { // Don't use test/exec because they would update lastIndex
+            throw new SyntaxError("invalid duplicate regular expression flag");
+        }
+        // Strip/apply leading mode modifier with any combination of flags except g or y: (?imnsx)
+        pattern = nativ.replace.call(pattern, /^\(\?([\w$]+)\)/, function ($0, $1) {
+            if (nativ.test.call(/[gy]/, $1)) {
+                throw new SyntaxError("can't use flag g or y in mode modifier");
+            }
+            flags = nativ.replace.call(flags + $1, duplicateFlags, "");
             return "";
-    ***REMOVED******REMOVED***;
-        self.forEach(flags, /[\s\S***REMOVED***/, function (m***REMOVED*** {
-            if (registeredFlags.indexOf(m[0***REMOVED******REMOVED*** < 0***REMOVED*** {
-                throw new SyntaxError("invalid regular expression flag " + m[0***REMOVED******REMOVED***;
-        ***REMOVED***
-    ***REMOVED******REMOVED***;
+        });
+        self.forEach(flags, /[\s\S]/, function (m) {
+            if (registeredFlags.indexOf(m[0]) < 0) {
+                throw new SyntaxError("invalid regular expression flag " + m[0]);
+            }
+        });
 
-        while (pos < pattern.length***REMOVED*** {
+        while (pos < pattern.length) {
             // Check for custom tokens at the current position
-            tokenResult = runTokens(pattern, pos, scope, tokenContext***REMOVED***;
-            if (tokenResult***REMOVED*** {
-                output.push(tokenResult.output***REMOVED***;
-                pos += (tokenResult.match[0***REMOVED***.length || 1***REMOVED***;
-        ***REMOVED*** else {
-                // Check for native tokens (except character classes***REMOVED*** at the current position
-                match = nativ.exec.call(nativeTokens[scope***REMOVED***, pattern.slice(pos***REMOVED******REMOVED***;
-                if (match***REMOVED*** {
-                    output.push(match[0***REMOVED******REMOVED***;
-                    pos += match[0***REMOVED***.length;
-            ***REMOVED*** else {
-                    chr = pattern.charAt(pos***REMOVED***;
-                    if (chr === "["***REMOVED*** {
+            tokenResult = runTokens(pattern, pos, scope, tokenContext);
+            if (tokenResult) {
+                output.push(tokenResult.output);
+                pos += (tokenResult.match[0].length || 1);
+            } else {
+                // Check for native tokens (except character classes) at the current position
+                match = nativ.exec.call(nativeTokens[scope], pattern.slice(pos));
+                if (match) {
+                    output.push(match[0]);
+                    pos += match[0].length;
+                } else {
+                    chr = pattern.charAt(pos);
+                    if (chr === "[") {
                         scope = classScope;
-                ***REMOVED*** else if (chr === "***REMOVED***"***REMOVED*** {
+                    } else if (chr === "]") {
                         scope = defaultScope;
-                ***REMOVED***
+                    }
                     // Advance position by one character
-                    output.push(chr***REMOVED***;
+                    output.push(chr);
                     ++pos;
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                }
+            }
+        }
 
-        return augment(new RegExp(output.join(""***REMOVED***, nativ.replace.call(flags, /[^gimy***REMOVED***+/g, ""***REMOVED******REMOVED***,
-                       tokenContext.hasNamedCapture ? tokenContext.captureNames : null***REMOVED***;
-***REMOVED***;
+        return augment(new RegExp(output.join(""), nativ.replace.call(flags, /[^gimy]+/g, "")),
+                       tokenContext.hasNamedCapture ? tokenContext.captureNames : null);
+    };
 
 /*--------------------------------------
  *  Public methods/properties
@@ -386,91 +386,91 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
 
 // Installed and uninstalled states for `XRegExp.addToken`
     addToken = {
-        on: function (regex, handler, options***REMOVED*** {
-            options = options || {***REMOVED***;
-            if (regex***REMOVED*** {
+        on: function (regex, handler, options) {
+            options = options || {};
+            if (regex) {
                 tokens.push({
-                    pattern: copy(regex, "g" + (hasNativeY ? "y" : ""***REMOVED******REMOVED***,
+                    pattern: copy(regex, "g" + (hasNativeY ? "y" : "")),
                     handler: handler,
                     scope: options.scope || defaultScope,
                     trigger: options.trigger || null
-            ***REMOVED******REMOVED***;
-        ***REMOVED***
+                });
+            }
             // Providing `customFlags` with null `regex` and `handler` allows adding flags that do
             // nothing, but don't throw an error
-            if (options.customFlags***REMOVED*** {
-                registeredFlags = nativ.replace.call(registeredFlags + options.customFlags, duplicateFlags, ""***REMOVED***;
-        ***REMOVED***
-***REMOVED***
-        off: function (***REMOVED*** {
-            throw new Error("extensibility must be installed before using addToken"***REMOVED***;
-    ***REMOVED***
-***REMOVED***;
+            if (options.customFlags) {
+                registeredFlags = nativ.replace.call(registeredFlags + options.customFlags, duplicateFlags, "");
+            }
+        },
+        off: function () {
+            throw new Error("extensibility must be installed before using addToken");
+        }
+    };
 
 /**
  * Extends or changes XRegExp syntax and allows custom flags. This is used internally and can be
- * used to create XRegExp addons. `XRegExp.install('extensibility'***REMOVED***` must be run before calling
+ * used to create XRegExp addons. `XRegExp.install('extensibility')` must be run before calling
  * this function, or an error is thrown. If more than one token can match the same string, the last
  * added wins.
  * @memberOf XRegExp
- * @param {RegExp***REMOVED*** regex Regex object that matches the new token.
- * @param {Function***REMOVED*** handler Function that returns a new pattern string (using native regex syntax***REMOVED***
+ * @param {RegExp} regex Regex object that matches the new token.
+ * @param {Function} handler Function that returns a new pattern string (using native regex syntax)
  *   to replace the matched token within all future XRegExp regexes. Has access to persistent
  *   properties of the regex being built, through `this`. Invoked with two arguments:
  *   <li>The match array, with named backreference properties.
  *   <li>The regex scope where the match was found.
- * @param {Object***REMOVED*** [options***REMOVED*** Options object with optional properties:
- *   <li>`scope` {String***REMOVED*** Scopes where the token applies: 'default', 'class', or 'all'.
- *   <li>`trigger` {Function***REMOVED*** Function that returns `true` when the token should be applied; e.g.,
+ * @param {Object} [options] Options object with optional properties:
+ *   <li>`scope` {String} Scopes where the token applies: 'default', 'class', or 'all'.
+ *   <li>`trigger` {Function} Function that returns `true` when the token should be applied; e.g.,
  *     if a flag is set. If `false` is returned, the matched string can be matched by other tokens.
  *     Has access to persistent properties of the regex being built, through `this` (including
- *     function `this.hasFlag`***REMOVED***.
- *   <li>`customFlags` {String***REMOVED*** Nonnative flags used by the token's handler or trigger functions.
+ *     function `this.hasFlag`).
+ *   <li>`customFlags` {String} Nonnative flags used by the token's handler or trigger functions.
  *     Prevents XRegExp from throwing an invalid flag error when the specified flags are used.
  * @example
  *
  * // Basic usage: Adds \a for ALERT character
  * XRegExp.addToken(
  *   /\\a/,
- *   function (***REMOVED*** {return '\\x07';***REMOVED***,
- *   {scope: 'all'***REMOVED***
- * ***REMOVED***;
- * XRegExp('\\a[\\a-\\n***REMOVED***+'***REMOVED***.test('\x07\n\x07'***REMOVED***; // -> true
+ *   function () {return '\\x07';},
+ *   {scope: 'all'}
+ * );
+ * XRegExp('\\a[\\a-\\n]+').test('\x07\n\x07'); // -> true
  */
     self.addToken = addToken.off;
 
 /**
- * Caches and returns the result of calling `XRegExp(pattern, flags***REMOVED***`. On any subsequent call with
+ * Caches and returns the result of calling `XRegExp(pattern, flags)`. On any subsequent call with
  * the same pattern and flag combination, the cached copy is returned.
  * @memberOf XRegExp
- * @param {String***REMOVED*** pattern Regex pattern string.
- * @param {String***REMOVED*** [flags***REMOVED*** Any combination of XRegExp flags.
- * @returns {RegExp***REMOVED*** Cached XRegExp object.
+ * @param {String} pattern Regex pattern string.
+ * @param {String} [flags] Any combination of XRegExp flags.
+ * @returns {RegExp} Cached XRegExp object.
  * @example
  *
- * while (match = XRegExp.cache('.', 'gs'***REMOVED***.exec(str***REMOVED******REMOVED*** {
+ * while (match = XRegExp.cache('.', 'gs').exec(str)) {
  *   // The regex is compiled once only
- * ***REMOVED***
+ * }
  */
-    self.cache = function (pattern, flags***REMOVED*** {
-        var key = pattern + "/" + (flags || ""***REMOVED***;
-        return cache[key***REMOVED*** || (cache[key***REMOVED*** = self(pattern, flags***REMOVED******REMOVED***;
-***REMOVED***;
+    self.cache = function (pattern, flags) {
+        var key = pattern + "/" + (flags || "");
+        return cache[key] || (cache[key] = self(pattern, flags));
+    };
 
 /**
  * Escapes any regular expression metacharacters, for use when matching literal strings. The result
  * can safely be used at any point within a regex that uses any flags.
  * @memberOf XRegExp
- * @param {String***REMOVED*** str String to escape.
- * @returns {String***REMOVED*** String with regex metacharacters escaped.
+ * @param {String} str String to escape.
+ * @returns {String} String with regex metacharacters escaped.
  * @example
  *
- * XRegExp.escape('Escaped? <.>'***REMOVED***;
+ * XRegExp.escape('Escaped? <.>');
  * // -> 'Escaped\?\ <\.>'
  */
-    self.escape = function (str***REMOVED*** {
-        return nativ.replace.call(str, /[-[\***REMOVED***{***REMOVED***(***REMOVED****+?.,\\^$|#\s***REMOVED***/g, "\\$&"***REMOVED***;
-***REMOVED***;
+    self.escape = function (str) {
+        return nativ.replace.call(str, /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    };
 
 /**
  * Executes a regex search in a specified string. Returns a match array or `null`. If the provided
@@ -480,91 +480,91 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  * used, but is updated for compatibility. Also fixes browser bugs compared to the native
  * `RegExp.prototype.exec` and can be used reliably cross-browser.
  * @memberOf XRegExp
- * @param {String***REMOVED*** str String to search.
- * @param {RegExp***REMOVED*** regex Regex to search with.
- * @param {Number***REMOVED*** [pos=0***REMOVED*** Zero-based index at which to start the search.
- * @param {Boolean|String***REMOVED*** [sticky=false***REMOVED*** Whether the match must start at the specified position
+ * @param {String} str String to search.
+ * @param {RegExp} regex Regex to search with.
+ * @param {Number} [pos=0] Zero-based index at which to start the search.
+ * @param {Boolean|String} [sticky=false] Whether the match must start at the specified position
  *   only. The string `'sticky'` is accepted as an alternative to `true`.
- * @returns {Array***REMOVED*** Match array with named backreference properties, or null.
+ * @returns {Array} Match array with named backreference properties, or null.
  * @example
  *
  * // Basic use, with named backreference
- * var match = XRegExp.exec('U+2620', XRegExp('U\\+(?<hex>[0-9A-F***REMOVED***{4***REMOVED******REMOVED***'***REMOVED******REMOVED***;
+ * var match = XRegExp.exec('U+2620', XRegExp('U\\+(?<hex>[0-9A-F]{4})'));
  * match.hex; // -> '2620'
  *
  * // With pos and sticky, in a loop
- * var pos = 2, result = [***REMOVED***, match;
- * while (match = XRegExp.exec('<1><2><3><4>5<6>', /<(\d***REMOVED***>/, pos, 'sticky'***REMOVED******REMOVED*** {
- *   result.push(match[1***REMOVED******REMOVED***;
- *   pos = match.index + match[0***REMOVED***.length;
- * ***REMOVED***
- * // result -> ['2', '3', '4'***REMOVED***
+ * var pos = 2, result = [], match;
+ * while (match = XRegExp.exec('<1><2><3><4>5<6>', /<(\d)>/, pos, 'sticky')) {
+ *   result.push(match[1]);
+ *   pos = match.index + match[0].length;
+ * }
+ * // result -> ['2', '3', '4']
  */
-    self.exec = function (str, regex, pos, sticky***REMOVED*** {
-        var r2 = copy(regex, "g" + (sticky && hasNativeY ? "y" : ""***REMOVED***, (sticky === false ? "y" : ""***REMOVED******REMOVED***,
+    self.exec = function (str, regex, pos, sticky) {
+        var r2 = copy(regex, "g" + (sticky && hasNativeY ? "y" : ""), (sticky === false ? "y" : "")),
             match;
         r2.lastIndex = pos = pos || 0;
-        match = fixed.exec.call(r2, str***REMOVED***; // Fixed `exec` required for `lastIndex` fix, etc.
-        if (sticky && match && match.index !== pos***REMOVED*** {
+        match = fixed.exec.call(r2, str); // Fixed `exec` required for `lastIndex` fix, etc.
+        if (sticky && match && match.index !== pos) {
             match = null;
-    ***REMOVED***
-        if (regex.global***REMOVED*** {
+        }
+        if (regex.global) {
             regex.lastIndex = match ? r2.lastIndex : 0;
-    ***REMOVED***
+        }
         return match;
-***REMOVED***;
+    };
 
 /**
  * Executes a provided function once per regex match.
  * @memberOf XRegExp
- * @param {String***REMOVED*** str String to search.
- * @param {RegExp***REMOVED*** regex Regex to search with.
- * @param {Function***REMOVED*** callback Function to execute for each match. Invoked with four arguments:
+ * @param {String} str String to search.
+ * @param {RegExp} regex Regex to search with.
+ * @param {Function} callback Function to execute for each match. Invoked with four arguments:
  *   <li>The match array, with named backreference properties.
  *   <li>The zero-based match index.
  *   <li>The string being traversed.
  *   <li>The regex object being used to traverse the string.
- * @param {****REMOVED*** [context***REMOVED*** Object to use as `this` when executing `callback`.
- * @returns {****REMOVED*** Provided `context` object.
+ * @param {*} [context] Object to use as `this` when executing `callback`.
+ * @returns {*} Provided `context` object.
  * @example
  *
  * // Extracts every other digit from a string
- * XRegExp.forEach('1a2345', /\d/, function (match, i***REMOVED*** {
- *   if (i % 2***REMOVED*** this.push(+match[0***REMOVED******REMOVED***;
- * ***REMOVED***, [***REMOVED******REMOVED***;
- * // -> [2, 4***REMOVED***
+ * XRegExp.forEach('1a2345', /\d/, function (match, i) {
+ *   if (i % 2) this.push(+match[0]);
+ * }, []);
+ * // -> [2, 4]
  */
-    self.forEach = function (str, regex, callback, context***REMOVED*** {
+    self.forEach = function (str, regex, callback, context) {
         var pos = 0,
             i = -1,
             match;
-        while ((match = self.exec(str, regex, pos***REMOVED******REMOVED******REMOVED*** {
-            callback.call(context, match, ++i, str, regex***REMOVED***;
-            pos = match.index + (match[0***REMOVED***.length || 1***REMOVED***;
-    ***REMOVED***
+        while ((match = self.exec(str, regex, pos))) {
+            callback.call(context, match, ++i, str, regex);
+            pos = match.index + (match[0].length || 1);
+        }
         return context;
-***REMOVED***;
+    };
 
 /**
  * Copies a regex object and adds flag `g`. The copy maintains special properties for named
  * capture, is augmented with `XRegExp.prototype` methods, and has a fresh `lastIndex` property
- * (set to zero***REMOVED***. Native regexes are not recompiled using XRegExp syntax.
+ * (set to zero). Native regexes are not recompiled using XRegExp syntax.
  * @memberOf XRegExp
- * @param {RegExp***REMOVED*** regex Regex to globalize.
- * @returns {RegExp***REMOVED*** Copy of the provided regex with flag `g` added.
+ * @param {RegExp} regex Regex to globalize.
+ * @returns {RegExp} Copy of the provided regex with flag `g` added.
  * @example
  *
- * var globalCopy = XRegExp.globalize(/regex/***REMOVED***;
+ * var globalCopy = XRegExp.globalize(/regex/);
  * globalCopy.global; // -> true
  */
-    self.globalize = function (regex***REMOVED*** {
-        return copy(regex, "g"***REMOVED***;
-***REMOVED***;
+    self.globalize = function (regex) {
+        return copy(regex, "g");
+    };
 
 /**
  * Installs optional features according to the specified options.
  * @memberOf XRegExp
- * @param {Object|String***REMOVED*** options Options object or string.
+ * @param {Object|String} options Options object or string.
  * @example
  *
  * // With an options object
@@ -575,55 +575,55 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  *
  *   // Enables extensibility of XRegExp syntax and flags
  *   extensibility: true
- * ***REMOVED******REMOVED***;
+ * });
  *
  * // With an options string
- * XRegExp.install('natives extensibility'***REMOVED***;
+ * XRegExp.install('natives extensibility');
  *
  * // Using a shortcut to install all optional features
- * XRegExp.install('all'***REMOVED***;
+ * XRegExp.install('all');
  */
-    self.install = function (options***REMOVED*** {
-        options = prepareOptions(options***REMOVED***;
-        if (!features.natives && options.natives***REMOVED*** {
-            setNatives(true***REMOVED***;
-    ***REMOVED***
-        if (!features.extensibility && options.extensibility***REMOVED*** {
-            setExtensibility(true***REMOVED***;
-    ***REMOVED***
-***REMOVED***;
+    self.install = function (options) {
+        options = prepareOptions(options);
+        if (!features.natives && options.natives) {
+            setNatives(true);
+        }
+        if (!features.extensibility && options.extensibility) {
+            setExtensibility(true);
+        }
+    };
 
 /**
  * Checks whether an individual optional feature is installed.
  * @memberOf XRegExp
- * @param {String***REMOVED*** feature Name of the feature to check. One of:
+ * @param {String} feature Name of the feature to check. One of:
  *   <li>`natives`
  *   <li>`extensibility`
- * @returns {Boolean***REMOVED*** Whether the feature is installed.
+ * @returns {Boolean} Whether the feature is installed.
  * @example
  *
- * XRegExp.isInstalled('natives'***REMOVED***;
+ * XRegExp.isInstalled('natives');
  */
-    self.isInstalled = function (feature***REMOVED*** {
-        return !!(features[feature***REMOVED******REMOVED***;
-***REMOVED***;
+    self.isInstalled = function (feature) {
+        return !!(features[feature]);
+    };
 
 /**
  * Returns `true` if an object is a regex; `false` if it isn't. This works correctly for regexes
  * created in another frame, when `instanceof` and `constructor` checks would fail.
  * @memberOf XRegExp
- * @param {****REMOVED*** value Object to check.
- * @returns {Boolean***REMOVED*** Whether the object is a `RegExp` object.
+ * @param {*} value Object to check.
+ * @returns {Boolean} Whether the object is a `RegExp` object.
  * @example
  *
- * XRegExp.isRegExp('string'***REMOVED***; // -> false
- * XRegExp.isRegExp(/regex/i***REMOVED***; // -> true
- * XRegExp.isRegExp(RegExp('^', 'm'***REMOVED******REMOVED***; // -> true
- * XRegExp.isRegExp(XRegExp('(?s***REMOVED***.'***REMOVED******REMOVED***; // -> true
+ * XRegExp.isRegExp('string'); // -> false
+ * XRegExp.isRegExp(/regex/i); // -> true
+ * XRegExp.isRegExp(RegExp('^', 'm')); // -> true
+ * XRegExp.isRegExp(XRegExp('(?s).')); // -> true
  */
-    self.isRegExp = function (value***REMOVED*** {
-        return isType(value, "regexp"***REMOVED***;
-***REMOVED***;
+    self.isRegExp = function (value) {
+        return isType(value, "regexp");
+    };
 
 /**
  * Retrieves the matches from searching a string using a chain of regexes that successively search
@@ -631,109 +631,109 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  * and `backref` properties. When a backreference is specified, the named or numbered backreference
  * is passed forward to the next regex or returned.
  * @memberOf XRegExp
- * @param {String***REMOVED*** str String to search.
- * @param {Array***REMOVED*** chain Regexes that each search for matches within preceding results.
- * @returns {Array***REMOVED*** Matches by the last regex in the chain, or an empty array.
+ * @param {String} str String to search.
+ * @param {Array} chain Regexes that each search for matches within preceding results.
+ * @returns {Array} Matches by the last regex in the chain, or an empty array.
  * @example
  *
  * // Basic usage; matches numbers within <b> tags
  * XRegExp.matchChain('1 <b>2</b> 3 <b>4 a 56</b>', [
- *   XRegExp('(?is***REMOVED***<b>.*?</b>'***REMOVED***,
+ *   XRegExp('(?is)<b>.*?</b>'),
  *   /\d+/
- * ***REMOVED******REMOVED***;
- * // -> ['2', '4', '56'***REMOVED***
+ * ]);
+ * // -> ['2', '4', '56']
  *
  * // Passing forward and returning specific backreferences
  * html = '<a href="http://xregexp.com/api/">XRegExp</a>\
  *         <a href="http://www.google.com/">Google</a>';
  * XRegExp.matchChain(html, [
- *   {regex: /<a href="([^"***REMOVED***+***REMOVED***">/i, backref: 1***REMOVED***,
- *   {regex: XRegExp('(?i***REMOVED***^https?://(?<domain>[^/?#***REMOVED***+***REMOVED***'***REMOVED***, backref: 'domain'***REMOVED***
- * ***REMOVED******REMOVED***;
- * // -> ['xregexp.com', 'www.google.com'***REMOVED***
+ *   {regex: /<a href="([^"]+)">/i, backref: 1},
+ *   {regex: XRegExp('(?i)^https?://(?<domain>[^/?#]+)'), backref: 'domain'}
+ * ]);
+ * // -> ['xregexp.com', 'www.google.com']
  */
-    self.matchChain = function (str, chain***REMOVED*** {
-        return (function recurseChain(values, level***REMOVED*** {
-            var item = chain[level***REMOVED***.regex ? chain[level***REMOVED*** : {regex: chain[level***REMOVED******REMOVED***,
-                matches = [***REMOVED***,
-                addMatch = function (match***REMOVED*** {
-                    matches.push(item.backref ? (match[item.backref***REMOVED*** || ""***REMOVED*** : match[0***REMOVED******REMOVED***;
-        ***REMOVED***
+    self.matchChain = function (str, chain) {
+        return (function recurseChain(values, level) {
+            var item = chain[level].regex ? chain[level] : {regex: chain[level]},
+                matches = [],
+                addMatch = function (match) {
+                    matches.push(item.backref ? (match[item.backref] || "") : match[0]);
+                },
                 i;
-            for (i = 0; i < values.length; ++i***REMOVED*** {
-                self.forEach(values[i***REMOVED***, item.regex, addMatch***REMOVED***;
-        ***REMOVED***
-            return ((level === chain.length - 1***REMOVED*** || !matches.length***REMOVED*** ?
+            for (i = 0; i < values.length; ++i) {
+                self.forEach(values[i], item.regex, addMatch);
+            }
+            return ((level === chain.length - 1) || !matches.length) ?
                     matches :
-                    recurseChain(matches, level + 1***REMOVED***;
-    ***REMOVED***([str***REMOVED***, 0***REMOVED******REMOVED***;
-***REMOVED***;
+                    recurseChain(matches, level + 1);
+        }([str], 0));
+    };
 
 /**
  * Returns a new string with one or all matches of a pattern replaced. The pattern can be a string
  * or regex, and the replacement can be a string or a function to be called for each match. To
  * perform a global search and replace, use the optional `scope` argument or include flag `g` if
- * using a regex. Replacement strings can use `${n***REMOVED***` for named and numbered backreferences.
- * Replacement functions can use named backreferences via `arguments[0***REMOVED***.name`. Also fixes browser
+ * using a regex. Replacement strings can use `${n}` for named and numbered backreferences.
+ * Replacement functions can use named backreferences via `arguments[0].name`. Also fixes browser
  * bugs compared to the native `String.prototype.replace` and can be used reliably cross-browser.
  * @memberOf XRegExp
- * @param {String***REMOVED*** str String to search.
- * @param {RegExp|String***REMOVED*** search Search pattern to be replaced.
- * @param {String|Function***REMOVED*** replacement Replacement string or a function invoked to create it.
+ * @param {String} str String to search.
+ * @param {RegExp|String} search Search pattern to be replaced.
+ * @param {String|Function} replacement Replacement string or a function invoked to create it.
  *   Replacement strings can include special replacement syntax:
  *     <li>$$ - Inserts a literal '$'.
  *     <li>$&, $0 - Inserts the matched substring.
- *     <li>$` - Inserts the string that precedes the matched substring (left context***REMOVED***.
- *     <li>$' - Inserts the string that follows the matched substring (right context***REMOVED***.
+ *     <li>$` - Inserts the string that precedes the matched substring (left context).
+ *     <li>$' - Inserts the string that follows the matched substring (right context).
  *     <li>$n, $nn - Where n/nn are digits referencing an existent capturing group, inserts
  *       backreference n/nn.
- *     <li>${n***REMOVED*** - Where n is a name or any number of digits that reference an existent capturing
+ *     <li>${n} - Where n is a name or any number of digits that reference an existent capturing
  *       group, inserts backreference n.
  *   Replacement functions are invoked with three or more arguments:
- *     <li>The matched substring (corresponds to $& above***REMOVED***. Named backreferences are accessible as
+ *     <li>The matched substring (corresponds to $& above). Named backreferences are accessible as
  *       properties of this first argument.
- *     <li>0..n arguments, one for each backreference (corresponding to $1, $2, etc. above***REMOVED***.
+ *     <li>0..n arguments, one for each backreference (corresponding to $1, $2, etc. above).
  *     <li>The zero-based index of the match within the total search string.
  *     <li>The total string being searched.
- * @param {String***REMOVED*** [scope='one'***REMOVED*** Use 'one' to replace the first match only, or 'all'. If not
+ * @param {String} [scope='one'] Use 'one' to replace the first match only, or 'all'. If not
  *   explicitly specified and using a regex with flag `g`, `scope` is 'all'.
- * @returns {String***REMOVED*** New string with one or all matches replaced.
+ * @returns {String} New string with one or all matches replaced.
  * @example
  *
  * // Regex search, using named backreferences in replacement string
- * var name = XRegExp('(?<first>\\w+***REMOVED*** (?<last>\\w+***REMOVED***'***REMOVED***;
- * XRegExp.replace('John Smith', name, '${last***REMOVED***, ${first***REMOVED***'***REMOVED***;
+ * var name = XRegExp('(?<first>\\w+) (?<last>\\w+)');
+ * XRegExp.replace('John Smith', name, '${last}, ${first}');
  * // -> 'Smith, John'
  *
  * // Regex search, using named backreferences in replacement function
- * XRegExp.replace('John Smith', name, function (match***REMOVED*** {
+ * XRegExp.replace('John Smith', name, function (match) {
  *   return match.last + ', ' + match.first;
- * ***REMOVED******REMOVED***;
+ * });
  * // -> 'Smith, John'
  *
  * // Global string search/replacement
- * XRegExp.replace('RegExp builds RegExps', 'RegExp', 'XRegExp', 'all'***REMOVED***;
+ * XRegExp.replace('RegExp builds RegExps', 'RegExp', 'XRegExp', 'all');
  * // -> 'XRegExp builds XRegExps'
  */
-    self.replace = function (str, search, replacement, scope***REMOVED*** {
-        var isRegex = self.isRegExp(search***REMOVED***,
+    self.replace = function (str, search, replacement, scope) {
+        var isRegex = self.isRegExp(search),
             search2 = search,
             result;
-        if (isRegex***REMOVED*** {
-            if (scope === undef && search.global***REMOVED*** {
+        if (isRegex) {
+            if (scope === undef && search.global) {
                 scope = "all"; // Follow flag g when `scope` isn't explicit
-        ***REMOVED***
+            }
             // Note that since a copy is used, `search`'s `lastIndex` isn't updated *during* replacement iterations
-            search2 = copy(search, scope === "all" ? "g" : "", scope === "all" ? "" : "g"***REMOVED***;
-    ***REMOVED*** else if (scope === "all"***REMOVED*** {
-            search2 = new RegExp(self.escape(String(search***REMOVED******REMOVED***, "g"***REMOVED***;
-    ***REMOVED***
-        result = fixed.replace.call(String(str***REMOVED***, search2, replacement***REMOVED***; // Fixed `replace` required for named backreferences, etc.
-        if (isRegex && search.global***REMOVED*** {
-            search.lastIndex = 0; // Fixes IE, Safari bug (last tested IE 9, Safari 5.1***REMOVED***
-    ***REMOVED***
+            search2 = copy(search, scope === "all" ? "g" : "", scope === "all" ? "" : "g");
+        } else if (scope === "all") {
+            search2 = new RegExp(self.escape(String(search)), "g");
+        }
+        result = fixed.replace.call(String(str), search2, replacement); // Fixed `replace` required for named backreferences, etc.
+        if (isRegex && search.global) {
+            search.lastIndex = 0; // Fixes IE, Safari bug (last tested IE 9, Safari 5.1)
+        }
         return result;
-***REMOVED***;
+    };
 
 /**
  * Splits a string into an array of strings using a regex or string separator. Matches of the
@@ -742,27 +742,27 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  * Fixes browser bugs compared to the native `String.prototype.split` and can be used reliably
  * cross-browser.
  * @memberOf XRegExp
- * @param {String***REMOVED*** str String to split.
- * @param {RegExp|String***REMOVED*** separator Regex or string to use for separating the string.
- * @param {Number***REMOVED*** [limit***REMOVED*** Maximum number of items to include in the result array.
- * @returns {Array***REMOVED*** Array of substrings.
+ * @param {String} str String to split.
+ * @param {RegExp|String} separator Regex or string to use for separating the string.
+ * @param {Number} [limit] Maximum number of items to include in the result array.
+ * @returns {Array} Array of substrings.
  * @example
  *
  * // Basic use
- * XRegExp.split('a b c', ' '***REMOVED***;
- * // -> ['a', 'b', 'c'***REMOVED***
+ * XRegExp.split('a b c', ' ');
+ * // -> ['a', 'b', 'c']
  *
  * // With limit
- * XRegExp.split('a b c', ' ', 2***REMOVED***;
- * // -> ['a', 'b'***REMOVED***
+ * XRegExp.split('a b c', ' ', 2);
+ * // -> ['a', 'b']
  *
  * // Backreferences in result array
- * XRegExp.split('..word1..', /([a-z***REMOVED***+***REMOVED***(\d+***REMOVED***/i***REMOVED***;
- * // -> ['..', 'word', '1', '..'***REMOVED***
+ * XRegExp.split('..word1..', /([a-z]+)(\d+)/i);
+ * // -> ['..', 'word', '1', '..']
  */
-    self.split = function (str, separator, limit***REMOVED*** {
-        return fixed.split.call(str, separator, limit***REMOVED***;
-***REMOVED***;
+    self.split = function (str, separator, limit) {
+        return fixed.split.call(str, separator, limit);
+    };
 
 /**
  * Executes a regex search in a specified string. Returns `true` or `false`. Optional `pos` and
@@ -771,29 +771,29 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  * updated for compatibility. Also fixes browser bugs compared to the native
  * `RegExp.prototype.test` and can be used reliably cross-browser.
  * @memberOf XRegExp
- * @param {String***REMOVED*** str String to search.
- * @param {RegExp***REMOVED*** regex Regex to search with.
- * @param {Number***REMOVED*** [pos=0***REMOVED*** Zero-based index at which to start the search.
- * @param {Boolean|String***REMOVED*** [sticky=false***REMOVED*** Whether the match must start at the specified position
+ * @param {String} str String to search.
+ * @param {RegExp} regex Regex to search with.
+ * @param {Number} [pos=0] Zero-based index at which to start the search.
+ * @param {Boolean|String} [sticky=false] Whether the match must start at the specified position
  *   only. The string `'sticky'` is accepted as an alternative to `true`.
- * @returns {Boolean***REMOVED*** Whether the regex matched the provided value.
+ * @returns {Boolean} Whether the regex matched the provided value.
  * @example
  *
  * // Basic use
- * XRegExp.test('abc', /c/***REMOVED***; // -> true
+ * XRegExp.test('abc', /c/); // -> true
  *
  * // With pos and sticky
- * XRegExp.test('abc', /c/, 0, 'sticky'***REMOVED***; // -> false
+ * XRegExp.test('abc', /c/, 0, 'sticky'); // -> false
  */
-    self.test = function (str, regex, pos, sticky***REMOVED*** {
-        // Do this the easy way :-***REMOVED***
-        return !!self.exec(str, regex, pos, sticky***REMOVED***;
-***REMOVED***;
+    self.test = function (str, regex, pos, sticky) {
+        // Do this the easy way :-)
+        return !!self.exec(str, regex, pos, sticky);
+    };
 
 /**
  * Uninstalls optional features according to the specified options.
  * @memberOf XRegExp
- * @param {Object|String***REMOVED*** options Options object or string.
+ * @param {Object|String} options Options object or string.
  * @example
  *
  * // With an options object
@@ -803,23 +803,23 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  *
  *   // Disables additional syntax and flag extensions
  *   extensibility: true
- * ***REMOVED******REMOVED***;
+ * });
  *
  * // With an options string
- * XRegExp.uninstall('natives extensibility'***REMOVED***;
+ * XRegExp.uninstall('natives extensibility');
  *
  * // Using a shortcut to uninstall all optional features
- * XRegExp.uninstall('all'***REMOVED***;
+ * XRegExp.uninstall('all');
  */
-    self.uninstall = function (options***REMOVED*** {
-        options = prepareOptions(options***REMOVED***;
-        if (features.natives && options.natives***REMOVED*** {
-            setNatives(false***REMOVED***;
-    ***REMOVED***
-        if (features.extensibility && options.extensibility***REMOVED*** {
-            setExtensibility(false***REMOVED***;
-    ***REMOVED***
-***REMOVED***;
+    self.uninstall = function (options) {
+        options = prepareOptions(options);
+        if (features.natives && options.natives) {
+            setNatives(false);
+        }
+        if (features.extensibility && options.extensibility) {
+            setExtensibility(false);
+        }
+    };
 
 /**
  * Returns an XRegExp object that is the union of the given patterns. Patterns can be provided as
@@ -827,54 +827,54 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  * Backreferences in provided regex objects are automatically renumbered to work correctly. Native
  * flags used by provided regexes are ignored in favor of the `flags` argument.
  * @memberOf XRegExp
- * @param {Array***REMOVED*** patterns Regexes and strings to combine.
- * @param {String***REMOVED*** [flags***REMOVED*** Any combination of XRegExp flags.
- * @returns {RegExp***REMOVED*** Union of the provided regexes and strings.
+ * @param {Array} patterns Regexes and strings to combine.
+ * @param {String} [flags] Any combination of XRegExp flags.
+ * @returns {RegExp} Union of the provided regexes and strings.
  * @example
  *
- * XRegExp.union(['a+b*c', /(dogs***REMOVED***\1/, /(cats***REMOVED***\1/***REMOVED***, 'i'***REMOVED***;
- * // -> /a\+b\*c|(dogs***REMOVED***\1|(cats***REMOVED***\2/i
+ * XRegExp.union(['a+b*c', /(dogs)\1/, /(cats)\1/], 'i');
+ * // -> /a\+b\*c|(dogs)\1|(cats)\2/i
  *
- * XRegExp.union([XRegExp('(?<pet>dogs***REMOVED***\\k<pet>'***REMOVED***, XRegExp('(?<pet>cats***REMOVED***\\k<pet>'***REMOVED******REMOVED******REMOVED***;
- * // -> XRegExp('(?<pet>dogs***REMOVED***\\k<pet>|(?<pet>cats***REMOVED***\\k<pet>'***REMOVED***
+ * XRegExp.union([XRegExp('(?<pet>dogs)\\k<pet>'), XRegExp('(?<pet>cats)\\k<pet>')]);
+ * // -> XRegExp('(?<pet>dogs)\\k<pet>|(?<pet>cats)\\k<pet>')
  */
-    self.union = function (patterns, flags***REMOVED*** {
-        var parts = /(\(***REMOVED***(?!\?***REMOVED***|\\([1-9***REMOVED***\d****REMOVED***|\\[\s\S***REMOVED***|\[(?:[^\\\***REMOVED******REMOVED***|\\[\s\S***REMOVED******REMOVED*******REMOVED***/g,
+    self.union = function (patterns, flags) {
+        var parts = /(\()(?!\?)|\\([1-9]\d*)|\\[\s\S]|\[(?:[^\\\]]|\\[\s\S])*]/g,
             numCaptures = 0,
             numPriorCaptures,
             captureNames,
-            rewrite = function (match, paren, backref***REMOVED*** {
-                var name = captureNames[numCaptures - numPriorCaptures***REMOVED***;
-                if (paren***REMOVED*** { // Capturing group
+            rewrite = function (match, paren, backref) {
+                var name = captureNames[numCaptures - numPriorCaptures];
+                if (paren) { // Capturing group
                     ++numCaptures;
-                    if (name***REMOVED*** { // If the current capture has a name
+                    if (name) { // If the current capture has a name
                         return "(?<" + name + ">";
-                ***REMOVED***
-            ***REMOVED*** else if (backref***REMOVED*** { // Backreference
-                    return "\\" + (+backref + numPriorCaptures***REMOVED***;
-            ***REMOVED***
+                    }
+                } else if (backref) { // Backreference
+                    return "\\" + (+backref + numPriorCaptures);
+                }
                 return match;
-    ***REMOVED***
-            output = [***REMOVED***,
+            },
+            output = [],
             pattern,
             i;
-        if (!(isType(patterns, "array"***REMOVED*** && patterns.length***REMOVED******REMOVED*** {
-            throw new TypeError("patterns must be a nonempty array"***REMOVED***;
-    ***REMOVED***
-        for (i = 0; i < patterns.length; ++i***REMOVED*** {
-            pattern = patterns[i***REMOVED***;
-            if (self.isRegExp(pattern***REMOVED******REMOVED*** {
+        if (!(isType(patterns, "array") && patterns.length)) {
+            throw new TypeError("patterns must be a nonempty array");
+        }
+        for (i = 0; i < patterns.length; ++i) {
+            pattern = patterns[i];
+            if (self.isRegExp(pattern)) {
                 numPriorCaptures = numCaptures;
-                captureNames = (pattern.xregexp && pattern.xregexp.captureNames***REMOVED*** || [***REMOVED***;
+                captureNames = (pattern.xregexp && pattern.xregexp.captureNames) || [];
                 // Rewrite backreferences. Passing to XRegExp dies on octals and ensures patterns
                 // are independently valid; helps keep this simple. Named captures are put back
-                output.push(self(pattern.source***REMOVED***.source.replace(parts, rewrite***REMOVED******REMOVED***;
-        ***REMOVED*** else {
-                output.push(self.escape(pattern***REMOVED******REMOVED***;
-        ***REMOVED***
-    ***REMOVED***
-        return self(output.join("|"***REMOVED***, flags***REMOVED***;
-***REMOVED***;
+                output.push(self(pattern.source).source.replace(parts, rewrite));
+            } else {
+                output.push(self.escape(pattern));
+            }
+        }
+        return self(output.join("|"), flags);
+    };
 
 /**
  * The XRegExp version number.
@@ -889,168 +889,168 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  *------------------------------------*/
 
 /**
- * Adds named capture support (with backreferences returned as `result.name`***REMOVED***, and fixes browser
- * bugs in the native `RegExp.prototype.exec`. Calling `XRegExp.install('natives'***REMOVED***` uses this to
+ * Adds named capture support (with backreferences returned as `result.name`), and fixes browser
+ * bugs in the native `RegExp.prototype.exec`. Calling `XRegExp.install('natives')` uses this to
  * override the native method. Use via `XRegExp.exec` without overriding natives.
  * @private
- * @param {String***REMOVED*** str String to search.
- * @returns {Array***REMOVED*** Match array with named backreference properties, or null.
+ * @param {String} str String to search.
+ * @returns {Array} Match array with named backreference properties, or null.
  */
-    fixed.exec = function (str***REMOVED*** {
+    fixed.exec = function (str) {
         var match, name, r2, origLastIndex, i;
-        if (!this.global***REMOVED*** {
+        if (!this.global) {
             origLastIndex = this.lastIndex;
-    ***REMOVED***
-        match = nativ.exec.apply(this, arguments***REMOVED***;
-        if (match***REMOVED*** {
+        }
+        match = nativ.exec.apply(this, arguments);
+        if (match) {
             // Fix browsers whose `exec` methods don't consistently return `undefined` for
             // nonparticipating capturing groups
-            if (!compliantExecNpcg && match.length > 1 && lastIndexOf(match, ""***REMOVED*** > -1***REMOVED*** {
-                r2 = new RegExp(this.source, nativ.replace.call(getNativeFlags(this***REMOVED***, "g", ""***REMOVED******REMOVED***;
-                // Using `str.slice(match.index***REMOVED***` rather than `match[0***REMOVED***` in case lookahead allowed
+            if (!compliantExecNpcg && match.length > 1 && lastIndexOf(match, "") > -1) {
+                r2 = new RegExp(this.source, nativ.replace.call(getNativeFlags(this), "g", ""));
+                // Using `str.slice(match.index)` rather than `match[0]` in case lookahead allowed
                 // matching due to characters outside the match
-                nativ.replace.call(String(str***REMOVED***.slice(match.index***REMOVED***, r2, function (***REMOVED*** {
+                nativ.replace.call(String(str).slice(match.index), r2, function () {
                     var i;
-                    for (i = 1; i < arguments.length - 2; ++i***REMOVED*** {
-                        if (arguments[i***REMOVED*** === undef***REMOVED*** {
-                            match[i***REMOVED*** = undef;
-                    ***REMOVED***
-                ***REMOVED***
-            ***REMOVED******REMOVED***;
-        ***REMOVED***
+                    for (i = 1; i < arguments.length - 2; ++i) {
+                        if (arguments[i] === undef) {
+                            match[i] = undef;
+                        }
+                    }
+                });
+            }
             // Attach named capture properties
-            if (this.xregexp && this.xregexp.captureNames***REMOVED*** {
-                for (i = 1; i < match.length; ++i***REMOVED*** {
-                    name = this.xregexp.captureNames[i - 1***REMOVED***;
-                    if (name***REMOVED*** {
-                        match[name***REMOVED*** = match[i***REMOVED***;
-                ***REMOVED***
-            ***REMOVED***
-        ***REMOVED***
+            if (this.xregexp && this.xregexp.captureNames) {
+                for (i = 1; i < match.length; ++i) {
+                    name = this.xregexp.captureNames[i - 1];
+                    if (name) {
+                        match[name] = match[i];
+                    }
+                }
+            }
             // Fix browsers that increment `lastIndex` after zero-length matches
-            if (this.global && !match[0***REMOVED***.length && (this.lastIndex > match.index***REMOVED******REMOVED*** {
+            if (this.global && !match[0].length && (this.lastIndex > match.index)) {
                 this.lastIndex = match.index;
-        ***REMOVED***
-    ***REMOVED***
-        if (!this.global***REMOVED*** {
-            this.lastIndex = origLastIndex; // Fixes IE, Opera bug (last tested IE 9, Opera 11.6***REMOVED***
-    ***REMOVED***
+            }
+        }
+        if (!this.global) {
+            this.lastIndex = origLastIndex; // Fixes IE, Opera bug (last tested IE 9, Opera 11.6)
+        }
         return match;
-***REMOVED***;
+    };
 
 /**
- * Fixes browser bugs in the native `RegExp.prototype.test`. Calling `XRegExp.install('natives'***REMOVED***`
+ * Fixes browser bugs in the native `RegExp.prototype.test`. Calling `XRegExp.install('natives')`
  * uses this to override the native method.
  * @private
- * @param {String***REMOVED*** str String to search.
- * @returns {Boolean***REMOVED*** Whether the regex matched the provided value.
+ * @param {String} str String to search.
+ * @returns {Boolean} Whether the regex matched the provided value.
  */
-    fixed.test = function (str***REMOVED*** {
-        // Do this the easy way :-***REMOVED***
-        return !!fixed.exec.call(this, str***REMOVED***;
-***REMOVED***;
+    fixed.test = function (str) {
+        // Do this the easy way :-)
+        return !!fixed.exec.call(this, str);
+    };
 
 /**
- * Adds named capture support (with backreferences returned as `result.name`***REMOVED***, and fixes browser
- * bugs in the native `String.prototype.match`. Calling `XRegExp.install('natives'***REMOVED***` uses this to
+ * Adds named capture support (with backreferences returned as `result.name`), and fixes browser
+ * bugs in the native `String.prototype.match`. Calling `XRegExp.install('natives')` uses this to
  * override the native method.
  * @private
- * @param {RegExp***REMOVED*** regex Regex to search with.
- * @returns {Array***REMOVED*** If `regex` uses flag g, an array of match strings or null. Without flag g, the
- *   result of calling `regex.exec(this***REMOVED***`.
+ * @param {RegExp} regex Regex to search with.
+ * @returns {Array} If `regex` uses flag g, an array of match strings or null. Without flag g, the
+ *   result of calling `regex.exec(this)`.
  */
-    fixed.match = function (regex***REMOVED*** {
-        if (!self.isRegExp(regex***REMOVED******REMOVED*** {
-            regex = new RegExp(regex***REMOVED***; // Use native `RegExp`
-    ***REMOVED*** else if (regex.global***REMOVED*** {
-            var result = nativ.match.apply(this, arguments***REMOVED***;
+    fixed.match = function (regex) {
+        if (!self.isRegExp(regex)) {
+            regex = new RegExp(regex); // Use native `RegExp`
+        } else if (regex.global) {
+            var result = nativ.match.apply(this, arguments);
             regex.lastIndex = 0; // Fixes IE bug
             return result;
-    ***REMOVED***
-        return fixed.exec.call(regex, this***REMOVED***;
-***REMOVED***;
+        }
+        return fixed.exec.call(regex, this);
+    };
 
 /**
- * Adds support for `${n***REMOVED***` tokens for named and numbered backreferences in replacement text, and
- * provides named backreferences to replacement functions as `arguments[0***REMOVED***.name`. Also fixes
+ * Adds support for `${n}` tokens for named and numbered backreferences in replacement text, and
+ * provides named backreferences to replacement functions as `arguments[0].name`. Also fixes
  * browser bugs in replacement text syntax when performing a replacement using a nonregex search
  * value, and the value of a replacement regex's `lastIndex` property during replacement iterations
- * and upon completion. Note that this doesn't support SpiderMonkey's proprietary third (`flags`***REMOVED***
- * argument. Calling `XRegExp.install('natives'***REMOVED***` uses this to override the native method. Use via
+ * and upon completion. Note that this doesn't support SpiderMonkey's proprietary third (`flags`)
+ * argument. Calling `XRegExp.install('natives')` uses this to override the native method. Use via
  * `XRegExp.replace` without overriding natives.
  * @private
- * @param {RegExp|String***REMOVED*** search Search pattern to be replaced.
- * @param {String|Function***REMOVED*** replacement Replacement string or a function invoked to create it.
- * @returns {String***REMOVED*** New string with one or all matches replaced.
+ * @param {RegExp|String} search Search pattern to be replaced.
+ * @param {String|Function} replacement Replacement string or a function invoked to create it.
+ * @returns {String} New string with one or all matches replaced.
  */
-    fixed.replace = function (search, replacement***REMOVED*** {
-        var isRegex = self.isRegExp(search***REMOVED***, captureNames, result, str, origLastIndex;
-        if (isRegex***REMOVED*** {
-            if (search.xregexp***REMOVED*** {
+    fixed.replace = function (search, replacement) {
+        var isRegex = self.isRegExp(search), captureNames, result, str, origLastIndex;
+        if (isRegex) {
+            if (search.xregexp) {
                 captureNames = search.xregexp.captureNames;
-        ***REMOVED***
-            if (!search.global***REMOVED*** {
+            }
+            if (!search.global) {
                 origLastIndex = search.lastIndex;
-        ***REMOVED***
-    ***REMOVED*** else {
+            }
+        } else {
             search += "";
-    ***REMOVED***
-        if (isType(replacement, "function"***REMOVED******REMOVED*** {
-            result = nativ.replace.call(String(this***REMOVED***, search, function (***REMOVED*** {
+        }
+        if (isType(replacement, "function")) {
+            result = nativ.replace.call(String(this), search, function () {
                 var args = arguments, i;
-                if (captureNames***REMOVED*** {
-                    // Change the `arguments[0***REMOVED***` string primitive to a `String` object that can store properties
-                    args[0***REMOVED*** = new String(args[0***REMOVED******REMOVED***;
+                if (captureNames) {
+                    // Change the `arguments[0]` string primitive to a `String` object that can store properties
+                    args[0] = new String(args[0]);
                     // Store named backreferences on the first argument
-                    for (i = 0; i < captureNames.length; ++i***REMOVED*** {
-                        if (captureNames[i***REMOVED******REMOVED*** {
-                            args[0***REMOVED***[captureNames[i***REMOVED******REMOVED*** = args[i + 1***REMOVED***;
-                    ***REMOVED***
-                ***REMOVED***
-            ***REMOVED***
+                    for (i = 0; i < captureNames.length; ++i) {
+                        if (captureNames[i]) {
+                            args[0][captureNames[i]] = args[i + 1];
+                        }
+                    }
+                }
                 // Update `lastIndex` before calling `replacement`.
-                // Fixes IE, Chrome, Firefox, Safari bug (last tested IE 9, Chrome 17, Firefox 11, Safari 5.1***REMOVED***
-                if (isRegex && search.global***REMOVED*** {
-                    search.lastIndex = args[args.length - 2***REMOVED*** + args[0***REMOVED***.length;
-            ***REMOVED***
-                return replacement.apply(null, args***REMOVED***;
-        ***REMOVED******REMOVED***;
-    ***REMOVED*** else {
-            str = String(this***REMOVED***; // Ensure `args[args.length - 1***REMOVED***` will be a string when given nonstring `this`
-            result = nativ.replace.call(str, search, function (***REMOVED*** {
+                // Fixes IE, Chrome, Firefox, Safari bug (last tested IE 9, Chrome 17, Firefox 11, Safari 5.1)
+                if (isRegex && search.global) {
+                    search.lastIndex = args[args.length - 2] + args[0].length;
+                }
+                return replacement.apply(null, args);
+            });
+        } else {
+            str = String(this); // Ensure `args[args.length - 1]` will be a string when given nonstring `this`
+            result = nativ.replace.call(str, search, function () {
                 var args = arguments; // Keep this function's `arguments` available through closure
-                return nativ.replace.call(String(replacement***REMOVED***, replacementToken, function ($0, $1, $2***REMOVED*** {
+                return nativ.replace.call(String(replacement), replacementToken, function ($0, $1, $2) {
                     var n;
                     // Named or numbered backreference with curly brackets
-                    if ($1***REMOVED*** {
-                        /* XRegExp behavior for `${n***REMOVED***`:
+                    if ($1) {
+                        /* XRegExp behavior for `${n}`:
                          * 1. Backreference to numbered capture, where `n` is 1+ digits. `0`, `00`, etc. is the entire match.
                          * 2. Backreference to named capture `n`, if it exists and is not a number overridden by numbered capture.
                          * 3. Otherwise, it's an error.
                          */
                         n = +$1; // Type-convert; drop leading zeros
-                        if (n <= args.length - 3***REMOVED*** {
-                            return args[n***REMOVED*** || "";
-                    ***REMOVED***
-                        n = captureNames ? lastIndexOf(captureNames, $1***REMOVED*** : -1;
-                        if (n < 0***REMOVED*** {
-                            throw new SyntaxError("backreference to undefined group " + $0***REMOVED***;
-                    ***REMOVED***
-                        return args[n + 1***REMOVED*** || "";
-                ***REMOVED***
-                    // Else, special variable or numbered backreference (without curly brackets***REMOVED***
-                    if ($2 === "$"***REMOVED*** return "$";
-                    if ($2 === "&" || +$2 === 0***REMOVED*** return args[0***REMOVED***; // $&, $0 (not followed by 1-9***REMOVED***, $00
-                    if ($2 === "`"***REMOVED*** return args[args.length - 1***REMOVED***.slice(0, args[args.length - 2***REMOVED******REMOVED***;
-                    if ($2 === "'"***REMOVED*** return args[args.length - 1***REMOVED***.slice(args[args.length - 2***REMOVED*** + args[0***REMOVED***.length***REMOVED***;
-                    // Else, numbered backreference (without curly brackets***REMOVED***
+                        if (n <= args.length - 3) {
+                            return args[n] || "";
+                        }
+                        n = captureNames ? lastIndexOf(captureNames, $1) : -1;
+                        if (n < 0) {
+                            throw new SyntaxError("backreference to undefined group " + $0);
+                        }
+                        return args[n + 1] || "";
+                    }
+                    // Else, special variable or numbered backreference (without curly brackets)
+                    if ($2 === "$") return "$";
+                    if ($2 === "&" || +$2 === 0) return args[0]; // $&, $0 (not followed by 1-9), $00
+                    if ($2 === "`") return args[args.length - 1].slice(0, args[args.length - 2]);
+                    if ($2 === "'") return args[args.length - 1].slice(args[args.length - 2] + args[0].length);
+                    // Else, numbered backreference (without curly brackets)
                     $2 = +$2; // Type-convert; drop leading zero
                     /* XRegExp behavior:
-                     * - Backreferences without curly brackets end after 1 or 2 digits. Use `${..***REMOVED***` for more digits.
+                     * - Backreferences without curly brackets end after 1 or 2 digits. Use `${..}` for more digits.
                      * - `$1` is an error if there are no capturing groups.
-                     * - `$10` is an error if there are less than 10 capturing groups. Use `${1***REMOVED***0` instead.
+                     * - `$10` is an error if there are less than 10 capturing groups. Use `${1}0` instead.
                      * - `$01` is equivalent to `$1` if a capturing group exists, otherwise it's an error.
-                     * - `$0` (not followed by 1-9***REMOVED***, `$00`, and `$&` are the entire match.
+                     * - `$0` (not followed by 1-9), `$00`, and `$&` are the entire match.
                      * Native behavior, for comparison:
                      * - Backreferences end after 1 or 2 digits. Cannot use backreference to capturing group 100+.
                      * - `$1` is a literal `$1` if there are no capturing groups.
@@ -1058,71 +1058,71 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
                      * - `$01` is equivalent to `$1` if a capturing group exists, otherwise it's a literal `$01`.
                      * - `$0` is a literal `$0`. `$&` is the entire match.
                      */
-                    if (!isNaN($2***REMOVED******REMOVED*** {
-                        if ($2 > args.length - 3***REMOVED*** {
-                            throw new SyntaxError("backreference to undefined group " + $0***REMOVED***;
-                    ***REMOVED***
-                        return args[$2***REMOVED*** || "";
-                ***REMOVED***
-                    throw new SyntaxError("invalid token " + $0***REMOVED***;
-            ***REMOVED******REMOVED***;
-        ***REMOVED******REMOVED***;
-    ***REMOVED***
-        if (isRegex***REMOVED*** {
-            if (search.global***REMOVED*** {
-                search.lastIndex = 0; // Fixes IE, Safari bug (last tested IE 9, Safari 5.1***REMOVED***
-        ***REMOVED*** else {
-                search.lastIndex = origLastIndex; // Fixes IE, Opera bug (last tested IE 9, Opera 11.6***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                    if (!isNaN($2)) {
+                        if ($2 > args.length - 3) {
+                            throw new SyntaxError("backreference to undefined group " + $0);
+                        }
+                        return args[$2] || "";
+                    }
+                    throw new SyntaxError("invalid token " + $0);
+                });
+            });
+        }
+        if (isRegex) {
+            if (search.global) {
+                search.lastIndex = 0; // Fixes IE, Safari bug (last tested IE 9, Safari 5.1)
+            } else {
+                search.lastIndex = origLastIndex; // Fixes IE, Opera bug (last tested IE 9, Opera 11.6)
+            }
+        }
         return result;
-***REMOVED***;
+    };
 
 /**
- * Fixes browser bugs in the native `String.prototype.split`. Calling `XRegExp.install('natives'***REMOVED***`
+ * Fixes browser bugs in the native `String.prototype.split`. Calling `XRegExp.install('natives')`
  * uses this to override the native method. Use via `XRegExp.split` without overriding natives.
  * @private
- * @param {RegExp|String***REMOVED*** separator Regex or string to use for separating the string.
- * @param {Number***REMOVED*** [limit***REMOVED*** Maximum number of items to include in the result array.
- * @returns {Array***REMOVED*** Array of substrings.
+ * @param {RegExp|String} separator Regex or string to use for separating the string.
+ * @param {Number} [limit] Maximum number of items to include in the result array.
+ * @returns {Array} Array of substrings.
  */
-    fixed.split = function (separator, limit***REMOVED*** {
-        if (!self.isRegExp(separator***REMOVED******REMOVED*** {
-            return nativ.split.apply(this, arguments***REMOVED***; // use faster native method
-    ***REMOVED***
-        var str = String(this***REMOVED***,
+    fixed.split = function (separator, limit) {
+        if (!self.isRegExp(separator)) {
+            return nativ.split.apply(this, arguments); // use faster native method
+        }
+        var str = String(this),
             origLastIndex = separator.lastIndex,
-            output = [***REMOVED***,
+            output = [],
             lastLastIndex = 0,
             lastLength;
         /* Values for `limit`, per the spec:
-         * If undefined: pow(2,32***REMOVED*** - 1
+         * If undefined: pow(2,32) - 1
          * If 0, Infinity, or NaN: 0
-         * If positive number: limit = floor(limit***REMOVED***; if (limit >= pow(2,32***REMOVED******REMOVED*** limit -= pow(2,32***REMOVED***;
-         * If negative number: pow(2,32***REMOVED*** - floor(abs(limit***REMOVED******REMOVED***
+         * If positive number: limit = floor(limit); if (limit >= pow(2,32)) limit -= pow(2,32);
+         * If negative number: pow(2,32) - floor(abs(limit))
          * If other: Type-convert, then use the above rules
          */
-        limit = (limit === undef ? -1 : limit***REMOVED*** >>> 0;
-        self.forEach(str, separator, function (match***REMOVED*** {
-            if ((match.index + match[0***REMOVED***.length***REMOVED*** > lastLastIndex***REMOVED*** { // != `if (match[0***REMOVED***.length***REMOVED***`
-                output.push(str.slice(lastLastIndex, match.index***REMOVED******REMOVED***;
-                if (match.length > 1 && match.index < str.length***REMOVED*** {
-                    Array.prototype.push.apply(output, match.slice(1***REMOVED******REMOVED***;
-            ***REMOVED***
-                lastLength = match[0***REMOVED***.length;
+        limit = (limit === undef ? -1 : limit) >>> 0;
+        self.forEach(str, separator, function (match) {
+            if ((match.index + match[0].length) > lastLastIndex) { // != `if (match[0].length)`
+                output.push(str.slice(lastLastIndex, match.index));
+                if (match.length > 1 && match.index < str.length) {
+                    Array.prototype.push.apply(output, match.slice(1));
+                }
+                lastLength = match[0].length;
                 lastLastIndex = match.index + lastLength;
-        ***REMOVED***
-    ***REMOVED******REMOVED***;
-        if (lastLastIndex === str.length***REMOVED*** {
-            if (!nativ.test.call(separator, ""***REMOVED*** || lastLength***REMOVED*** {
-                output.push(""***REMOVED***;
-        ***REMOVED***
-    ***REMOVED*** else {
-            output.push(str.slice(lastLastIndex***REMOVED******REMOVED***;
-    ***REMOVED***
+            }
+        });
+        if (lastLastIndex === str.length) {
+            if (!nativ.test.call(separator, "") || lastLength) {
+                output.push("");
+            }
+        } else {
+            output.push(str.slice(lastLastIndex));
+        }
         separator.lastIndex = origLastIndex;
-        return output.length > limit ? output.slice(0, limit***REMOVED*** : output;
-***REMOVED***;
+        return output.length > limit ? output.slice(0, limit) : output;
+    };
 
 /*--------------------------------------
  *  Built-in tokens
@@ -1135,316 +1135,316 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  * Should be SyntaxErrors but are allowed in web reality. XRegExp makes them errors for cross-
  * browser consistency and to reserve their syntax, but lets them be superseded by XRegExp addons.
  */
-    add(/\\([ABCE-RTUVXYZaeg-mopqyz***REMOVED***|c(?![A-Za-z***REMOVED******REMOVED***|u(?![\dA-Fa-f***REMOVED***{4***REMOVED******REMOVED***|x(?![\dA-Fa-f***REMOVED***{2***REMOVED******REMOVED******REMOVED***/,
-        function (match, scope***REMOVED*** {
+    add(/\\([ABCE-RTUVXYZaeg-mopqyz]|c(?![A-Za-z])|u(?![\dA-Fa-f]{4})|x(?![\dA-Fa-f]{2}))/,
+        function (match, scope) {
             // \B is allowed in default scope only
-            if (match[1***REMOVED*** === "B" && scope === defaultScope***REMOVED*** {
-                return match[0***REMOVED***;
-        ***REMOVED***
-            throw new SyntaxError("invalid escape " + match[0***REMOVED******REMOVED***;
-***REMOVED***
-    ***REMOVED***scope: "all"***REMOVED******REMOVED***;
+            if (match[1] === "B" && scope === defaultScope) {
+                return match[0];
+            }
+            throw new SyntaxError("invalid escape " + match[0]);
+        },
+        {scope: "all"});
 
-/* Empty character class: [***REMOVED*** or [^***REMOVED***
- * Fixes a critical cross-browser syntax inconsistency. Unless this is standardized (per the spec***REMOVED***,
+/* Empty character class: [] or [^]
+ * Fixes a critical cross-browser syntax inconsistency. Unless this is standardized (per the spec),
  * regex syntax can't be accurately parsed because character class endings can't be determined.
  */
-    add(/\[(\^?***REMOVED******REMOVED***/,
-        function (match***REMOVED*** {
-            // For cross-browser compatibility with ES3, convert [***REMOVED*** to \b\B and [^***REMOVED*** to [\s\S***REMOVED***.
-            // (?!***REMOVED*** should work like \b\B, but is unreliable in Firefox
-            return match[1***REMOVED*** ? "[\\s\\S***REMOVED***" : "\\b\\B";
-    ***REMOVED******REMOVED***;
+    add(/\[(\^?)]/,
+        function (match) {
+            // For cross-browser compatibility with ES3, convert [] to \b\B and [^] to [\s\S].
+            // (?!) should work like \b\B, but is unreliable in Firefox
+            return match[1] ? "[\\s\\S]" : "\\b\\B";
+        });
 
-/* Comment pattern: (?# ***REMOVED***
- * Inline comments are an alternative to the line comments allowed in free-spacing mode (flag x***REMOVED***.
+/* Comment pattern: (?# )
+ * Inline comments are an alternative to the line comments allowed in free-spacing mode (flag x).
  */
-    add(/(?:\(\?#[^***REMOVED******REMOVED****\***REMOVED******REMOVED***+/,
-        function (match***REMOVED*** {
+    add(/(?:\(\?#[^)]*\))+/,
+        function (match) {
             // Keep tokens separated unless the following token is a quantifier
-            return nativ.test.call(quantifier, match.input.slice(match.index + match[0***REMOVED***.length***REMOVED******REMOVED*** ? "" : "(?:***REMOVED***";
-    ***REMOVED******REMOVED***;
+            return nativ.test.call(quantifier, match.input.slice(match.index + match[0].length)) ? "" : "(?:)";
+        });
 
 /* Named backreference: \k<name>
  * Backreference names can use the characters A-Z, a-z, 0-9, _, and $ only.
  */
-    add(/\\k<([\w$***REMOVED***+***REMOVED***>/,
-        function (match***REMOVED*** {
-            var index = isNaN(match[1***REMOVED******REMOVED*** ? (lastIndexOf(this.captureNames, match[1***REMOVED******REMOVED*** + 1***REMOVED*** : +match[1***REMOVED***,
-                endIndex = match.index + match[0***REMOVED***.length;
-            if (!index || index > this.captureNames.length***REMOVED*** {
-                throw new SyntaxError("backreference to undefined group " + match[0***REMOVED******REMOVED***;
-        ***REMOVED***
+    add(/\\k<([\w$]+)>/,
+        function (match) {
+            var index = isNaN(match[1]) ? (lastIndexOf(this.captureNames, match[1]) + 1) : +match[1],
+                endIndex = match.index + match[0].length;
+            if (!index || index > this.captureNames.length) {
+                throw new SyntaxError("backreference to undefined group " + match[0]);
+            }
             // Keep backreferences separate from subsequent literal numbers
             return "\\" + index + (
-                endIndex === match.input.length || isNaN(match.input.charAt(endIndex***REMOVED******REMOVED*** ? "" : "(?:***REMOVED***"
-            ***REMOVED***;
-    ***REMOVED******REMOVED***;
+                endIndex === match.input.length || isNaN(match.input.charAt(endIndex)) ? "" : "(?:)"
+            );
+        });
 
-/* Whitespace and line comments, in free-spacing mode (aka extended mode, flag x***REMOVED*** only.
+/* Whitespace and line comments, in free-spacing mode (aka extended mode, flag x) only.
  */
-    add(/(?:\s+|#.****REMOVED***+/,
-        function (match***REMOVED*** {
+    add(/(?:\s+|#.*)+/,
+        function (match) {
             // Keep tokens separated unless the following token is a quantifier
-            return nativ.test.call(quantifier, match.input.slice(match.index + match[0***REMOVED***.length***REMOVED******REMOVED*** ? "" : "(?:***REMOVED***";
-***REMOVED***
-    ***REMOVED***
-            trigger: function (***REMOVED*** {
-                return this.hasFlag("x"***REMOVED***;
-    ***REMOVED***
+            return nativ.test.call(quantifier, match.input.slice(match.index + match[0].length)) ? "" : "(?:)";
+        },
+        {
+            trigger: function () {
+                return this.hasFlag("x");
+            },
             customFlags: "x"
-    ***REMOVED******REMOVED***;
+        });
 
-/* Dot, in dotall mode (aka singleline mode, flag s***REMOVED*** only.
+/* Dot, in dotall mode (aka singleline mode, flag s) only.
  */
     add(/\./,
-        function (***REMOVED*** {
-            return "[\\s\\S***REMOVED***";
-***REMOVED***
-    ***REMOVED***
-            trigger: function (***REMOVED*** {
-                return this.hasFlag("s"***REMOVED***;
-    ***REMOVED***
+        function () {
+            return "[\\s\\S]";
+        },
+        {
+            trigger: function () {
+                return this.hasFlag("s");
+            },
             customFlags: "s"
-    ***REMOVED******REMOVED***;
+        });
 
 /* Named capturing group; match the opening delimiter only: (?<name>
  * Capture names can use the characters A-Z, a-z, 0-9, _, and $ only. Names can't be integers.
  * Supports Python-style (?P<name> as an alternate syntax to avoid issues in recent Opera (which
- * natively supports the Python-style syntax***REMOVED***. Otherwise, XRegExp might treat numbered
+ * natively supports the Python-style syntax). Otherwise, XRegExp might treat numbered
  * backreferences to Python-style named capture as octals.
  */
-    add(/\(\?P?<([\w$***REMOVED***+***REMOVED***>/,
-        function (match***REMOVED*** {
-            if (!isNaN(match[1***REMOVED******REMOVED******REMOVED*** {
+    add(/\(\?P?<([\w$]+)>/,
+        function (match) {
+            if (!isNaN(match[1])) {
                 // Avoid incorrect lookups, since named backreferences are added to match arrays
-                throw new SyntaxError("can't use integer as capture name " + match[0***REMOVED******REMOVED***;
-        ***REMOVED***
-            this.captureNames.push(match[1***REMOVED******REMOVED***;
+                throw new SyntaxError("can't use integer as capture name " + match[0]);
+            }
+            this.captureNames.push(match[1]);
             this.hasNamedCapture = true;
             return "(";
-    ***REMOVED******REMOVED***;
+        });
 
 /* Numbered backreference or octal, plus any following digits: \0, \11, etc.
  * Octals except \0 not followed by 0-9 and backreferences to unopened capture groups throw an
  * error. Other matches are returned unaltered. IE <= 8 doesn't support backreferences greater than
  * \99 in regex syntax.
  */
-    add(/\\(\d+***REMOVED***/,
-        function (match, scope***REMOVED*** {
-            if (!(scope === defaultScope && /^[1-9***REMOVED***/.test(match[1***REMOVED******REMOVED*** && +match[1***REMOVED*** <= this.captureNames.length***REMOVED*** &&
-                    match[1***REMOVED*** !== "0"***REMOVED*** {
-                throw new SyntaxError("can't use octal escape or backreference to undefined group " + match[0***REMOVED******REMOVED***;
-        ***REMOVED***
-            return match[0***REMOVED***;
-***REMOVED***
-    ***REMOVED***scope: "all"***REMOVED******REMOVED***;
+    add(/\\(\d+)/,
+        function (match, scope) {
+            if (!(scope === defaultScope && /^[1-9]/.test(match[1]) && +match[1] <= this.captureNames.length) &&
+                    match[1] !== "0") {
+                throw new SyntaxError("can't use octal escape or backreference to undefined group " + match[0]);
+            }
+            return match[0];
+        },
+        {scope: "all"});
 
 /* Capturing group; match the opening parenthesis only.
- * Required for support of named capturing groups. Also adds explicit capture mode (flag n***REMOVED***.
+ * Required for support of named capturing groups. Also adds explicit capture mode (flag n).
  */
-    add(/\((?!\?***REMOVED***/,
-        function (***REMOVED*** {
-            if (this.hasFlag("n"***REMOVED******REMOVED*** {
+    add(/\((?!\?)/,
+        function () {
+            if (this.hasFlag("n")) {
                 return "(?:";
-        ***REMOVED***
-            this.captureNames.push(null***REMOVED***;
+            }
+            this.captureNames.push(null);
             return "(";
-***REMOVED***
-    ***REMOVED***customFlags: "n"***REMOVED******REMOVED***;
+        },
+        {customFlags: "n"});
 
 /*--------------------------------------
  *  Expose XRegExp
  *------------------------------------*/
 
 // For CommonJS enviroments
-    if (typeof exports !== "undefined"***REMOVED*** {
+    if (typeof exports !== "undefined") {
         exports.XRegExp = self;
-***REMOVED***
+    }
 
     return self;
 
-***REMOVED***(***REMOVED******REMOVED***;
+}());
 
 
 /***** unicode-base.js *****/
 
 /*!
  * XRegExp Unicode Base v1.0.0
- * (c***REMOVED*** 2008-2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2008-2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  * Uses Unicode 6.1 <http://unicode.org/>
  */
 
 /**
- * Adds support for the `\p{L***REMOVED***` or `\p{Letter***REMOVED***` Unicode category. Addon packages for other Unicode
+ * Adds support for the `\p{L}` or `\p{Letter}` Unicode category. Addon packages for other Unicode
  * categories, scripts, blocks, and properties are available separately. All Unicode tokens can be
- * inverted using `\P{..***REMOVED***` or `\p{^..***REMOVED***`. Token names are case insensitive, and any spaces, hyphens,
+ * inverted using `\P{..}` or `\p{^..}`. Token names are case insensitive, and any spaces, hyphens,
  * and underscores are ignored.
  * @requires XRegExp
  */
-(function (XRegExp***REMOVED*** {
+(function (XRegExp) {
     "use strict";
 
-    var unicode = {***REMOVED***;
+    var unicode = {};
 
 /*--------------------------------------
  *  Private helper functions
  *------------------------------------*/
 
-// Generates a standardized token name (lowercase, with hyphens, spaces, and underscores removed***REMOVED***
-    function slug(name***REMOVED*** {
-        return name.replace(/[- _***REMOVED***+/g, ""***REMOVED***.toLowerCase(***REMOVED***;
-***REMOVED***
+// Generates a standardized token name (lowercase, with hyphens, spaces, and underscores removed)
+    function slug(name) {
+        return name.replace(/[- _]+/g, "").toLowerCase();
+    }
 
 // Expands a list of Unicode code points and ranges to be usable in a regex character class
-    function expand(str***REMOVED*** {
-        return str.replace(/\w{4***REMOVED***/g, "\\u$&"***REMOVED***;
-***REMOVED***
+    function expand(str) {
+        return str.replace(/\w{4}/g, "\\u$&");
+    }
 
 // Adds leading zeros if shorter than four characters
-    function pad4(str***REMOVED*** {
-        while (str.length < 4***REMOVED*** {
+    function pad4(str) {
+        while (str.length < 4) {
             str = "0" + str;
-    ***REMOVED***
+        }
         return str;
-***REMOVED***
+    }
 
 // Converts a hexadecimal number to decimal
-    function dec(hex***REMOVED*** {
-        return parseInt(hex, 16***REMOVED***;
-***REMOVED***
+    function dec(hex) {
+        return parseInt(hex, 16);
+    }
 
 // Converts a decimal number to hexadecimal
-    function hex(dec***REMOVED*** {
-        return parseInt(dec, 10***REMOVED***.toString(16***REMOVED***;
-***REMOVED***
+    function hex(dec) {
+        return parseInt(dec, 10).toString(16);
+    }
 
 // Inverts a list of Unicode code points and ranges
-    function invert(range***REMOVED*** {
-        var output = [***REMOVED***,
+    function invert(range) {
+        var output = [],
             lastEnd = -1,
             start;
-        XRegExp.forEach(range, /\\u(\w{4***REMOVED******REMOVED***(?:-\\u(\w{4***REMOVED******REMOVED******REMOVED***?/, function (m***REMOVED*** {
-            start = dec(m[1***REMOVED******REMOVED***;
-            if (start > (lastEnd + 1***REMOVED******REMOVED*** {
-                output.push("\\u" + pad4(hex(lastEnd + 1***REMOVED******REMOVED******REMOVED***;
-                if (start > (lastEnd + 2***REMOVED******REMOVED*** {
-                    output.push("-\\u" + pad4(hex(start - 1***REMOVED******REMOVED******REMOVED***;
-            ***REMOVED***
-        ***REMOVED***
-            lastEnd = dec(m[2***REMOVED*** || m[1***REMOVED******REMOVED***;
-    ***REMOVED******REMOVED***;
-        if (lastEnd < 0xFFFF***REMOVED*** {
-            output.push("\\u" + pad4(hex(lastEnd + 1***REMOVED******REMOVED******REMOVED***;
-            if (lastEnd < 0xFFFE***REMOVED*** {
-                output.push("-\\uFFFF"***REMOVED***;
-        ***REMOVED***
-    ***REMOVED***
-        return output.join(""***REMOVED***;
-***REMOVED***
+        XRegExp.forEach(range, /\\u(\w{4})(?:-\\u(\w{4}))?/, function (m) {
+            start = dec(m[1]);
+            if (start > (lastEnd + 1)) {
+                output.push("\\u" + pad4(hex(lastEnd + 1)));
+                if (start > (lastEnd + 2)) {
+                    output.push("-\\u" + pad4(hex(start - 1)));
+                }
+            }
+            lastEnd = dec(m[2] || m[1]);
+        });
+        if (lastEnd < 0xFFFF) {
+            output.push("\\u" + pad4(hex(lastEnd + 1)));
+            if (lastEnd < 0xFFFE) {
+                output.push("-\\uFFFF");
+            }
+        }
+        return output.join("");
+    }
 
 // Generates an inverted token on first use
-    function cacheInversion(item***REMOVED*** {
-        return unicode["^" + item***REMOVED*** || (unicode["^" + item***REMOVED*** = invert(unicode[item***REMOVED******REMOVED******REMOVED***;
-***REMOVED***
+    function cacheInversion(item) {
+        return unicode["^" + item] || (unicode["^" + item] = invert(unicode[item]));
+    }
 
 /*--------------------------------------
  *  Core functionality
  *------------------------------------*/
 
-    XRegExp.install("extensibility"***REMOVED***;
+    XRegExp.install("extensibility");
 
 /**
- * Adds to the list of Unicode properties that XRegExp regexes can match via \p{..***REMOVED*** or \P{..***REMOVED***.
+ * Adds to the list of Unicode properties that XRegExp regexes can match via \p{..} or \P{..}.
  * @memberOf XRegExp
- * @param {Object***REMOVED*** pack Named sets of Unicode code points and ranges.
- * @param {Object***REMOVED*** [aliases***REMOVED*** Aliases for the primary token names.
+ * @param {Object} pack Named sets of Unicode code points and ranges.
+ * @param {Object} [aliases] Aliases for the primary token names.
  * @example
  *
  * XRegExp.addUnicodePackage({
  *   XDigit: '0030-00390041-00460061-0066' // 0-9A-Fa-f
- * ***REMOVED***, {
+ * }, {
  *   XDigit: 'Hexadecimal'
- * ***REMOVED******REMOVED***;
+ * });
  */
-    XRegExp.addUnicodePackage = function (pack, aliases***REMOVED*** {
+    XRegExp.addUnicodePackage = function (pack, aliases) {
         var p;
-        if (!XRegExp.isInstalled("extensibility"***REMOVED******REMOVED*** {
-            throw new Error("extensibility must be installed before adding Unicode packages"***REMOVED***;
-    ***REMOVED***
-        if (pack***REMOVED*** {
-            for (p in pack***REMOVED*** {
-                if (pack.hasOwnProperty(p***REMOVED******REMOVED*** {
-                    unicode[slug(p***REMOVED******REMOVED*** = expand(pack[p***REMOVED******REMOVED***;
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
-        if (aliases***REMOVED*** {
-            for (p in aliases***REMOVED*** {
-                if (aliases.hasOwnProperty(p***REMOVED******REMOVED*** {
-                    unicode[slug(aliases[p***REMOVED******REMOVED******REMOVED*** = unicode[slug(p***REMOVED******REMOVED***;
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED***;
+        if (!XRegExp.isInstalled("extensibility")) {
+            throw new Error("extensibility must be installed before adding Unicode packages");
+        }
+        if (pack) {
+            for (p in pack) {
+                if (pack.hasOwnProperty(p)) {
+                    unicode[slug(p)] = expand(pack[p]);
+                }
+            }
+        }
+        if (aliases) {
+            for (p in aliases) {
+                if (aliases.hasOwnProperty(p)) {
+                    unicode[slug(aliases[p])] = unicode[slug(p)];
+                }
+            }
+        }
+    };
 
 /* Adds data for the Unicode `Letter` category. Addon packages include other categories, scripts,
  * blocks, and properties.
  */
     XRegExp.addUnicodePackage({
         L: "0041-005A0061-007A00AA00B500BA00C0-00D600D8-00F600F8-02C102C6-02D102E0-02E402EC02EE0370-037403760377037A-037D03860388-038A038C038E-03A103A3-03F503F7-0481048A-05270531-055605590561-058705D0-05EA05F0-05F20620-064A066E066F0671-06D306D506E506E606EE06EF06FA-06FC06FF07100712-072F074D-07A507B107CA-07EA07F407F507FA0800-0815081A082408280840-085808A008A2-08AC0904-0939093D09500958-09610971-09770979-097F0985-098C098F09900993-09A809AA-09B009B209B6-09B909BD09CE09DC09DD09DF-09E109F009F10A05-0A0A0A0F0A100A13-0A280A2A-0A300A320A330A350A360A380A390A59-0A5C0A5E0A72-0A740A85-0A8D0A8F-0A910A93-0AA80AAA-0AB00AB20AB30AB5-0AB90ABD0AD00AE00AE10B05-0B0C0B0F0B100B13-0B280B2A-0B300B320B330B35-0B390B3D0B5C0B5D0B5F-0B610B710B830B85-0B8A0B8E-0B900B92-0B950B990B9A0B9C0B9E0B9F0BA30BA40BA8-0BAA0BAE-0BB90BD00C05-0C0C0C0E-0C100C12-0C280C2A-0C330C35-0C390C3D0C580C590C600C610C85-0C8C0C8E-0C900C92-0CA80CAA-0CB30CB5-0CB90CBD0CDE0CE00CE10CF10CF20D05-0D0C0D0E-0D100D12-0D3A0D3D0D4E0D600D610D7A-0D7F0D85-0D960D9A-0DB10DB3-0DBB0DBD0DC0-0DC60E01-0E300E320E330E40-0E460E810E820E840E870E880E8A0E8D0E94-0E970E99-0E9F0EA1-0EA30EA50EA70EAA0EAB0EAD-0EB00EB20EB30EBD0EC0-0EC40EC60EDC-0EDF0F000F40-0F470F49-0F6C0F88-0F8C1000-102A103F1050-1055105A-105D106110651066106E-10701075-1081108E10A0-10C510C710CD10D0-10FA10FC-1248124A-124D1250-12561258125A-125D1260-1288128A-128D1290-12B012B2-12B512B8-12BE12C012C2-12C512C8-12D612D8-13101312-13151318-135A1380-138F13A0-13F41401-166C166F-167F1681-169A16A0-16EA1700-170C170E-17111720-17311740-17511760-176C176E-17701780-17B317D717DC1820-18771880-18A818AA18B0-18F51900-191C1950-196D1970-19741980-19AB19C1-19C71A00-1A161A20-1A541AA71B05-1B331B45-1B4B1B83-1BA01BAE1BAF1BBA-1BE51C00-1C231C4D-1C4F1C5A-1C7D1CE9-1CEC1CEE-1CF11CF51CF61D00-1DBF1E00-1F151F18-1F1D1F20-1F451F48-1F4D1F50-1F571F591F5B1F5D1F5F-1F7D1F80-1FB41FB6-1FBC1FBE1FC2-1FC41FC6-1FCC1FD0-1FD31FD6-1FDB1FE0-1FEC1FF2-1FF41FF6-1FFC2071207F2090-209C21022107210A-211321152119-211D212421262128212A-212D212F-2139213C-213F2145-2149214E218321842C00-2C2E2C30-2C5E2C60-2CE42CEB-2CEE2CF22CF32D00-2D252D272D2D2D30-2D672D6F2D80-2D962DA0-2DA62DA8-2DAE2DB0-2DB62DB8-2DBE2DC0-2DC62DC8-2DCE2DD0-2DD62DD8-2DDE2E2F300530063031-3035303B303C3041-3096309D-309F30A1-30FA30FC-30FF3105-312D3131-318E31A0-31BA31F0-31FF3400-4DB54E00-9FCCA000-A48CA4D0-A4FDA500-A60CA610-A61FA62AA62BA640-A66EA67F-A697A6A0-A6E5A717-A71FA722-A788A78B-A78EA790-A793A7A0-A7AAA7F8-A801A803-A805A807-A80AA80C-A822A840-A873A882-A8B3A8F2-A8F7A8FBA90A-A925A930-A946A960-A97CA984-A9B2A9CFAA00-AA28AA40-AA42AA44-AA4BAA60-AA76AA7AAA80-AAAFAAB1AAB5AAB6AAB9-AABDAAC0AAC2AADB-AADDAAE0-AAEAAAF2-AAF4AB01-AB06AB09-AB0EAB11-AB16AB20-AB26AB28-AB2EABC0-ABE2AC00-D7A3D7B0-D7C6D7CB-D7FBF900-FA6DFA70-FAD9FB00-FB06FB13-FB17FB1DFB1F-FB28FB2A-FB36FB38-FB3CFB3EFB40FB41FB43FB44FB46-FBB1FBD3-FD3DFD50-FD8FFD92-FDC7FDF0-FDFBFE70-FE74FE76-FEFCFF21-FF3AFF41-FF5AFF66-FFBEFFC2-FFC7FFCA-FFCFFFD2-FFD7FFDA-FFDC"
-***REMOVED*** {
+    }, {
         L: "Letter"
-***REMOVED******REMOVED***;
+    });
 
-/* Adds Unicode property syntax to XRegExp: \p{..***REMOVED***, \P{..***REMOVED***, \p{^..***REMOVED***
+/* Adds Unicode property syntax to XRegExp: \p{..}, \P{..}, \p{^..}
  */
     XRegExp.addToken(
-        /\\([pP***REMOVED******REMOVED***{(\^?***REMOVED***([^***REMOVED******REMOVED*******REMOVED******REMOVED***/,
-        function (match, scope***REMOVED*** {
-            var inv = (match[1***REMOVED*** === "P" || match[2***REMOVED******REMOVED*** ? "^" : "",
-                item = slug(match[3***REMOVED******REMOVED***;
-            // The double negative \P{^..***REMOVED*** is invalid
-            if (match[1***REMOVED*** === "P" && match[2***REMOVED******REMOVED*** {
-                throw new SyntaxError("invalid double negation \\P{^"***REMOVED***;
-        ***REMOVED***
-            if (!unicode.hasOwnProperty(item***REMOVED******REMOVED*** {
-                throw new SyntaxError("invalid or unknown Unicode property " + match[0***REMOVED******REMOVED***;
-        ***REMOVED***
+        /\\([pP]){(\^?)([^}]*)}/,
+        function (match, scope) {
+            var inv = (match[1] === "P" || match[2]) ? "^" : "",
+                item = slug(match[3]);
+            // The double negative \P{^..} is invalid
+            if (match[1] === "P" && match[2]) {
+                throw new SyntaxError("invalid double negation \\P{^");
+            }
+            if (!unicode.hasOwnProperty(item)) {
+                throw new SyntaxError("invalid or unknown Unicode property " + match[0]);
+            }
             return scope === "class" ?
-                    (inv ? cacheInversion(item***REMOVED*** : unicode[item***REMOVED******REMOVED*** :
-                    "[" + inv + unicode[item***REMOVED*** + "***REMOVED***";
-***REMOVED***
-    ***REMOVED***scope: "all"***REMOVED***
-    ***REMOVED***;
+                    (inv ? cacheInversion(item) : unicode[item]) :
+                    "[" + inv + unicode[item] + "]";
+        },
+        {scope: "all"}
+    );
 
-***REMOVED***(XRegExp***REMOVED******REMOVED***;
+}(XRegExp));
 
 
 /***** unicode-categories.js *****/
 
 /*!
  * XRegExp Unicode Categories v1.2.0
- * (c***REMOVED*** 2010-2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2010-2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  * Uses Unicode 6.1 <http://unicode.org/>
  */
 
 /**
- * Adds support for all Unicode categories (aka properties***REMOVED*** E.g., `\p{Lu***REMOVED***` or
- * `\p{Uppercase Letter***REMOVED***`. Token names are case insensitive, and any spaces, hyphens, and
+ * Adds support for all Unicode categories (aka properties) E.g., `\p{Lu}` or
+ * `\p{Uppercase Letter}`. Token names are case insensitive, and any spaces, hyphens, and
  * underscores are ignored.
  * @requires XRegExp, XRegExp Unicode Base
  */
-(function (XRegExp***REMOVED*** {
+(function (XRegExp) {
     "use strict";
 
-    if (!XRegExp.addUnicodePackage***REMOVED*** {
-        throw new ReferenceError("Unicode Base must be loaded before Unicode Categories"***REMOVED***;
-***REMOVED***
+    if (!XRegExp.addUnicodePackage) {
+        throw new ReferenceError("Unicode Base must be loaded before Unicode Categories");
+    }
 
-    XRegExp.install("extensibility"***REMOVED***;
+    XRegExp.install("extensibility");
 
     XRegExp.addUnicodePackage({
         //L: "", // Included in the Unicode Base addon
@@ -1484,7 +1484,7 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
         Co: "E000-F8FF",
         Cs: "D800-DFFF",
         Cn: "03780379037F-0383038B038D03A20528-05300557055805600588058B-058E059005C8-05CF05EB-05EF05F5-05FF0605061C061D070E074B074C07B2-07BF07FB-07FF082E082F083F085C085D085F-089F08A108AD-08E308FF097809800984098D098E0991099209A909B109B3-09B509BA09BB09C509C609C909CA09CF-09D609D8-09DB09DE09E409E509FC-0A000A040A0B-0A0E0A110A120A290A310A340A370A3A0A3B0A3D0A43-0A460A490A4A0A4E-0A500A52-0A580A5D0A5F-0A650A76-0A800A840A8E0A920AA90AB10AB40ABA0ABB0AC60ACA0ACE0ACF0AD1-0ADF0AE40AE50AF2-0B000B040B0D0B0E0B110B120B290B310B340B3A0B3B0B450B460B490B4A0B4E-0B550B58-0B5B0B5E0B640B650B78-0B810B840B8B-0B8D0B910B96-0B980B9B0B9D0BA0-0BA20BA5-0BA70BAB-0BAD0BBA-0BBD0BC3-0BC50BC90BCE0BCF0BD1-0BD60BD8-0BE50BFB-0C000C040C0D0C110C290C340C3A-0C3C0C450C490C4E-0C540C570C5A-0C5F0C640C650C70-0C770C800C810C840C8D0C910CA90CB40CBA0CBB0CC50CC90CCE-0CD40CD7-0CDD0CDF0CE40CE50CF00CF3-0D010D040D0D0D110D3B0D3C0D450D490D4F-0D560D58-0D5F0D640D650D76-0D780D800D810D840D97-0D990DB20DBC0DBE0DBF0DC7-0DC90DCB-0DCE0DD50DD70DE0-0DF10DF5-0E000E3B-0E3E0E5C-0E800E830E850E860E890E8B0E8C0E8E-0E930E980EA00EA40EA60EA80EA90EAC0EBA0EBE0EBF0EC50EC70ECE0ECF0EDA0EDB0EE0-0EFF0F480F6D-0F700F980FBD0FCD0FDB-0FFF10C610C8-10CC10CE10CF1249124E124F12571259125E125F1289128E128F12B112B612B712BF12C112C612C712D7131113161317135B135C137D-137F139A-139F13F5-13FF169D-169F16F1-16FF170D1715-171F1737-173F1754-175F176D17711774-177F17DE17DF17EA-17EF17FA-17FF180F181A-181F1878-187F18AB-18AF18F6-18FF191D-191F192C-192F193C-193F1941-1943196E196F1975-197F19AC-19AF19CA-19CF19DB-19DD1A1C1A1D1A5F1A7D1A7E1A8A-1A8F1A9A-1A9F1AAE-1AFF1B4C-1B4F1B7D-1B7F1BF4-1BFB1C38-1C3A1C4A-1C4C1C80-1CBF1CC8-1CCF1CF7-1CFF1DE7-1DFB1F161F171F1E1F1F1F461F471F4E1F4F1F581F5A1F5C1F5E1F7E1F7F1FB51FC51FD41FD51FDC1FF01FF11FF51FFF2065-206920722073208F209D-209F20BA-20CF20F1-20FF218A-218F23F4-23FF2427-243F244B-245F27002B4D-2B4F2B5A-2BFF2C2F2C5F2CF4-2CF82D262D28-2D2C2D2E2D2F2D68-2D6E2D71-2D7E2D97-2D9F2DA72DAF2DB72DBF2DC72DCF2DD72DDF2E3C-2E7F2E9A2EF4-2EFF2FD6-2FEF2FFC-2FFF3040309730983100-3104312E-3130318F31BB-31BF31E4-31EF321F32FF4DB6-4DBF9FCD-9FFFA48D-A48FA4C7-A4CFA62C-A63FA698-A69EA6F8-A6FFA78FA794-A79FA7AB-A7F7A82C-A82FA83A-A83FA878-A87FA8C5-A8CDA8DA-A8DFA8FC-A8FFA954-A95EA97D-A97FA9CEA9DA-A9DDA9E0-A9FFAA37-AA3FAA4EAA4FAA5AAA5BAA7C-AA7FAAC3-AADAAAF7-AB00AB07AB08AB0FAB10AB17-AB1FAB27AB2F-ABBFABEEABEFABFA-ABFFD7A4-D7AFD7C7-D7CAD7FC-D7FFFA6EFA6FFADA-FAFFFB07-FB12FB18-FB1CFB37FB3DFB3FFB42FB45FBC2-FBD2FD40-FD4FFD90FD91FDC8-FDEFFDFEFDFFFE1A-FE1FFE27-FE2FFE53FE67FE6C-FE6FFE75FEFDFEFEFF00FFBF-FFC1FFC8FFC9FFD0FFD1FFD8FFD9FFDD-FFDFFFE7FFEF-FFF8FFFEFFFF"
-***REMOVED*** {
+    }, {
         //L: "Letter", // Included in the Unicode Base addon
         Ll: "Lowercase_Letter",
         Lu: "Uppercase_Letter",
@@ -1522,34 +1522,34 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
         Co: "Private_Use",
         Cs: "Surrogate",
         Cn: "Unassigned"
-***REMOVED******REMOVED***;
+    });
 
-***REMOVED***(XRegExp***REMOVED******REMOVED***;
+}(XRegExp));
 
 
 /***** unicode-scripts.js *****/
 
 /*!
  * XRegExp Unicode Scripts v1.2.0
- * (c***REMOVED*** 2010-2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2010-2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  * Uses Unicode 6.1 <http://unicode.org/>
  */
 
 /**
- * Adds support for all Unicode scripts in the Basic Multilingual Plane (U+0000-U+FFFF***REMOVED***.
- * E.g., `\p{Latin***REMOVED***`. Token names are case insensitive, and any spaces, hyphens, and underscores
+ * Adds support for all Unicode scripts in the Basic Multilingual Plane (U+0000-U+FFFF).
+ * E.g., `\p{Latin}`. Token names are case insensitive, and any spaces, hyphens, and underscores
  * are ignored.
  * @requires XRegExp, XRegExp Unicode Base
  */
-(function (XRegExp***REMOVED*** {
+(function (XRegExp) {
     "use strict";
 
-    if (!XRegExp.addUnicodePackage***REMOVED*** {
-        throw new ReferenceError("Unicode Base must be loaded before Unicode Scripts"***REMOVED***;
-***REMOVED***
+    if (!XRegExp.addUnicodePackage) {
+        throw new ReferenceError("Unicode Base must be loaded before Unicode Scripts");
+    }
 
-    XRegExp.install("extensibility"***REMOVED***;
+    XRegExp.install("extensibility");
 
     XRegExp.addUnicodePackage({
         Arabic: "0600-06040606-060B060D-061A061E0620-063F0641-064A0656-065E066A-066F0671-06DC06DE-06FF0750-077F08A008A2-08AC08E4-08FEFB50-FBC1FBD3-FD3DFD50-FD8FFD92-FDC7FDF0-FDFCFE70-FE74FE76-FEFC",
@@ -1623,34 +1623,34 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
         Tifinagh: "2D30-2D672D6F2D702D7F",
         Vai: "A500-A62B",
         Yi: "A000-A48CA490-A4C6"
-***REMOVED******REMOVED***;
+    });
 
-***REMOVED***(XRegExp***REMOVED******REMOVED***;
+}(XRegExp));
 
 
 /***** unicode-blocks.js *****/
 
 /*!
  * XRegExp Unicode Blocks v1.2.0
- * (c***REMOVED*** 2010-2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2010-2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  * Uses Unicode 6.1 <http://unicode.org/>
  */
 
 /**
- * Adds support for all Unicode blocks in the Basic Multilingual Plane (U+0000-U+FFFF***REMOVED***. Unicode
- * blocks use the prefix "In". E.g., `\p{InBasicLatin***REMOVED***`. Token names are case insensitive, and any
+ * Adds support for all Unicode blocks in the Basic Multilingual Plane (U+0000-U+FFFF). Unicode
+ * blocks use the prefix "In". E.g., `\p{InBasicLatin}`. Token names are case insensitive, and any
  * spaces, hyphens, and underscores are ignored.
  * @requires XRegExp, XRegExp Unicode Base
  */
-(function (XRegExp***REMOVED*** {
+(function (XRegExp) {
     "use strict";
 
-    if (!XRegExp.addUnicodePackage***REMOVED*** {
-        throw new ReferenceError("Unicode Base must be loaded before Unicode Blocks"***REMOVED***;
-***REMOVED***
+    if (!XRegExp.addUnicodePackage) {
+        throw new ReferenceError("Unicode Base must be loaded before Unicode Blocks");
+    }
 
-    XRegExp.install("extensibility"***REMOVED***;
+    XRegExp.install("extensibility");
 
     XRegExp.addUnicodePackage({
         InBasic_Latin: "0000-007F",
@@ -1809,34 +1809,34 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
         InArabic_Presentation_Forms_B: "FE70-FEFF",
         InHalfwidth_and_Fullwidth_Forms: "FF00-FFEF",
         InSpecials: "FFF0-FFFF"
-***REMOVED******REMOVED***;
+    });
 
-***REMOVED***(XRegExp***REMOVED******REMOVED***;
+}(XRegExp));
 
 
 /***** unicode-properties.js *****/
 
 /*!
  * XRegExp Unicode Properties v1.0.0
- * (c***REMOVED*** 2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  * Uses Unicode 6.1 <http://unicode.org/>
  */
 
 /**
- * Adds Unicode properties necessary to meet Level 1 Unicode support (detailed in UTS#18 RL1.2***REMOVED***.
- * Includes code points from the Basic Multilingual Plane (U+0000-U+FFFF***REMOVED*** only. Token names are
+ * Adds Unicode properties necessary to meet Level 1 Unicode support (detailed in UTS#18 RL1.2).
+ * Includes code points from the Basic Multilingual Plane (U+0000-U+FFFF) only. Token names are
  * case insensitive, and any spaces, hyphens, and underscores are ignored.
  * @requires XRegExp, XRegExp Unicode Base
  */
-(function (XRegExp***REMOVED*** {
+(function (XRegExp) {
     "use strict";
 
-    if (!XRegExp.addUnicodePackage***REMOVED*** {
-        throw new ReferenceError("Unicode Base must be loaded before Unicode Properties"***REMOVED***;
-***REMOVED***
+    if (!XRegExp.addUnicodePackage) {
+        throw new ReferenceError("Unicode Base must be loaded before Unicode Properties");
+    }
 
-    XRegExp.install("extensibility"***REMOVED***;
+    XRegExp.install("extensibility");
 
     XRegExp.addUnicodePackage({
         Alphabetic: "0041-005A0061-007A00AA00B500BA00C0-00D600D8-00F600F8-02C102C6-02D102E0-02E402EC02EE03450370-037403760377037A-037D03860388-038A038C038E-03A103A3-03F503F7-0481048A-05270531-055605590561-058705B0-05BD05BF05C105C205C405C505C705D0-05EA05F0-05F20610-061A0620-06570659-065F066E-06D306D5-06DC06E1-06E806ED-06EF06FA-06FC06FF0710-073F074D-07B107CA-07EA07F407F507FA0800-0817081A-082C0840-085808A008A2-08AC08E4-08E908F0-08FE0900-093B093D-094C094E-09500955-09630971-09770979-097F0981-09830985-098C098F09900993-09A809AA-09B009B209B6-09B909BD-09C409C709C809CB09CC09CE09D709DC09DD09DF-09E309F009F10A01-0A030A05-0A0A0A0F0A100A13-0A280A2A-0A300A320A330A350A360A380A390A3E-0A420A470A480A4B0A4C0A510A59-0A5C0A5E0A70-0A750A81-0A830A85-0A8D0A8F-0A910A93-0AA80AAA-0AB00AB20AB30AB5-0AB90ABD-0AC50AC7-0AC90ACB0ACC0AD00AE0-0AE30B01-0B030B05-0B0C0B0F0B100B13-0B280B2A-0B300B320B330B35-0B390B3D-0B440B470B480B4B0B4C0B560B570B5C0B5D0B5F-0B630B710B820B830B85-0B8A0B8E-0B900B92-0B950B990B9A0B9C0B9E0B9F0BA30BA40BA8-0BAA0BAE-0BB90BBE-0BC20BC6-0BC80BCA-0BCC0BD00BD70C01-0C030C05-0C0C0C0E-0C100C12-0C280C2A-0C330C35-0C390C3D-0C440C46-0C480C4A-0C4C0C550C560C580C590C60-0C630C820C830C85-0C8C0C8E-0C900C92-0CA80CAA-0CB30CB5-0CB90CBD-0CC40CC6-0CC80CCA-0CCC0CD50CD60CDE0CE0-0CE30CF10CF20D020D030D05-0D0C0D0E-0D100D12-0D3A0D3D-0D440D46-0D480D4A-0D4C0D4E0D570D60-0D630D7A-0D7F0D820D830D85-0D960D9A-0DB10DB3-0DBB0DBD0DC0-0DC60DCF-0DD40DD60DD8-0DDF0DF20DF30E01-0E3A0E40-0E460E4D0E810E820E840E870E880E8A0E8D0E94-0E970E99-0E9F0EA1-0EA30EA50EA70EAA0EAB0EAD-0EB90EBB-0EBD0EC0-0EC40EC60ECD0EDC-0EDF0F000F40-0F470F49-0F6C0F71-0F810F88-0F970F99-0FBC1000-10361038103B-103F1050-10621065-1068106E-1086108E109C109D10A0-10C510C710CD10D0-10FA10FC-1248124A-124D1250-12561258125A-125D1260-1288128A-128D1290-12B012B2-12B512B8-12BE12C012C2-12C512C8-12D612D8-13101312-13151318-135A135F1380-138F13A0-13F41401-166C166F-167F1681-169A16A0-16EA16EE-16F01700-170C170E-17131720-17331740-17531760-176C176E-1770177217731780-17B317B6-17C817D717DC1820-18771880-18AA18B0-18F51900-191C1920-192B1930-19381950-196D1970-19741980-19AB19B0-19C91A00-1A1B1A20-1A5E1A61-1A741AA71B00-1B331B35-1B431B45-1B4B1B80-1BA91BAC-1BAF1BBA-1BE51BE7-1BF11C00-1C351C4D-1C4F1C5A-1C7D1CE9-1CEC1CEE-1CF31CF51CF61D00-1DBF1E00-1F151F18-1F1D1F20-1F451F48-1F4D1F50-1F571F591F5B1F5D1F5F-1F7D1F80-1FB41FB6-1FBC1FBE1FC2-1FC41FC6-1FCC1FD0-1FD31FD6-1FDB1FE0-1FEC1FF2-1FF41FF6-1FFC2071207F2090-209C21022107210A-211321152119-211D212421262128212A-212D212F-2139213C-213F2145-2149214E2160-218824B6-24E92C00-2C2E2C30-2C5E2C60-2CE42CEB-2CEE2CF22CF32D00-2D252D272D2D2D30-2D672D6F2D80-2D962DA0-2DA62DA8-2DAE2DB0-2DB62DB8-2DBE2DC0-2DC62DC8-2DCE2DD0-2DD62DD8-2DDE2DE0-2DFF2E2F3005-30073021-30293031-30353038-303C3041-3096309D-309F30A1-30FA30FC-30FF3105-312D3131-318E31A0-31BA31F0-31FF3400-4DB54E00-9FCCA000-A48CA4D0-A4FDA500-A60CA610-A61FA62AA62BA640-A66EA674-A67BA67F-A697A69F-A6EFA717-A71FA722-A788A78B-A78EA790-A793A7A0-A7AAA7F8-A801A803-A805A807-A80AA80C-A827A840-A873A880-A8C3A8F2-A8F7A8FBA90A-A92AA930-A952A960-A97CA980-A9B2A9B4-A9BFA9CFAA00-AA36AA40-AA4DAA60-AA76AA7AAA80-AABEAAC0AAC2AADB-AADDAAE0-AAEFAAF2-AAF5AB01-AB06AB09-AB0EAB11-AB16AB20-AB26AB28-AB2EABC0-ABEAAC00-D7A3D7B0-D7C6D7CB-D7FBF900-FA6DFA70-FAD9FB00-FB06FB13-FB17FB1D-FB28FB2A-FB36FB38-FB3CFB3EFB40FB41FB43FB44FB46-FBB1FBD3-FD3DFD50-FD8FFD92-FDC7FDF0-FDFBFE70-FE74FE76-FEFCFF21-FF3AFF41-FF5AFF66-FFBEFFC2-FFC7FFCA-FFCFFFD2-FFD7FFDA-FFDC",
@@ -1845,94 +1845,94 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
         White_Space: "0009-000D0020008500A01680180E2000-200A20282029202F205F3000",
         Noncharacter_Code_Point: "FDD0-FDEFFFFEFFFF",
         Default_Ignorable_Code_Point: "00AD034F115F116017B417B5180B-180D200B-200F202A-202E2060-206F3164FE00-FE0FFEFFFFA0FFF0-FFF8",
-        // \p{Any***REMOVED*** matches a code unit. To match any code point via surrogate pairs, use (?:[\0-\uD7FF\uDC00-\uFFFF***REMOVED***|[\uD800-\uDBFF***REMOVED***[\uDC00-\uDFFF***REMOVED***|[\uD800-\uDBFF***REMOVED******REMOVED***
-        Any: "0000-FFFF", // \p{^Any***REMOVED*** compiles to [^\u0000-\uFFFF***REMOVED***; [\p{^Any***REMOVED******REMOVED*** to [***REMOVED***
+        // \p{Any} matches a code unit. To match any code point via surrogate pairs, use (?:[\0-\uD7FF\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF])
+        Any: "0000-FFFF", // \p{^Any} compiles to [^\u0000-\uFFFF]; [\p{^Any}] to []
         Ascii: "0000-007F",
-        // \p{Assigned***REMOVED*** is equivalent to \p{^Cn***REMOVED***
-        //Assigned: XRegExp("[\\p{^Cn***REMOVED******REMOVED***"***REMOVED***.source.replace(/[[\***REMOVED******REMOVED***|\\u/g, ""***REMOVED*** // Negation inside a character class triggers inversion
+        // \p{Assigned} is equivalent to \p{^Cn}
+        //Assigned: XRegExp("[\\p{^Cn}]").source.replace(/[[\]]|\\u/g, "") // Negation inside a character class triggers inversion
         Assigned: "0000-0377037A-037E0384-038A038C038E-03A103A3-05270531-05560559-055F0561-05870589058A058F0591-05C705D0-05EA05F0-05F40600-06040606-061B061E-070D070F-074A074D-07B107C0-07FA0800-082D0830-083E0840-085B085E08A008A2-08AC08E4-08FE0900-09770979-097F0981-09830985-098C098F09900993-09A809AA-09B009B209B6-09B909BC-09C409C709C809CB-09CE09D709DC09DD09DF-09E309E6-09FB0A01-0A030A05-0A0A0A0F0A100A13-0A280A2A-0A300A320A330A350A360A380A390A3C0A3E-0A420A470A480A4B-0A4D0A510A59-0A5C0A5E0A66-0A750A81-0A830A85-0A8D0A8F-0A910A93-0AA80AAA-0AB00AB20AB30AB5-0AB90ABC-0AC50AC7-0AC90ACB-0ACD0AD00AE0-0AE30AE6-0AF10B01-0B030B05-0B0C0B0F0B100B13-0B280B2A-0B300B320B330B35-0B390B3C-0B440B470B480B4B-0B4D0B560B570B5C0B5D0B5F-0B630B66-0B770B820B830B85-0B8A0B8E-0B900B92-0B950B990B9A0B9C0B9E0B9F0BA30BA40BA8-0BAA0BAE-0BB90BBE-0BC20BC6-0BC80BCA-0BCD0BD00BD70BE6-0BFA0C01-0C030C05-0C0C0C0E-0C100C12-0C280C2A-0C330C35-0C390C3D-0C440C46-0C480C4A-0C4D0C550C560C580C590C60-0C630C66-0C6F0C78-0C7F0C820C830C85-0C8C0C8E-0C900C92-0CA80CAA-0CB30CB5-0CB90CBC-0CC40CC6-0CC80CCA-0CCD0CD50CD60CDE0CE0-0CE30CE6-0CEF0CF10CF20D020D030D05-0D0C0D0E-0D100D12-0D3A0D3D-0D440D46-0D480D4A-0D4E0D570D60-0D630D66-0D750D79-0D7F0D820D830D85-0D960D9A-0DB10DB3-0DBB0DBD0DC0-0DC60DCA0DCF-0DD40DD60DD8-0DDF0DF2-0DF40E01-0E3A0E3F-0E5B0E810E820E840E870E880E8A0E8D0E94-0E970E99-0E9F0EA1-0EA30EA50EA70EAA0EAB0EAD-0EB90EBB-0EBD0EC0-0EC40EC60EC8-0ECD0ED0-0ED90EDC-0EDF0F00-0F470F49-0F6C0F71-0F970F99-0FBC0FBE-0FCC0FCE-0FDA1000-10C510C710CD10D0-1248124A-124D1250-12561258125A-125D1260-1288128A-128D1290-12B012B2-12B512B8-12BE12C012C2-12C512C8-12D612D8-13101312-13151318-135A135D-137C1380-139913A0-13F41400-169C16A0-16F01700-170C170E-17141720-17361740-17531760-176C176E-1770177217731780-17DD17E0-17E917F0-17F91800-180E1810-18191820-18771880-18AA18B0-18F51900-191C1920-192B1930-193B19401944-196D1970-19741980-19AB19B0-19C919D0-19DA19DE-1A1B1A1E-1A5E1A60-1A7C1A7F-1A891A90-1A991AA0-1AAD1B00-1B4B1B50-1B7C1B80-1BF31BFC-1C371C3B-1C491C4D-1C7F1CC0-1CC71CD0-1CF61D00-1DE61DFC-1F151F18-1F1D1F20-1F451F48-1F4D1F50-1F571F591F5B1F5D1F5F-1F7D1F80-1FB41FB6-1FC41FC6-1FD31FD6-1FDB1FDD-1FEF1FF2-1FF41FF6-1FFE2000-2064206A-20712074-208E2090-209C20A0-20B920D0-20F02100-21892190-23F32400-24262440-244A2460-26FF2701-2B4C2B50-2B592C00-2C2E2C30-2C5E2C60-2CF32CF9-2D252D272D2D2D30-2D672D6F2D702D7F-2D962DA0-2DA62DA8-2DAE2DB0-2DB62DB8-2DBE2DC0-2DC62DC8-2DCE2DD0-2DD62DD8-2DDE2DE0-2E3B2E80-2E992E9B-2EF32F00-2FD52FF0-2FFB3000-303F3041-30963099-30FF3105-312D3131-318E3190-31BA31C0-31E331F0-321E3220-32FE3300-4DB54DC0-9FCCA000-A48CA490-A4C6A4D0-A62BA640-A697A69F-A6F7A700-A78EA790-A793A7A0-A7AAA7F8-A82BA830-A839A840-A877A880-A8C4A8CE-A8D9A8E0-A8FBA900-A953A95F-A97CA980-A9CDA9CF-A9D9A9DEA9DFAA00-AA36AA40-AA4DAA50-AA59AA5C-AA7BAA80-AAC2AADB-AAF6AB01-AB06AB09-AB0EAB11-AB16AB20-AB26AB28-AB2EABC0-ABEDABF0-ABF9AC00-D7A3D7B0-D7C6D7CB-D7FBD800-FA6DFA70-FAD9FB00-FB06FB13-FB17FB1D-FB36FB38-FB3CFB3EFB40FB41FB43FB44FB46-FBC1FBD3-FD3FFD50-FD8FFD92-FDC7FDF0-FDFDFE00-FE19FE20-FE26FE30-FE52FE54-FE66FE68-FE6BFE70-FE74FE76-FEFCFEFFFF01-FFBEFFC2-FFC7FFCA-FFCFFFD2-FFD7FFDA-FFDCFFE0-FFE6FFE8-FFEEFFF9-FFFD"
-***REMOVED******REMOVED***;
+    });
 
-***REMOVED***(XRegExp***REMOVED******REMOVED***;
+}(XRegExp));
 
 
 /***** matchrecursive.js *****/
 
 /*!
  * XRegExp.matchRecursive v0.2.0
- * (c***REMOVED*** 2009-2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2009-2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  */
 
-(function (XRegExp***REMOVED*** {
+(function (XRegExp) {
     "use strict";
 
 /**
  * Returns a match detail object composed of the provided values.
  * @private
  */
-    function row(value, name, start, end***REMOVED*** {
-        return {value:value, name:name, start:start, end:end***REMOVED***;
-***REMOVED***
+    function row(value, name, start, end) {
+        return {value:value, name:name, start:start, end:end};
+    }
 
 /**
  * Returns an array of match strings between outermost left and right delimiters, or an array of
  * objects with detailed match parts and position data. An error is thrown if delimiters are
  * unbalanced within the data.
  * @memberOf XRegExp
- * @param {String***REMOVED*** str String to search.
- * @param {String***REMOVED*** left Left delimiter as an XRegExp pattern.
- * @param {String***REMOVED*** right Right delimiter as an XRegExp pattern.
- * @param {String***REMOVED*** [flags***REMOVED*** Flags for the left and right delimiters. Use any of: `gimnsxy`.
- * @param {Object***REMOVED*** [options***REMOVED*** Lets you specify `valueNames` and `escapeChar` options.
- * @returns {Array***REMOVED*** Array of matches, or an empty array.
+ * @param {String} str String to search.
+ * @param {String} left Left delimiter as an XRegExp pattern.
+ * @param {String} right Right delimiter as an XRegExp pattern.
+ * @param {String} [flags] Flags for the left and right delimiters. Use any of: `gimnsxy`.
+ * @param {Object} [options] Lets you specify `valueNames` and `escapeChar` options.
+ * @returns {Array} Array of matches, or an empty array.
  * @example
  *
  * // Basic usage
- * var str = '(t((e***REMOVED******REMOVED***s***REMOVED***t(***REMOVED***(ing***REMOVED***';
- * XRegExp.matchRecursive(str, '\\(', '\\***REMOVED***', 'g'***REMOVED***;
- * // -> ['t((e***REMOVED******REMOVED***s', '', 'ing'***REMOVED***
+ * var str = '(t((e))s)t()(ing)';
+ * XRegExp.matchRecursive(str, '\\(', '\\)', 'g');
+ * // -> ['t((e))s', '', 'ing']
  *
  * // Extended information mode with valueNames
  * str = 'Here is <div> <div>an</div></div> example';
  * XRegExp.matchRecursive(str, '<div\\s*>', '</div>', 'gi', {
- *   valueNames: ['between', 'left', 'match', 'right'***REMOVED***
- * ***REMOVED******REMOVED***;
+ *   valueNames: ['between', 'left', 'match', 'right']
+ * });
  * // -> [
- * // {name: 'between', value: 'Here is ',       start: 0,  end: 8***REMOVED***,
- * // {name: 'left',    value: '<div>',          start: 8,  end: 13***REMOVED***,
- * // {name: 'match',   value: ' <div>an</div>', start: 13, end: 27***REMOVED***,
- * // {name: 'right',   value: '</div>',         start: 27, end: 33***REMOVED***,
- * // {name: 'between', value: ' example',       start: 33, end: 41***REMOVED***
- * // ***REMOVED***
+ * // {name: 'between', value: 'Here is ',       start: 0,  end: 8},
+ * // {name: 'left',    value: '<div>',          start: 8,  end: 13},
+ * // {name: 'match',   value: ' <div>an</div>', start: 13, end: 27},
+ * // {name: 'right',   value: '</div>',         start: 27, end: 33},
+ * // {name: 'between', value: ' example',       start: 33, end: 41}
+ * // ]
  *
  * // Omitting unneeded parts with null valueNames, and using escapeChar
- * str = '...{1***REMOVED***\\{{function(x,y***REMOVED***{return y+x;***REMOVED******REMOVED***';
- * XRegExp.matchRecursive(str, '{', '***REMOVED***', 'g', {
- *   valueNames: ['literal', null, 'value', null***REMOVED***,
+ * str = '...{1}\\{{function(x,y){return y+x;}}';
+ * XRegExp.matchRecursive(str, '{', '}', 'g', {
+ *   valueNames: ['literal', null, 'value', null],
  *   escapeChar: '\\'
- * ***REMOVED******REMOVED***;
+ * });
  * // -> [
- * // {name: 'literal', value: '...', start: 0, end: 3***REMOVED***,
- * // {name: 'value',   value: '1',   start: 4, end: 5***REMOVED***,
- * // {name: 'literal', value: '\\{', start: 6, end: 8***REMOVED***,
- * // {name: 'value',   value: 'function(x,y***REMOVED***{return y+x;***REMOVED***', start: 9, end: 35***REMOVED***
- * // ***REMOVED***
+ * // {name: 'literal', value: '...', start: 0, end: 3},
+ * // {name: 'value',   value: '1',   start: 4, end: 5},
+ * // {name: 'literal', value: '\\{', start: 6, end: 8},
+ * // {name: 'value',   value: 'function(x,y){return y+x;}', start: 9, end: 35}
+ * // ]
  *
  * // Sticky mode via flag y
  * str = '<1><<<2>>><3>4<5>';
- * XRegExp.matchRecursive(str, '<', '>', 'gy'***REMOVED***;
- * // -> ['1', '<<2>>', '3'***REMOVED***
+ * XRegExp.matchRecursive(str, '<', '>', 'gy');
+ * // -> ['1', '<<2>>', '3']
  */
-    XRegExp.matchRecursive = function (str, left, right, flags, options***REMOVED*** {
+    XRegExp.matchRecursive = function (str, left, right, flags, options) {
         flags = flags || "";
-        options = options || {***REMOVED***;
-        var global = flags.indexOf("g"***REMOVED*** > -1,
-            sticky = flags.indexOf("y"***REMOVED*** > -1,
-            basicFlags = flags.replace(/y/g, ""***REMOVED***, // Flag y controlled internally
+        options = options || {};
+        var global = flags.indexOf("g") > -1,
+            sticky = flags.indexOf("y") > -1,
+            basicFlags = flags.replace(/y/g, ""), // Flag y controlled internally
             escapeChar = options.escapeChar,
             vN = options.valueNames,
-            output = [***REMOVED***,
+            output = [],
             openTokens = 0,
             delimStart = 0,
             delimEnd = 0,
@@ -1942,38 +1942,38 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
             leftMatch,
             rightMatch,
             esc;
-        left = XRegExp(left, basicFlags***REMOVED***;
-        right = XRegExp(right, basicFlags***REMOVED***;
+        left = XRegExp(left, basicFlags);
+        right = XRegExp(right, basicFlags);
 
-        if (escapeChar***REMOVED*** {
-            if (escapeChar.length > 1***REMOVED*** {
-                throw new SyntaxError("can't use more than one escape character"***REMOVED***;
-        ***REMOVED***
-            escapeChar = XRegExp.escape(escapeChar***REMOVED***;
+        if (escapeChar) {
+            if (escapeChar.length > 1) {
+                throw new SyntaxError("can't use more than one escape character");
+            }
+            escapeChar = XRegExp.escape(escapeChar);
             // Using XRegExp.union safely rewrites backreferences in `left` and `right`
             esc = new RegExp(
-                "(?:" + escapeChar + "[\\S\\s***REMOVED***|(?:(?!" + XRegExp.union([left, right***REMOVED******REMOVED***.source + "***REMOVED***[^" + escapeChar + "***REMOVED******REMOVED***+***REMOVED***+",
-                flags.replace(/[^im***REMOVED***+/g, ""***REMOVED*** // Flags gy not needed here; flags nsx handled by XRegExp
-            ***REMOVED***;
-    ***REMOVED***
+                "(?:" + escapeChar + "[\\S\\s]|(?:(?!" + XRegExp.union([left, right]).source + ")[^" + escapeChar + "])+)+",
+                flags.replace(/[^im]+/g, "") // Flags gy not needed here; flags nsx handled by XRegExp
+            );
+        }
 
-        while (true***REMOVED*** {
+        while (true) {
             // If using an escape character, advance to the delimiter's next starting position,
             // skipping any escaped characters in between
-            if (escapeChar***REMOVED*** {
-                delimEnd += (XRegExp.exec(str, esc, delimEnd, "sticky"***REMOVED*** || [""***REMOVED******REMOVED***[0***REMOVED***.length;
-        ***REMOVED***
-            leftMatch = XRegExp.exec(str, left, delimEnd***REMOVED***;
-            rightMatch = XRegExp.exec(str, right, delimEnd***REMOVED***;
+            if (escapeChar) {
+                delimEnd += (XRegExp.exec(str, esc, delimEnd, "sticky") || [""])[0].length;
+            }
+            leftMatch = XRegExp.exec(str, left, delimEnd);
+            rightMatch = XRegExp.exec(str, right, delimEnd);
             // Keep the leftmost match only
-            if (leftMatch && rightMatch***REMOVED*** {
-                if (leftMatch.index <= rightMatch.index***REMOVED*** {
+            if (leftMatch && rightMatch) {
+                if (leftMatch.index <= rightMatch.index) {
                     rightMatch = null;
-            ***REMOVED*** else {
+                } else {
                     leftMatch = null;
-            ***REMOVED***
-        ***REMOVED***
-            /* Paths (LM:leftMatch, RM:rightMatch, OT:openTokens***REMOVED***:
+                }
+            }
+            /* Paths (LM:leftMatch, RM:rightMatch, OT:openTokens):
             LM | RM | OT | Result
             1  | 0  | 1  | loop
             1  | 0  | 0  | loop
@@ -1983,217 +1983,217 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
             0  | 0  | 0  | break
             * Doesn't include the sticky mode special case
             * Loop ends after the first completed match if `!global` */
-            if (leftMatch || rightMatch***REMOVED*** {
-                delimStart = (leftMatch || rightMatch***REMOVED***.index;
-                delimEnd = delimStart + (leftMatch || rightMatch***REMOVED***[0***REMOVED***.length;
-        ***REMOVED*** else if (!openTokens***REMOVED*** {
+            if (leftMatch || rightMatch) {
+                delimStart = (leftMatch || rightMatch).index;
+                delimEnd = delimStart + (leftMatch || rightMatch)[0].length;
+            } else if (!openTokens) {
                 break;
-        ***REMOVED***
-            if (sticky && !openTokens && delimStart > lastOuterEnd***REMOVED*** {
+            }
+            if (sticky && !openTokens && delimStart > lastOuterEnd) {
                 break;
-        ***REMOVED***
-            if (leftMatch***REMOVED*** {
-                if (!openTokens***REMOVED*** {
+            }
+            if (leftMatch) {
+                if (!openTokens) {
                     outerStart = delimStart;
                     innerStart = delimEnd;
-            ***REMOVED***
+                }
                 ++openTokens;
-        ***REMOVED*** else if (rightMatch && openTokens***REMOVED*** {
-                if (!--openTokens***REMOVED*** {
-                    if (vN***REMOVED*** {
-                        if (vN[0***REMOVED*** && outerStart > lastOuterEnd***REMOVED*** {
-                            output.push(row(vN[0***REMOVED***, str.slice(lastOuterEnd, outerStart***REMOVED***, lastOuterEnd, outerStart***REMOVED******REMOVED***;
-                    ***REMOVED***
-                        if (vN[1***REMOVED******REMOVED*** {
-                            output.push(row(vN[1***REMOVED***, str.slice(outerStart, innerStart***REMOVED***, outerStart, innerStart***REMOVED******REMOVED***;
-                    ***REMOVED***
-                        if (vN[2***REMOVED******REMOVED*** {
-                            output.push(row(vN[2***REMOVED***, str.slice(innerStart, delimStart***REMOVED***, innerStart, delimStart***REMOVED******REMOVED***;
-                    ***REMOVED***
-                        if (vN[3***REMOVED******REMOVED*** {
-                            output.push(row(vN[3***REMOVED***, str.slice(delimStart, delimEnd***REMOVED***, delimStart, delimEnd***REMOVED******REMOVED***;
-                    ***REMOVED***
-                ***REMOVED*** else {
-                        output.push(str.slice(innerStart, delimStart***REMOVED******REMOVED***;
-                ***REMOVED***
+            } else if (rightMatch && openTokens) {
+                if (!--openTokens) {
+                    if (vN) {
+                        if (vN[0] && outerStart > lastOuterEnd) {
+                            output.push(row(vN[0], str.slice(lastOuterEnd, outerStart), lastOuterEnd, outerStart));
+                        }
+                        if (vN[1]) {
+                            output.push(row(vN[1], str.slice(outerStart, innerStart), outerStart, innerStart));
+                        }
+                        if (vN[2]) {
+                            output.push(row(vN[2], str.slice(innerStart, delimStart), innerStart, delimStart));
+                        }
+                        if (vN[3]) {
+                            output.push(row(vN[3], str.slice(delimStart, delimEnd), delimStart, delimEnd));
+                        }
+                    } else {
+                        output.push(str.slice(innerStart, delimStart));
+                    }
                     lastOuterEnd = delimEnd;
-                    if (!global***REMOVED*** {
+                    if (!global) {
                         break;
-                ***REMOVED***
-            ***REMOVED***
-        ***REMOVED*** else {
-                throw new Error("string contains unbalanced delimiters"***REMOVED***;
-        ***REMOVED***
+                    }
+                }
+            } else {
+                throw new Error("string contains unbalanced delimiters");
+            }
             // If the delimiter matched an empty string, avoid an infinite loop
-            if (delimStart === delimEnd***REMOVED*** {
+            if (delimStart === delimEnd) {
                 ++delimEnd;
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
 
-        if (global && !sticky && vN && vN[0***REMOVED*** && str.length > lastOuterEnd***REMOVED*** {
-            output.push(row(vN[0***REMOVED***, str.slice(lastOuterEnd***REMOVED***, lastOuterEnd, str.length***REMOVED******REMOVED***;
-    ***REMOVED***
+        if (global && !sticky && vN && vN[0] && str.length > lastOuterEnd) {
+            output.push(row(vN[0], str.slice(lastOuterEnd), lastOuterEnd, str.length));
+        }
 
         return output;
-***REMOVED***;
+    };
 
-***REMOVED***(XRegExp***REMOVED******REMOVED***;
+}(XRegExp));
 
 
 /***** build.js *****/
 
 /*!
  * XRegExp.build v0.1.0
- * (c***REMOVED*** 2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  * Inspired by RegExp.create by Lea Verou <http://lea.verou.me/>
  */
 
-(function (XRegExp***REMOVED*** {
+(function (XRegExp) {
     "use strict";
 
-    var subparts = /(\(***REMOVED***(?!\?***REMOVED***|\\([1-9***REMOVED***\d****REMOVED***|\\[\s\S***REMOVED***|\[(?:[^\\\***REMOVED******REMOVED***|\\[\s\S***REMOVED******REMOVED*******REMOVED***/g,
-        parts = XRegExp.union([/\({{([\w$***REMOVED***+***REMOVED******REMOVED******REMOVED***\***REMOVED***|{{([\w$***REMOVED***+***REMOVED******REMOVED******REMOVED***/, subparts***REMOVED***, "g"***REMOVED***;
+    var subparts = /(\()(?!\?)|\\([1-9]\d*)|\\[\s\S]|\[(?:[^\\\]]|\\[\s\S])*]/g,
+        parts = XRegExp.union([/\({{([\w$]+)}}\)|{{([\w$]+)}}/, subparts], "g");
 
 /**
  * Strips a leading `^` and trailing unescaped `$`, if both are present.
  * @private
- * @param {String***REMOVED*** pattern Pattern to process.
- * @returns {String***REMOVED*** Pattern with edge anchors removed.
+ * @param {String} pattern Pattern to process.
+ * @returns {String} Pattern with edge anchors removed.
  */
-    function deanchor(pattern***REMOVED*** {
-        var startAnchor = /^(?:\(\?:\***REMOVED******REMOVED***?\^/, // Leading `^` or `(?:***REMOVED***^` (handles /x cruft***REMOVED***
-            endAnchor = /\$(?:\(\?:\***REMOVED******REMOVED***?$/; // Trailing `$` or `$(?:***REMOVED***` (handles /x cruft***REMOVED***
-        if (endAnchor.test(pattern.replace(/\\[\s\S***REMOVED***/g, ""***REMOVED******REMOVED******REMOVED*** { // Ensure trailing `$` isn't escaped
-            return pattern.replace(startAnchor, ""***REMOVED***.replace(endAnchor, ""***REMOVED***;
-    ***REMOVED***
+    function deanchor(pattern) {
+        var startAnchor = /^(?:\(\?:\))?\^/, // Leading `^` or `(?:)^` (handles /x cruft)
+            endAnchor = /\$(?:\(\?:\))?$/; // Trailing `$` or `$(?:)` (handles /x cruft)
+        if (endAnchor.test(pattern.replace(/\\[\s\S]/g, ""))) { // Ensure trailing `$` isn't escaped
+            return pattern.replace(startAnchor, "").replace(endAnchor, "");
+        }
         return pattern;
-***REMOVED***
+    }
 
 /**
  * Converts the provided value to an XRegExp.
  * @private
- * @param {String|RegExp***REMOVED*** value Value to convert.
- * @returns {RegExp***REMOVED*** XRegExp object with XRegExp syntax applied.
+ * @param {String|RegExp} value Value to convert.
+ * @returns {RegExp} XRegExp object with XRegExp syntax applied.
  */
-    function asXRegExp(value***REMOVED*** {
-        return XRegExp.isRegExp(value***REMOVED*** ?
-                (value.xregexp && !value.xregexp.isNative ? value : XRegExp(value.source***REMOVED******REMOVED*** :
-                XRegExp(value***REMOVED***;
-***REMOVED***
+    function asXRegExp(value) {
+        return XRegExp.isRegExp(value) ?
+                (value.xregexp && !value.xregexp.isNative ? value : XRegExp(value.source)) :
+                XRegExp(value);
+    }
 
 /**
  * Builds regexes using named subpatterns, for readability and pattern reuse. Backreferences in the
  * outer pattern and provided subpatterns are automatically renumbered to work correctly. Native
  * flags used by provided subpatterns are ignored in favor of the `flags` argument.
  * @memberOf XRegExp
- * @param {String***REMOVED*** pattern XRegExp pattern using `{{name***REMOVED******REMOVED***` for embedded subpatterns. Allows
- *   `({{name***REMOVED******REMOVED******REMOVED***` as shorthand for `(?<name>{{name***REMOVED******REMOVED******REMOVED***`. Patterns cannot be embedded within
+ * @param {String} pattern XRegExp pattern using `{{name}}` for embedded subpatterns. Allows
+ *   `({{name}})` as shorthand for `(?<name>{{name}})`. Patterns cannot be embedded within
  *   character classes.
- * @param {Object***REMOVED*** subs Lookup object for named subpatterns. Values can be strings or regexes. A
+ * @param {Object} subs Lookup object for named subpatterns. Values can be strings or regexes. A
  *   leading `^` and trailing unescaped `$` are stripped from subpatterns, if both are present.
- * @param {String***REMOVED*** [flags***REMOVED*** Any combination of XRegExp flags.
- * @returns {RegExp***REMOVED*** Regex with interpolated subpatterns.
+ * @param {String} [flags] Any combination of XRegExp flags.
+ * @returns {RegExp} Regex with interpolated subpatterns.
  * @example
  *
- * var time = XRegExp.build('(?x***REMOVED***^ {{hours***REMOVED******REMOVED*** ({{minutes***REMOVED******REMOVED******REMOVED*** $', {
- *   hours: XRegExp.build('{{h12***REMOVED******REMOVED*** : | {{h24***REMOVED******REMOVED***', {
- *     h12: /1[0-2***REMOVED***|0?[1-9***REMOVED***/,
- *     h24: /2[0-3***REMOVED***|[01***REMOVED***[0-9***REMOVED***/
- *   ***REMOVED***, 'x'***REMOVED***,
- *   minutes: /^[0-5***REMOVED***[0-9***REMOVED***$/
- * ***REMOVED******REMOVED***;
- * time.test('10:59'***REMOVED***; // -> true
- * XRegExp.exec('10:59', time***REMOVED***.minutes; // -> '59'
+ * var time = XRegExp.build('(?x)^ {{hours}} ({{minutes}}) $', {
+ *   hours: XRegExp.build('{{h12}} : | {{h24}}', {
+ *     h12: /1[0-2]|0?[1-9]/,
+ *     h24: /2[0-3]|[01][0-9]/
+ *   }, 'x'),
+ *   minutes: /^[0-5][0-9]$/
+ * });
+ * time.test('10:59'); // -> true
+ * XRegExp.exec('10:59', time).minutes; // -> '59'
  */
-    XRegExp.build = function (pattern, subs, flags***REMOVED*** {
-        var inlineFlags = /^\(\?([\w$***REMOVED***+***REMOVED***\***REMOVED***/.exec(pattern***REMOVED***,
-            data = {***REMOVED***,
+    XRegExp.build = function (pattern, subs, flags) {
+        var inlineFlags = /^\(\?([\w$]+)\)/.exec(pattern),
+            data = {},
             numCaps = 0, // Caps is short for captures
             numPriorCaps,
             numOuterCaps = 0,
-            outerCapsMap = [0***REMOVED***,
+            outerCapsMap = [0],
             outerCapNames,
             sub,
             p;
 
         // Add flags within a leading mode modifier to the overall pattern's flags
-        if (inlineFlags***REMOVED*** {
+        if (inlineFlags) {
             flags = flags || "";
-            inlineFlags[1***REMOVED***.replace(/./g, function (flag***REMOVED*** {
-                flags += (flags.indexOf(flag***REMOVED*** > -1 ? "" : flag***REMOVED***; // Don't add duplicates
-        ***REMOVED******REMOVED***;
-    ***REMOVED***
+            inlineFlags[1].replace(/./g, function (flag) {
+                flags += (flags.indexOf(flag) > -1 ? "" : flag); // Don't add duplicates
+            });
+        }
 
-        for (p in subs***REMOVED*** {
-            if (subs.hasOwnProperty(p***REMOVED******REMOVED*** {
+        for (p in subs) {
+            if (subs.hasOwnProperty(p)) {
                 // Passing to XRegExp enables entended syntax for subpatterns provided as strings
-                // and ensures independent validity, lest an unescaped `(`, `***REMOVED***`, `[`, or trailing
-                // `\` breaks the `(?:***REMOVED***` wrapper. For subpatterns provided as regexes, it dies on
+                // and ensures independent validity, lest an unescaped `(`, `)`, `[`, or trailing
+                // `\` breaks the `(?:)` wrapper. For subpatterns provided as regexes, it dies on
                 // octals and adds the `xregexp` property, for simplicity
-                sub = asXRegExp(subs[p***REMOVED******REMOVED***;
+                sub = asXRegExp(subs[p]);
                 // Deanchoring allows embedding independently useful anchored regexes. If you
-                // really need to keep your anchors, double them (i.e., `^^...$$`***REMOVED***
-                data[p***REMOVED*** = {pattern: deanchor(sub.source***REMOVED***, names: sub.xregexp.captureNames || [***REMOVED******REMOVED***;
-        ***REMOVED***
-    ***REMOVED***
+                // really need to keep your anchors, double them (i.e., `^^...$$`)
+                data[p] = {pattern: deanchor(sub.source), names: sub.xregexp.captureNames || []};
+            }
+        }
 
         // Passing to XRegExp dies on octals and ensures the outer pattern is independently valid;
         // helps keep this simple. Named captures will be put back
-        pattern = asXRegExp(pattern***REMOVED***;
-        outerCapNames = pattern.xregexp.captureNames || [***REMOVED***;
-        pattern = pattern.source.replace(parts, function ($0, $1, $2, $3, $4***REMOVED*** {
+        pattern = asXRegExp(pattern);
+        outerCapNames = pattern.xregexp.captureNames || [];
+        pattern = pattern.source.replace(parts, function ($0, $1, $2, $3, $4) {
             var subName = $1 || $2, capName, intro;
-            if (subName***REMOVED*** { // Named subpattern
-                if (!data.hasOwnProperty(subName***REMOVED******REMOVED*** {
-                    throw new ReferenceError("undefined property " + $0***REMOVED***;
-            ***REMOVED***
-                if ($1***REMOVED*** { // Named subpattern was wrapped in a capturing group
-                    capName = outerCapNames[numOuterCaps***REMOVED***;
-                    outerCapsMap[++numOuterCaps***REMOVED*** = ++numCaps;
+            if (subName) { // Named subpattern
+                if (!data.hasOwnProperty(subName)) {
+                    throw new ReferenceError("undefined property " + $0);
+                }
+                if ($1) { // Named subpattern was wrapped in a capturing group
+                    capName = outerCapNames[numOuterCaps];
+                    outerCapsMap[++numOuterCaps] = ++numCaps;
                     // If it's a named group, preserve the name. Otherwise, use the subpattern name
                     // as the capture name
-                    intro = "(?<" + (capName || subName***REMOVED*** + ">";
-            ***REMOVED*** else {
+                    intro = "(?<" + (capName || subName) + ">";
+                } else {
                     intro = "(?:";
-            ***REMOVED***
+                }
                 numPriorCaps = numCaps;
-                return intro + data[subName***REMOVED***.pattern.replace(subparts, function (match, paren, backref***REMOVED*** {
-                    if (paren***REMOVED*** { // Capturing group
-                        capName = data[subName***REMOVED***.names[numCaps - numPriorCaps***REMOVED***;
+                return intro + data[subName].pattern.replace(subparts, function (match, paren, backref) {
+                    if (paren) { // Capturing group
+                        capName = data[subName].names[numCaps - numPriorCaps];
                         ++numCaps;
-                        if (capName***REMOVED*** { // If the current capture has a name, preserve the name
+                        if (capName) { // If the current capture has a name, preserve the name
                             return "(?<" + capName + ">";
-                    ***REMOVED***
-                ***REMOVED*** else if (backref***REMOVED*** { // Backreference
-                        return "\\" + (+backref + numPriorCaps***REMOVED***; // Rewrite the backreference
-                ***REMOVED***
+                        }
+                    } else if (backref) { // Backreference
+                        return "\\" + (+backref + numPriorCaps); // Rewrite the backreference
+                    }
                     return match;
-            ***REMOVED******REMOVED*** + "***REMOVED***";
-        ***REMOVED***
-            if ($3***REMOVED*** { // Capturing group
-                capName = outerCapNames[numOuterCaps***REMOVED***;
-                outerCapsMap[++numOuterCaps***REMOVED*** = ++numCaps;
-                if (capName***REMOVED*** { // If the current capture has a name, preserve the name
+                }) + ")";
+            }
+            if ($3) { // Capturing group
+                capName = outerCapNames[numOuterCaps];
+                outerCapsMap[++numOuterCaps] = ++numCaps;
+                if (capName) { // If the current capture has a name, preserve the name
                     return "(?<" + capName + ">";
-            ***REMOVED***
-        ***REMOVED*** else if ($4***REMOVED*** { // Backreference
-                return "\\" + outerCapsMap[+$4***REMOVED***; // Rewrite the backreference
-        ***REMOVED***
+                }
+            } else if ($4) { // Backreference
+                return "\\" + outerCapsMap[+$4]; // Rewrite the backreference
+            }
             return $0;
-    ***REMOVED******REMOVED***;
+        });
 
-        return XRegExp(pattern, flags***REMOVED***;
-***REMOVED***;
+        return XRegExp(pattern, flags);
+    };
 
-***REMOVED***(XRegExp***REMOVED******REMOVED***;
+}(XRegExp));
 
 
 /***** prototypes.js *****/
 
 /*!
  * XRegExp Prototype Methods v1.0.0
- * (c***REMOVED*** 2012 Steven Levithan <http://xregexp.com/>
+ * (c) 2012 Steven Levithan <http://xregexp.com/>
  * MIT License
  */
 
@@ -2201,108 +2201,108 @@ XRegExp = XRegExp || (function (undef***REMOVED*** {
  * Adds a collection of methods to `XRegExp.prototype`. RegExp objects copied by XRegExp are also
  * augmented with any `XRegExp.prototype` methods. Hence, the following work equivalently:
  *
- * XRegExp('[a-z***REMOVED***', 'ig'***REMOVED***.xexec('abc'***REMOVED***;
- * XRegExp(/[a-z***REMOVED***/ig***REMOVED***.xexec('abc'***REMOVED***;
- * XRegExp.globalize(/[a-z***REMOVED***/i***REMOVED***.xexec('abc'***REMOVED***;
+ * XRegExp('[a-z]', 'ig').xexec('abc');
+ * XRegExp(/[a-z]/ig).xexec('abc');
+ * XRegExp.globalize(/[a-z]/i).xexec('abc');
  */
-(function (XRegExp***REMOVED*** {
+(function (XRegExp) {
     "use strict";
 
 /**
  * Copy properties of `b` to `a`.
  * @private
- * @param {Object***REMOVED*** a Object that will receive new properties.
- * @param {Object***REMOVED*** b Object whose properties will be copied.
+ * @param {Object} a Object that will receive new properties.
+ * @param {Object} b Object whose properties will be copied.
  */
-    function extend(a, b***REMOVED*** {
-        for (var p in b***REMOVED*** {
-            if (b.hasOwnProperty(p***REMOVED******REMOVED*** {
-                a[p***REMOVED*** = b[p***REMOVED***;
-        ***REMOVED***
-    ***REMOVED***
+    function extend(a, b) {
+        for (var p in b) {
+            if (b.hasOwnProperty(p)) {
+                a[p] = b[p];
+            }
+        }
         //return a;
-***REMOVED***
+    }
 
     extend(XRegExp.prototype, {
 
 /**
  * Implicitly calls the regex's `test` method with the first value in the provided arguments array.
  * @memberOf XRegExp.prototype
- * @param {****REMOVED*** context Ignored. Accepted only for congruity with `Function.prototype.apply`.
- * @param {Array***REMOVED*** args Array with the string to search as its first value.
- * @returns {Boolean***REMOVED*** Whether the regex matched the provided value.
+ * @param {*} context Ignored. Accepted only for congruity with `Function.prototype.apply`.
+ * @param {Array} args Array with the string to search as its first value.
+ * @returns {Boolean} Whether the regex matched the provided value.
  * @example
  *
- * XRegExp('[a-z***REMOVED***'***REMOVED***.apply(null, ['abc'***REMOVED******REMOVED***; // -> true
+ * XRegExp('[a-z]').apply(null, ['abc']); // -> true
  */
-        apply: function (context, args***REMOVED*** {
-            return this.test(args[0***REMOVED******REMOVED***;
-***REMOVED***
+        apply: function (context, args) {
+            return this.test(args[0]);
+        },
 
 /**
  * Implicitly calls the regex's `test` method with the provided string.
  * @memberOf XRegExp.prototype
- * @param {****REMOVED*** context Ignored. Accepted only for congruity with `Function.prototype.call`.
- * @param {String***REMOVED*** str String to search.
- * @returns {Boolean***REMOVED*** Whether the regex matched the provided value.
+ * @param {*} context Ignored. Accepted only for congruity with `Function.prototype.call`.
+ * @param {String} str String to search.
+ * @returns {Boolean} Whether the regex matched the provided value.
  * @example
  *
- * XRegExp('[a-z***REMOVED***'***REMOVED***.call(null, 'abc'***REMOVED***; // -> true
+ * XRegExp('[a-z]').call(null, 'abc'); // -> true
  */
-        call: function (context, str***REMOVED*** {
-            return this.test(str***REMOVED***;
-***REMOVED***
+        call: function (context, str) {
+            return this.test(str);
+        },
 
 /**
- * Implicitly calls {@link #XRegExp.forEach***REMOVED***.
+ * Implicitly calls {@link #XRegExp.forEach}.
  * @memberOf XRegExp.prototype
  * @example
  *
- * XRegExp('\\d'***REMOVED***.forEach('1a2345', function (match, i***REMOVED*** {
- *   if (i % 2***REMOVED*** this.push(+match[0***REMOVED******REMOVED***;
- * ***REMOVED***, [***REMOVED******REMOVED***;
- * // -> [2, 4***REMOVED***
+ * XRegExp('\\d').forEach('1a2345', function (match, i) {
+ *   if (i % 2) this.push(+match[0]);
+ * }, []);
+ * // -> [2, 4]
  */
-        forEach: function (str, callback, context***REMOVED*** {
-            return XRegExp.forEach(str, this, callback, context***REMOVED***;
-***REMOVED***
+        forEach: function (str, callback, context) {
+            return XRegExp.forEach(str, this, callback, context);
+        },
 
 /**
- * Implicitly calls {@link #XRegExp.globalize***REMOVED***.
+ * Implicitly calls {@link #XRegExp.globalize}.
  * @memberOf XRegExp.prototype
  * @example
  *
- * var globalCopy = XRegExp('regex'***REMOVED***.globalize(***REMOVED***;
+ * var globalCopy = XRegExp('regex').globalize();
  * globalCopy.global; // -> true
  */
-        globalize: function (***REMOVED*** {
-            return XRegExp.globalize(this***REMOVED***;
-***REMOVED***
+        globalize: function () {
+            return XRegExp.globalize(this);
+        },
 
 /**
- * Implicitly calls {@link #XRegExp.exec***REMOVED***.
+ * Implicitly calls {@link #XRegExp.exec}.
  * @memberOf XRegExp.prototype
  * @example
  *
- * var match = XRegExp('U\\+(?<hex>[0-9A-F***REMOVED***{4***REMOVED******REMOVED***'***REMOVED***.xexec('U+2620'***REMOVED***;
+ * var match = XRegExp('U\\+(?<hex>[0-9A-F]{4})').xexec('U+2620');
  * match.hex; // -> '2620'
  */
-        xexec: function (str, pos, sticky***REMOVED*** {
-            return XRegExp.exec(str, this, pos, sticky***REMOVED***;
-***REMOVED***
+        xexec: function (str, pos, sticky) {
+            return XRegExp.exec(str, this, pos, sticky);
+        },
 
 /**
- * Implicitly calls {@link #XRegExp.test***REMOVED***.
+ * Implicitly calls {@link #XRegExp.test}.
  * @memberOf XRegExp.prototype
  * @example
  *
- * XRegExp('c'***REMOVED***.xtest('abc'***REMOVED***; // -> true
+ * XRegExp('c').xtest('abc'); // -> true
  */
-        xtest: function (str, pos, sticky***REMOVED*** {
-            return XRegExp.test(str, this, pos, sticky***REMOVED***;
-    ***REMOVED***
+        xtest: function (str, pos, sticky) {
+            return XRegExp.test(str, this, pos, sticky);
+        }
 
-***REMOVED******REMOVED***;
+    });
 
-***REMOVED***(XRegExp***REMOVED******REMOVED***;
+}(XRegExp));
 

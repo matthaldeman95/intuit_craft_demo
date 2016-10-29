@@ -2,30 +2,30 @@ import smtplib
 from sys import platform
 
 username = 'matthaldeman95@gmail.com'
-***REMOVED***
+try:
     if platform == "darwin":
         path = '/Users/Matt/Documents/priv/pd.txt'
     elif platform == "linux2":
         path = '/home/matthew/Documents/priv/pd.txt'
-    with open(path***REMOVED*** as pd_file:
-        password = pd_file.read(***REMOVED***
-***REMOVED***
+    with open(path) as pd_file:
+        password = pd_file.read()
+except:
     password = "filler password"
 
 
-def compose_email(site_name, error_code, time***REMOVED***:
-    ***REMOVED***
+def compose_email(site_name, error_code, time):
+    """
     Sends an email to myself when the site is down
     :param site_name:   Name of bad website
     :param error_code:  HTTP error code given
     :param time:        Time of bad request
     :return:
-    ***REMOVED***
+    """
 
     sender = 'matthaldeman95@gmail.com'
     receiver = 'matthaldeman95@gmail.com'
 
-    message = ***REMOVED***
+    message = """
     From:  Intuit <matthaldeman95@gmail.com>
     To:  System Administrator <matthaldeman95@gmail.com>
     MIME-Version: 1.0
@@ -35,16 +35,16 @@ def compose_email(site_name, error_code, time***REMOVED***:
     At %s, the following HTTP error occurred for the site %s:
 
     %s
-    ***REMOVED*** % (time, site_name, error_code***REMOVED***
+    """ % (time, site_name, error_code)
 
-    s = smtplib.SMTP('smtp.gmail.com:587'***REMOVED***
-    s.ehlo(***REMOVED***
-    s.starttls(***REMOVED***
-    s.ehlo(***REMOVED***
-    s.login(username, password***REMOVED***
-    s.sendmail(sender, receiver, message***REMOVED***
+    s = smtplib.SMTP('smtp.gmail.com:587')
+    s.ehlo()
+    s.starttls()
+    s.ehlo()
+    s.login(username, password)
+    s.sendmail(sender, receiver, message)
 
 
 if __name__ == "__main__":
     import datetime
-    compose_email("test.com", 404, datetime.datetime.now(***REMOVED******REMOVED***
+    compose_email("test.com", 404, datetime.datetime.now())

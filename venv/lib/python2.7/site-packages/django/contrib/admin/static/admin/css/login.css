@@ -2,24 +2,24 @@
 
 body.login {
     background: #f8f8f8;
-***REMOVED***
+}
 
 .login #header {
     height: auto;
     padding: 5px 16px;
-***REMOVED***
+}
 
 .login #header h1 {
     font-size: 18px;
-***REMOVED***
+}
 
 .login #header h1 a {
     color: #fff;
-***REMOVED***
+}
 
 .login #content {
     padding: 20px 20px 0;
-***REMOVED***
+}
 
 .login #container {
     background: #fff;
@@ -29,18 +29,18 @@ body.login {
     width: 28em;
     min-width: 300px;
     margin: 100px auto;
-***REMOVED***
+}
 
 .login #content-main {
     width: 100%;
-***REMOVED***
+}
 
 .login .form-row {
     padding: 4px 0;
     float: left;
     width: 100%;
     border-bottom: none;
-***REMOVED***
+}
 
 .login .form-row label {
     padding-right: 0.5em;
@@ -48,7 +48,7 @@ body.login {
     font-size: 1em;
     clear: both;
     color: #333;
-***REMOVED***
+}
 
 .login .form-row #id_username, .login .form-row #id_password {
     clear: both;
@@ -57,12 +57,12 @@ body.login {
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
             box-sizing: border-box;
-***REMOVED***
+}
 
 .login span.help {
     font-size: 10px;
     display: block;
-***REMOVED***
+}
 
 .login .submit-row {
     clear: both;
@@ -71,8 +71,8 @@ body.login {
     border: none;
     background: none;
     text-align: left;
-***REMOVED***
+}
 
 .login .password-reset-link {
     text-align: center;
-***REMOVED***
+}

@@ -5,15 +5,15 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
-class Migration(migrations.Migration***REMOVED***:
+class Migration(migrations.Migration):
 
     dependencies = [
-        ('intuit_site_check', '0004_website_on_error_message'***REMOVED***,
-    ***REMOVED***
+        ('intuit_site_check', '0004_website_on_error_message'),
+    ]
 
     operations = [
         migrations.RemoveField(
             model_name='website',
             name='on_error_message',
-        ***REMOVED***,
-    ***REMOVED***
+        ),
+    ]

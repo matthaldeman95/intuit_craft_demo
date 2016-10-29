@@ -5,16 +5,16 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 
 
-class Migration(migrations.Migration***REMOVED***:
+class Migration(migrations.Migration):
 
     dependencies = [
-        ('intuit_site_check', '0003_auto_20161026_2307'***REMOVED***,
-    ***REMOVED***
+        ('intuit_site_check', '0003_auto_20161026_2307'),
+    ]
 
     operations = [
         migrations.AddField(
             model_name='website',
             name='on_error_message',
-            field=models.BooleanField(default=False***REMOVED***,
-        ***REMOVED***,
-    ***REMOVED***
+            field=models.BooleanField(default=False),
+        ),
+    ]
