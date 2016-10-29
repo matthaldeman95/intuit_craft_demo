@@ -53,13 +53,11 @@ def generate_plot(data, size, data_range, user_selected=None***REMOVED***:
     elif data_range == 5:
         title += "All time"
 
-    font = {'fontname':'Helvetica'***REMOVED***
-
     plt.plot(x, y***REMOVED***
-    plt.title(title, size=18, **font***REMOVED***
-    plt.xlabel('Time', size=15, **font***REMOVED***
-    plt.ylabel('Load Time (s***REMOVED***', size=15, **font***REMOVED***
-    plt.annotate(avg_text, xy=(0.65, 0.92***REMOVED***, xycoords='axes fraction', size=16, **font***REMOVED***
+    plt.title(title, size=18***REMOVED***
+    plt.xlabel('Time', size=15***REMOVED***
+    plt.ylabel('Load Time (s***REMOVED***', size=15***REMOVED***
+    plt.annotate(avg_text, xy=(0.65, 0.92***REMOVED***, xycoords='axes fraction', size=16***REMOVED***
 
     mpld3_plot = mpld3.fig_to_html(mpl_figure***REMOVED***
 
