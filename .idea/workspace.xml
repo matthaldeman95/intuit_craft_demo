@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ab07e535-f745-4f37-8bc7-57c555bcbf28" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/compose_email.py" afterPath="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
     </list>
     <ignored path="intuit_craft_demo.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -59,11 +60,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="compose_email.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/intuit_site_check/compose_email.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="15" column="28" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+            <state relative-caret-position="105">
+              <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="462">
+              <caret line="33" column="33" selection-start-line="33" selection-start-column="33" selection-end-line="33" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -96,13 +117,14 @@
         <option value="$PROJECT_DIR$/intuit_site_check/tables.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/urls.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/static/intuit_site_check/style.css" />
-        <option value="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/dashboard.html" />
         <option value="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/detail_page.html" />
         <option value="$PROJECT_DIR$/intuit_site_check/filters.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/views.py" />
         <option value="$PROJECT_DIR$/intuit_site_check/generate_plot.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/intuit_site_check/compose_email.py" />
       </list>
     </option>
   </component>
@@ -435,7 +457,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/error_code_testpage.html" />
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -743,16 +764,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/intuit_site_check/compose_email.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#14#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/intuit_site_check/static/intuit_site_check/load_test.js" />
     <entry file="file://$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/dashboard.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -851,8 +862,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+        <state relative-caret-position="105">
+          <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="33" column="33" selection-start-line="33" selection-start-column="33" selection-end-line="33" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/intuit_site_check/compose_email.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="15" column="28" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
           <folding />
         </state>
       </provider>
