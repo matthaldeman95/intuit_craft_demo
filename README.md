@@ -31,4 +31,8 @@ Download all of the requirements:
 
             $ sudo pip install -r requirements.txt
 
-Run the Django development server
+Run the Django development server:
+
+            $ python manage.py runserver
+
+Using your favorite web browser, go to   127.0.0.1:8000/dashboard
