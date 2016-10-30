@@ -5,6 +5,10 @@ import mpld3
 from numpy import mean
 import datetime
 
+# Pre-store two Figures so that they are only generated twice
+figsize = [(6, 4.5), (8, 6)]
+figures = [Figure(figsize=figsize[0]), Figure(figsize=figsize[1])]
+
 
 def generate_plot(data, size, data_range, user_selected=None):
     """
@@ -29,11 +33,10 @@ def generate_plot(data, size, data_range, user_selected=None):
     avg = float(round(avg, 3))
     avg_text = "Average: " + str(avg)
 
-    figsize = [(6, 4.5), (8, 6)]
-
-
-    # Control size of output plot
-    mpl_figure = Figure(figsize=figsize[size])
+    # Clear existing figures and create current plot
+    for fig in figures:
+        fig.clf()
+    mpl_figure = figures[size]
 
     canvas = FigureCanvas(mpl_figure)
     ax = mpl_figure.add_subplot(111)
