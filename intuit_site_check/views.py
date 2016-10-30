@@ -200,4 +200,4 @@ def detail_page(request, site_id, data_range=3):
 
 def index(request):
 
-    return HttpResponseRedirect('dashboard')
+    return HttpResponseRedirect('')
