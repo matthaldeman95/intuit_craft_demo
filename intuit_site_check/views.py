@@ -197,7 +197,3 @@ def detail_page(request, site_id, data_range=3):
         'invalid_range_message': invalid_range_message
     }
     return HttpResponse(template.render(context, request))
-
-def index(request):
-
-    return HttpResponseRedirect('')
