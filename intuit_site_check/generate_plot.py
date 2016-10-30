@@ -65,4 +65,6 @@ def generate_plot(data, size, data_range, user_selected=None):
 
     plt.clf()
 
+    plt.close()
+
     return mpld3_plot

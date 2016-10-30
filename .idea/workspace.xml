@@ -4,7 +4,6 @@
     <list default="true" id="ab07e535-f745-4f37-8bc7-57c555bcbf28" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.sqlite3" afterPath="$PROJECT_DIR$/db.sqlite3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/generate_plot.py" afterPath="$PROJECT_DIR$/intuit_site_check/generate_plot.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/dashboard.html" afterPath="$PROJECT_DIR$/intuit_site_check/templates/intuit_site_check/dashboard.html" />
     </list>
     <ignored path="intuit_craft_demo.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -49,8 +48,8 @@
       <file leaf-file-name="generate_plot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/intuit_site_check/generate_plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="17" selection-start-line="0" selection-start-column="17" selection-end-line="0" selection-end-column="17" />
+            <state relative-caret-position="399">
+              <caret line="67" column="15" selection-start-line="67" selection-start-column="15" selection-end-line="67" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -783,7 +782,7 @@
         <state relative-caret-position="540">
           <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
-            <element signature="e#314#323#0" expanded="true" />
+            <element signature="e#314#323#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -875,8 +874,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/intuit_site_check/generate_plot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="17" selection-start-line="0" selection-start-column="17" selection-end-line="0" selection-end-column="17" />
+        <state relative-caret-position="399">
+          <caret line="67" column="15" selection-start-line="67" selection-start-column="15" selection-end-line="67" selection-end-column="15" />
           <folding />
         </state>
       </provider>
