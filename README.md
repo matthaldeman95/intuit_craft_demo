@@ -11,15 +11,22 @@ Features:
 - Tables and plots display site load times over user configurable time ranges
 - If a site is unavailable, an email is sent to myself with the HTTP error code
 
-## Directions
+### Directions
 
-Dependencies:
+#### Dependencies:
 
 - python 2.7
 
 - pip
 
-- matplotlib
+- virtualenv
+
+            $ sudo pip install virtualenv
+
+- matplotlib - Matplotlib has many dependency that may cause this app to fail.  These dependencies include
+    plotly and freetype (which may require a brew installation rather than pip).
+    [http://matplotlib.org/1.5.1/users/installing.html#required-dependencies](Check here if there are
+    dependency issues installing matplotlib.)
 
     On Linux:
 
@@ -29,15 +36,15 @@ Dependencies:
 
             $ sudo pip install matplotlib
 
-- django_tables2 - Doesn't seem to play nicely with the later requirements installation
+- django_tables2 - This is in the requirements.txt file but sometimes does not play nicely with it.
 
             $ sudo pip install django_tables2
 
-- virtualenv
 
-            $ sudo pip install virtualenv
 
 All other dependencies should be handled by the requirements.txt file.
+
+### Set up virtual environment and run development server
 
 Clone or download this project, and cd into that directory.  Create a virtual environment and enter it:
 
