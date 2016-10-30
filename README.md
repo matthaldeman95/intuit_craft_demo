@@ -15,12 +15,11 @@ Features:
 
 Dependencies:
 
-python 2.7
+- python 2.7
 
+- pip
 
-pip
-
-matplotlib
+- matplotlib
 
     On Linux:
 
@@ -30,11 +29,11 @@ matplotlib
 
             $ sudo pip install matplotlib
 
-django_tables2 - Doesn't seem to play nicely with the later requirements installation
+- django_tables2 - Doesn't seem to play nicely with the later requirements installation
 
             $ sudo pip install django_tables2
 
-virtualenv
+- virtualenv
 
             $ sudo pip install virtualenv
 

@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
+    url(r'^$', include('intuit_site_check.urls')),
     url(r'^dashboard/', include('intuit_site_check.urls')),
-    url(r'^admin/', admin.site.urls),
+    #url(r'^admin/', admin.site.urls),
 ]
