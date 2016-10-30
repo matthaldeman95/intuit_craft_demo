@@ -25,8 +25,8 @@ Features:
 
 - matplotlib - Matplotlib has many dependency that may cause this app to fail.  These dependencies include
     plotly and freetype (which may require a brew installation rather than pip).
-    [http://matplotlib.org/1.5.1/users/installing.html#required-dependencies](Check here if there are
-    dependency issues installing matplotlib.)
+    (http://matplotlib.org/1.5.1/users/installing.html#required-dependencies)[Check here if there are
+    dependency issues installing matplotlib.]
 
     On Linux:
 
