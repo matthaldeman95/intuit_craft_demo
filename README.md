@@ -5,7 +5,7 @@ A Django web application that continuously monitors the availability and load ti
 
       https://turbotax.intuit.com/?cid=seq_intuit_tt_click_hd
       https://en.wikipedia.org/wiki/Intuit
-      
+
 Features:
 - Collects site availability and load time every minute
 - Tables and plots display site load times over user configurable time ranges
@@ -25,8 +25,8 @@ Features:
 
 - matplotlib - Matplotlib has many dependency that may cause this app to fail.  These dependencies include
     plotly and freetype (which may require a brew installation rather than pip).
-    (http://matplotlib.org/1.5.1/users/installing.html#required-dependencies)[Check here if there are
-    dependency issues installing matplotlib.]
+
+    [Check here if there are dependency issues with installing matplotlib.](http://matplotlib.org/1.5.1/users/installing.html#required-dependencies)
 
     On Linux:
 
