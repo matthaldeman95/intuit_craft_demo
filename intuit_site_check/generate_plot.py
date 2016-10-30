@@ -1,6 +1,6 @@
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+#import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 import mpld3
 from numpy import mean
 import datetime
@@ -31,8 +31,12 @@ def generate_plot(data, size, data_range, user_selected=None):
 
     figsize = [(6, 4.5), (8, 6)]
 
+
     # Control size of output plot
-    mpl_figure = plt.figure(figsize=figsize[size])
+    mpl_figure = Figure(figsize=figsize[size])
+
+    canvas = FigureCanvas(mpl_figure)
+    ax = mpl_figure.add_subplot(111)
 
     title = "Page Load Times: "
 
@@ -55,16 +59,16 @@ def generate_plot(data, size, data_range, user_selected=None):
     elif data_range == 5:
         title += "All time"
 
-    plt.plot(x, y)
-    plt.title(title, size=18)
-    plt.xlabel('Time', size=15)
-    plt.ylabel('Load Time (s)', size=15)
-    plt.annotate(avg_text, xy=(0.65, 0.92), xycoords='axes fraction', size=16)
+    ax.plot(x, y)
+    ax.set_title(title, size=18)
+    ax.set_xlabel('Time', size=15)
+    ax.set_ylabel('Load Time (s)', size=15)
+    ax.annotate(avg_text, xy=(0.65, 0.92), xycoords='axes fraction', size=16)
 
     mpld3_plot = mpld3.fig_to_html(mpl_figure)
 
-    plt.clf()
+    #plt.clf()
 
-    plt.close()
+    #plt.close()
 
     return mpld3_plot
