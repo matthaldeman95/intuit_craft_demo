@@ -23,13 +23,16 @@ def generate_plot(data, size, data_range, user_selected=None):
     # Load data
     x = []
     y = []
+    mean_array = []
     for data in data:
         time_stamp = data.timestamp - datetime.timedelta(hours=7)
         x.append(time_stamp)
         y.append(float(data.load_time))
+        if data.load_time != 0:
+            mean_array.append(float(data.load_time))
 
     # Average of data
-    avg = mean(y)
+    avg = mean(mean_array)
     avg = float(round(avg, 3))
     avg_text = "Average: " + str(avg)
 
