@@ -22,7 +22,7 @@ Features:
 
             $ sudo pip install virtualenv
 
-- matplotlib - Matplotlib has many dependency that may cause this app to fail.  These dependencies include
+- matplotlib - Matplotlib has many dependencies that may cause this app to fail.  These dependencies include
     plotly and freetype (which may require a brew installation rather than pip).
 
     [Check here if there are dependency issues with installing matplotlib.](http://matplotlib.org/1.5.1/users/installing.html#required-dependencies)
