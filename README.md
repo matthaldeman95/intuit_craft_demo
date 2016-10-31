@@ -11,9 +11,8 @@ Features:
 - Tables and plots display site load times over user configurable time ranges
 - If a site is unavailable, an email is sent to myself with the HTTP error code
 
-### Directions
 
-#### Dependencies:
+### Dependencies:
 
 - python 2.7
 
