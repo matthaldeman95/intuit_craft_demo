@@ -59,3 +59,6 @@ Run the Django development server:
             $ python manage.py runserver
 
 Using your favorite web browser, go to [127.0.0.1:8000/dashboard](http://127.0.0.1:8000/dashboard)
+
+
+## I got the job :)
